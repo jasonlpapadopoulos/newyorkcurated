@@ -48,6 +48,9 @@
     "brooklyn": [
       { "name": "Williamsburg", "value": "williamsburg" },
       { "name": "Bushwick", "value": "bushwick" }
+    ],
+    "queens": [
+      { "name": "Astoria", "value": "astoria" }
     ]
   }
 }
