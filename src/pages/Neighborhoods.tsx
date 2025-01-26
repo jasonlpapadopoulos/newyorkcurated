@@ -1,6 +1,6 @@
 import { useSearchParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import neighborhoodsData from '../data/neighborhoods.json';
 
 interface Neighborhood {
@@ -12,12 +12,20 @@ interface ManhattanArea {
   [key: string]: Neighborhood[];
 }
 
-interface NeighborhoodData {
-  manhattan?: {
-    [key: string]: Neighborhood[];
+interface NeighborhoodsData {
+  food: {
+    manhattan: {
+      [key: string]: Neighborhood[];
+    };
+    brooklyn: Neighborhood[];
+    queens: Neighborhood[];
   };
-  brooklyn?: Neighborhood[];
-  queens?: Neighborhood[];
+  drinks: {
+    manhattan: {
+      [key: string]: Neighborhood[];
+    };
+    brooklyn: Neighborhood[];
+  };
 }
 
 function Neighborhoods() {
@@ -26,7 +34,9 @@ function Neighborhoods() {
   const [selectedNeighborhoods, setSelectedNeighborhoods] = useState<string[]>([]);
 
   const title = category === 'eat' ? 'Food' : 'Drinks';
-  const data = category === 'eat' ? neighborhoodsData.food : neighborhoodsData.drinks;
+  const data = category === 'eat' 
+    ? (neighborhoodsData as NeighborhoodsData).food 
+    : (neighborhoodsData as NeighborhoodsData).drinks;
 
   // Handle section toggle
   const toggleSection = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -118,7 +128,7 @@ function Neighborhoods() {
   };
 
   // Render borough section (Brooklyn, Queens)
-  const renderBoroughSection = (boroughName: string, neighborhoods: Neighborhood[]) => {
+  const renderBoroughSection = (boroughName: string, neighborhoods: Neighborhood[] | undefined) => {
     if (!neighborhoods) return null;
     
     return (
@@ -177,8 +187,8 @@ function Neighborhoods() {
             </div>
           </div>
         )}
-        {data.brooklyn && renderBoroughSection('Brooklyn', data.brooklyn)}
-        {data.queens && renderBoroughSection('Queens', data.queens)}
+        {renderBoroughSection('Brooklyn', data.brooklyn)}
+        {renderBoroughSection('Queens', data.queens)}
       </div>
       <button 
         className="submit-button" 
