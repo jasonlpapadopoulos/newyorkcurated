@@ -3,6 +3,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import Layout from './components/Layout';
 import Home from './pages/Home';
 import WhatAreYouLookingFor from './pages/WhatAreYouLookingFor';
+import Neighborhoods from './pages/Neighborhoods';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="/what-are-you-looking-for" element={<WhatAreYouLookingFor />} />
+            <Route path="/neighborhoods" element={<Neighborhoods />} />
           </Route>
         </Routes>
       </Router>

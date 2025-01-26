@@ -5,8 +5,7 @@ function WhatAreYouLookingFor() {
   const navigate = useNavigate();
   
   const setCategory = (category: string) => {
-    localStorage.setItem('selectedCategory', category);
-    navigate('/neighborhoods');
+    navigate(`/neighborhoods?to=${category}`);
   };
 
   return (
@@ -17,14 +16,14 @@ function WhatAreYouLookingFor() {
       </Helmet>
       <h2 className="title">What are you looking for?</h2>
       <div className="options-container">
-        <button onClick={() => setCategory('food')} className="option">
+        <a href="#" onClick={(e) => { e.preventDefault(); setCategory('eat'); }} className="option">
           <div className="option-icon food-icon"></div>
           <div className="option-text">Food</div>
-        </button>
-        <button onClick={() => setCategory('drinks')} className="option">
+        </a>
+        <a href="#" onClick={(e) => { e.preventDefault(); setCategory('drink'); }} className="option">
           <div className="option-icon drink-icon"></div>
           <div className="option-text">Drinks</div>
-        </button>
+        </a>
       </div>
     </>
   );

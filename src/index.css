@@ -3,3 +3,7 @@
 
 /* Import your existing CSS */
 @import './styles/main.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
