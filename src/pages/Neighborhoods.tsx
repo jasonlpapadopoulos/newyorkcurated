@@ -1,4 +1,4 @@
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useState } from 'react';
 import neighborhoodsData from '../data/neighborhoods.json';
@@ -30,6 +30,7 @@ interface NeighborhoodsData {
 }
 
 function Neighborhoods() {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const category = searchParams.get('to');
   const [selectedNeighborhoods, setSelectedNeighborhoods] = useState<string[]>([]);
@@ -85,7 +86,7 @@ function Neighborhoods() {
   const handleSubmit = () => {
     if (selectedNeighborhoods.length > 0) {
       localStorage.setItem('selectedNeighborhoods', JSON.stringify(selectedNeighborhoods));
-      window.location.href = `/${category === 'eat' ? 'food' : 'drinks'}`;
+      navigate('/results?category=' + (category === 'eat' ? 'food' : 'drinks'));
     }
   };
 
@@ -189,7 +190,8 @@ function Neighborhoods() {
           </div>
         )}
         {renderBoroughSection('Brooklyn', data.brooklyn)}
-        {renderBoroughSection('Queens', data.queens)}
+        {/* Only render Queens section for food category */}
+        {category === 'eat' && renderBoroughSection('Queens', (data as NeighborhoodsData['food']).queens)}
       </div>
       <button 
         className="submit-button" 

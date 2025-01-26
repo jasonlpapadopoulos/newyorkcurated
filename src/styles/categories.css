@@ -1,19 +1,18 @@
 .options-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
+    gap: 1.5rem;
     opacity: 0;
     animation: fadeIn 1s ease-in forwards;
     animation-delay: 0.5s;
     width: 90%;
     max-width: 600px;
     margin: 2rem auto;
+    padding: 0 1rem;
 }
   
 .option {
-    height: 35vw;
     aspect-ratio: 1/1;
-    max-height: 180px;
     border: 2px solid white;
     border-radius: 15px;
     display: flex;
@@ -26,7 +25,7 @@
     overflow: hidden;
     text-decoration: none;
     color: white;
-    padding: 0.5rem;
+    padding: 1rem;
 }
   
 .option:before {
@@ -52,45 +51,32 @@
 }
   
 .option-icon {
-    font-size: clamp(3.5rem, 12vw, 5rem);
-    margin-bottom: 0.5rem;
+    font-size: 4rem;
+    margin-bottom: 1rem;
     z-index: 2;
-    height: 60%;
-    display: flex;
-    align-items: center;
 }
   
 .option-text {
-    font-size: clamp(1.25rem, 4vw, 1.5rem);
+    font-size: 1.5rem;
     font-weight: bold;
     z-index: 2;
     text-align: center;
-    height: 40%;
-    display: flex;
-    align-items: center;
 }
 
 /* Mobile-specific adjustments */
 @media screen and (max-width: 480px) {
     .options-container {
-        gap: 1.5rem;
+        gap: 1rem;
         width: 85%;
-        margin: 1.5rem auto;
-    }
-
-    .option {
-        height: 40vw;
-        max-height: none;
-        padding: 0.25rem;
+        padding: 0 0.5rem;
     }
 
     .option-icon {
-        font-size: clamp(3rem, 15vw, 4rem);
-        height: 55%;
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
     }
 
     .option-text {
-        font-size: clamp(1.125rem, 4.5vw, 1.375rem);
-        height: 45%;
+        font-size: 1.25rem;
     }
 }
