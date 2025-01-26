@@ -1,15 +1,15 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/roboto/2.0.0/css/roboto.min.css');
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap');
 
-/* Import CSS files */
+/* Import modular CSS files */
 @import './styles/general.css';
-@import './styles/animations.css';
 @import './styles/banner.css';
+@import './styles/account.css';
 @import './styles/buttons_filters.css';
 @import './styles/categories.css';
 @import './styles/checkboxes.css';
 @import './styles/icons.css';
-@import './styles/account.css';
 @import './styles/individual_place.css';
 @import './styles/map_views.css';
 @import './styles/sections.css';
+@import './styles/animations.css';
