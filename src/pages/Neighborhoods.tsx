@@ -13,7 +13,7 @@ function Neighborhoods() {
         <title>NYC {title} Neighborhoods - Plana</title>
         <meta name="description" content={`Discover the best neighborhoods for ${title.toLowerCase()} in New York City with Plana's curated recommendations.`} />
       </Helmet>
-      <h2 className="title">Choose a Neighborhood for {title}</h2>
+      <h2 className="title">Coming Soon!</h2>
       {/* Add your neighborhoods content here */}
     </>
   );
