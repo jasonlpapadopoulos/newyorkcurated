@@ -25,6 +25,7 @@ interface NeighborhoodsData {
       [key: string]: Neighborhood[];
     };
     brooklyn: Neighborhood[];
+    queens: Neighborhood[];
   };
 }
 
