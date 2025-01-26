@@ -6,12 +6,8 @@ function Header() {
       <div className="site-header-content">
         <div className="header-top">
           <div className="banner">
-            <Link to="/">Plana</Link>
+            <Link to="/">nyCurated</Link>
           </div>
-          <Link to="/account" className="account-section">
-            <span>👤</span>
-            Account
-          </Link>
         </div>
       </div>
       <div className="header-bottom-line"></div>

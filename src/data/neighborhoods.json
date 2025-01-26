@@ -1,0 +1,53 @@
+{
+  "food": {
+    "manhattan": {
+      "uptown": [
+        { "name": "Harlem", "value": "harlem" },
+        { "name": "Upper East Side", "value": "upper-east-side" },
+        { "name": "Upper West Side", "value": "upper-west-side" }
+      ],
+      "midtown": [
+        { "name": "Hell's Kitchen", "value": "hells-kitchen" },
+        { "name": "Korea Town", "value": "korea-town" },
+        { "name": "Murray Hill", "value": "murray-hill" },
+        { "name": "Midtown", "value": "midtown" }
+      ],
+      "downtown": [
+        { "name": "East Village", "value": "east-village" },
+        { "name": "West Village", "value": "west-village" },
+        { "name": "Lower East Side", "value": "lower-east-side" },
+        { "name": "SoHo", "value": "soho" },
+        { "name": "Chinatown", "value": "chinatown" },
+        { "name": "Little Italy", "value": "little-italy" }
+      ]
+    },
+    "brooklyn": [
+      { "name": "Williamsburg", "value": "williamsburg" },
+      { "name": "DUMBO", "value": "dumbo" },
+      { "name": "Park Slope", "value": "park-slope" },
+      { "name": "Bushwick", "value": "bushwick" }
+    ],
+    "queens": [
+      { "name": "Astoria", "value": "astoria" },
+      { "name": "Long Island City", "value": "long-island-city" },
+      { "name": "Flushing", "value": "flushing" }
+    ]
+  },
+  "drinks": {
+    "manhattan": {
+      "downtown": [
+        { "name": "East Village", "value": "east-village" },
+        { "name": "Lower East Side", "value": "lower-east-side" },
+        { "name": "West Village", "value": "west-village" }
+      ],
+      "midtown": [
+        { "name": "Hell's Kitchen", "value": "hells-kitchen" },
+        { "name": "Murray Hill", "value": "murray-hill" }
+      ]
+    },
+    "brooklyn": [
+      { "name": "Williamsburg", "value": "williamsburg" },
+      { "name": "Bushwick", "value": "bushwick" }
+    ]
+  }
+}

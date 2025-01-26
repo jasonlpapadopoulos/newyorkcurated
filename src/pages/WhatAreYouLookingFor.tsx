@@ -11,8 +11,8 @@ function WhatAreYouLookingFor() {
   return (
     <>
       <Helmet>
-        <title>Plana - New York City</title>
-        <meta name="description" content="Discover food, drinks, and more in New York City with Plana's curated recommendations." />
+        <title>New York Curated - Categories</title>
+        <meta name="description" content="Discover food, drinks, and more in New York City." />
       </Helmet>
       <h2 className="title">What are you looking for?</h2>
       <div className="options-container">

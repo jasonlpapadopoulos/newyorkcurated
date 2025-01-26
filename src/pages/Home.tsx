@@ -5,11 +5,11 @@ function Home() {
   return (
     <>
       <Helmet>
-        <title>Plana - Curated Recommendations</title>
-        <meta name="description" content="Find the best things to do in New York City with Plana's curated recommendations." />
+        <title>New York Curated</title>
+        <meta name="description" content="Find the best things to do in New York." />
       </Helmet>
-      <h1 className="big-title">Plana</h1>
-      <p className="subtitle">Curated Recommendations</p>
+      <h1 className="big-title">New York Curated</h1>
+      <p className="subtitle">Find the best things to do in New York.</p>
       <Link to="/what-are-you-looking-for">
         <img 
           className="city-image"
@@ -18,9 +18,7 @@ function Home() {
           alt="NYC Skyline"
         />
       </Link>
-      <Link to="/what-are-you-looking-for" className="city-button">New York City</Link>
-      <p className="homepage-text">Find the best things to do.</p>
-      <p className="comment">Just launched in New York.</p>
+      <Link to="/what-are-you-looking-for" className="city-button">Explore</Link>
     </>
   );
 }

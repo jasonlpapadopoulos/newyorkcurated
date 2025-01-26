@@ -14,6 +14,9 @@ function App() {
             <Route index element={<Home />} />
             <Route path="/what-are-you-looking-for" element={<WhatAreYouLookingFor />} />
             <Route path="/neighborhoods" element={<Neighborhoods />} />
+            {/* Add these routes to handle the old URLs */}
+            <Route path="/neighborhoods.html" element={<Neighborhoods />} />
+            <Route path="/what-are-you-looking-for.html" element={<WhatAreYouLookingFor />} />
           </Route>
         </Routes>
       </Router>
