@@ -66,7 +66,7 @@ export const sampleRestaurants: Restaurant[] = [
   {
     id: '3',
     name: "Clinton Street Baking Company",
-    description: "Famous for pancakes and brunch, this Lower East Side institution always has a line",
+    description: "Famous for pancakes and brunch, this Lower East Side institution always has a line. Famous for pancakes and brunch, this Lower East Side institution always has a line. Famous for pancakes and brunch, this Lower East Side institution always has a line.",
     cuisine: "American",
     neighborhood: "lower-east-side",
     price: '$$',

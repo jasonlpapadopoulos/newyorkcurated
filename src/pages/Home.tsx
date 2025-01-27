@@ -6,10 +6,10 @@ function Home() {
     <>
       <Helmet>
         <title>New York Curated</title>
-        <meta name="description" content="Find the best things to do in New York." />
+        <meta name="description" content="The best things to do in New York." />
       </Helmet>
       <h1 className="big-title">New York Curated</h1>
-      <p className="subtitle">Find the best things to do in New York.</p>
+      <p className="subtitle">The best things to do in New York.</p>
       <Link to="/what-are-you-looking-for">
         <img 
           className="city-image"

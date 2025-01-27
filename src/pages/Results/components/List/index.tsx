@@ -1,29 +1,60 @@
+import { Restaurant } from '../../../../types/restaurant';
+
 interface ListProps {
-  restaurants: any[];
+  restaurants: Restaurant[];
 }
+
+const getNeighborhoodName = (value: string): string => {
+  const names: { [key: string]: string } = {
+    'upper-east-side': 'Upper East Side',
+    'upper-west-side': 'Upper West Side',
+    'lower-east-side': 'Lower East Side',
+    'east-village': 'East Village',
+    'west-village': 'West Village',
+    'hells-kitchen': "Hell's Kitchen",
+    'korea-town': 'Korea Town',
+    'murray-hill': 'Murray Hill',
+    'midtown': 'Midtown',
+    'soho': 'SoHo',
+    'chinatown': 'Chinatown',
+    'little-italy': 'Little Italy',
+    'williamsburg': 'Williamsburg',
+    'dumbo': 'DUMBO',
+    'park-slope': 'Park Slope',
+    'bushwick': 'Bushwick',
+    'astoria': 'Astoria',
+    'long-island-city': 'Long Island City',
+    'flushing': 'Flushing',
+    'harlem': 'Harlem'
+  };
+  
+  return names[value] || value;
+};
 
 export default function List({ restaurants }: ListProps) {
   return (
     <div className="restaurant-list">
       {restaurants.map(restaurant => (
-        <div key={restaurant.id} className="restaurant-card">
-          <img 
-            src={restaurant.imageUrl} 
-            alt={restaurant.name}
-            className="restaurant-image"
-          />
-          <div className="restaurant-info">
-            <h3>{restaurant.name}</h3>
-            <p className="restaurant-meta">
-              {restaurant.cuisine} · {restaurant.price}
-            </p>
-            <p className="restaurant-description">
-              {restaurant.description}
-            </p>
-            <p className="restaurant-address">
-              {restaurant.address}
-            </p>
-          </div>
+        <div key={restaurant.id} className="place-box">
+          <a href={`/place/${restaurant.id}`}>
+            <div className="place-content">
+              <h3 className="place-name">{restaurant.name}</h3>
+              <p className="place-neighborhood">{getNeighborhoodName(restaurant.neighborhood)}</p>
+              <p className="place-meta">
+                {restaurant.cuisine}, {restaurant.price}
+              </p>
+              <img 
+                src={restaurant.imageUrl} 
+                alt={restaurant.name}
+                className="place-image"
+              />
+              <div className="description-container">
+                <p className="place-description">
+                  {restaurant.description}
+                </p>
+              </div>
+            </div>
+          </a>
         </div>
       ))}
     </div>

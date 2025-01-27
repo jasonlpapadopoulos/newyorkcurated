@@ -7,18 +7,18 @@ import ResizeHandle from './components/ResizeHandle';
 import Filters from './components/Filters';
 import { sampleRestaurants } from '../../data/sample-restaurants';
 import 'leaflet/dist/leaflet.css';
+import '../../styles/places.css';
 
 export default function Results() {
   const [searchParams] = useSearchParams();
   const category = searchParams.get('category') || 'food';
-  const [mapHeight, setMapHeight] = useState(33); // Initialize at 33%
+  const [mapHeight, setMapHeight] = useState(33);
   const [selectedFilters, setSelectedFilters] = useState({
     meals: new Set<string>(),
     price: new Set<string>(),
     cuisine: new Set<string>()
   });
 
-  // Close filters when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
@@ -68,7 +68,7 @@ export default function Results() {
 
         <div 
           id="restaurant-list"
-          style={{ height: `${100 - mapHeight - 8}%` }} // 8% for separator section
+          style={{ height: `${100 - mapHeight - 8}%` }}
         >
           <List restaurants={sampleRestaurants} />
         </div>
