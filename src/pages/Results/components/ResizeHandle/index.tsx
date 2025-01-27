@@ -9,20 +9,54 @@ export default function ResizeHandle({ onResize }: ResizeHandleProps) {
   const startYRef = useRef(0);
   const startHeightRef = useRef(0);
   const [isSnapping, setIsSnapping] = useState(false);
+  const [hasInitialResizeOccurred, setHasInitialResizeOccurred] = useState(false);
+  const dragThreshold = 5; // Pixels to move before considering it a drag
+  const moveCountRef = useRef(0);
+
+  const handleClick = () => {
+    // Only handle as click if we haven't moved much
+    if (moveCountRef.current < dragThreshold) {
+      const mapView = document.getElementById('map-view');
+      const currentHeight = mapView ? parseFloat(mapView.style.height) : 33;
+      
+      setIsSnapping(true);
+      
+      // If this is the first interaction, set the flag
+      if (!hasInitialResizeOccurred) {
+        setHasInitialResizeOccurred(true);
+      }
+
+      // Toggle between positions
+      let targetHeight;
+      if (!hasInitialResizeOccurred) {
+        // First click goes to 5%
+        targetHeight = 5;
+      } else {
+        // After first interaction, toggle between 5% and 95%
+        targetHeight = currentHeight < 50 ? 95 : 5;
+      }
+
+      onResize(targetHeight);
+      setTimeout(() => setIsSnapping(false), 300);
+    }
+  };
 
   useEffect(() => {
     const handleMove = (clientY: number) => {
       if (!isDraggingRef.current) return;
 
-      const containerHeight = window.innerHeight - 70; // Account for header
+      moveCountRef.current += 1;
+
+      const containerHeight = window.innerHeight - 70;
       const deltaY = clientY - startYRef.current;
-      const newMapHeight = Math.min(
-        Math.max(
-          (startHeightRef.current + deltaY) / containerHeight * 100,
-          10  // Minimum map height 10%
-        ),
-        90 // Maximum map height 90%
-      );
+      let newMapHeight = (startHeightRef.current + deltaY) / containerHeight * 100;
+
+      if (hasInitialResizeOccurred) {
+        // Snap to either 5% or 95% based on drag position
+        newMapHeight = newMapHeight > 50 ? 95 : 5;
+      }
+
+      newMapHeight = Math.min(Math.max(newMapHeight, 5), 95);
 
       requestAnimationFrame(() => {
         onResize(newMapHeight);
@@ -35,22 +69,33 @@ export default function ResizeHandle({ onResize }: ResizeHandleProps) {
       isDraggingRef.current = false;
       document.body.style.cursor = 'default';
       document.body.style.userSelect = 'auto';
-      setIsSnapping(true);
+      
+      // Only handle as drag if we've moved enough
+      if (moveCountRef.current >= dragThreshold) {
+        setIsSnapping(true);
 
-      // Get current map height
-      const mapView = document.getElementById('map-view');
-      const currentHeight = mapView ? parseFloat(mapView.style.height) : 33;
-      
-      // Snap to positions
-      let targetHeight;
-      if (currentHeight < 40) targetHeight = 10;
-      else if (currentHeight > 80) targetHeight = 90;
-      else targetHeight = 33;
-      
-      // Animate to target position
-      onResize(targetHeight);
-      
-      setTimeout(() => setIsSnapping(false), 300);
+        const mapView = document.getElementById('map-view');
+        const currentHeight = mapView ? parseFloat(mapView.style.height) : 33;
+
+        if (!hasInitialResizeOccurred) {
+          setHasInitialResizeOccurred(true);
+        }
+
+        let targetHeight;
+        if (hasInitialResizeOccurred) {
+          targetHeight = currentHeight > 50 ? 95 : 5;
+        } else {
+          if (currentHeight < 25) targetHeight = 5;
+          else if (currentHeight > 66) targetHeight = 95;
+          else targetHeight = 33;
+        }
+        
+        onResize(targetHeight);
+        setTimeout(() => setIsSnapping(false), 300);
+      }
+
+      // Reset move counter
+      moveCountRef.current = 0;
     };
 
     const handleMouseMove = (e: MouseEvent) => handleMove(e.clientY);
@@ -72,7 +117,7 @@ export default function ResizeHandle({ onResize }: ResizeHandleProps) {
       document.removeEventListener('touchend', handleEnd);
       document.removeEventListener('touchcancel', handleEnd);
     };
-  }, [onResize]);
+  }, [onResize, hasInitialResizeOccurred]);
 
   const handleStart = (clientY: number) => {
     isDraggingRef.current = true;
@@ -80,6 +125,7 @@ export default function ResizeHandle({ onResize }: ResizeHandleProps) {
     startHeightRef.current = document.getElementById('map-view')?.offsetHeight || 0;
     document.body.style.cursor = 'row-resize';
     document.body.style.userSelect = 'none';
+    moveCountRef.current = 0;
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -94,6 +140,7 @@ export default function ResizeHandle({ onResize }: ResizeHandleProps) {
     <div className={`resize-handle ${isSnapping ? 'snapping' : ''}`}>
       <div 
         className="resize-handle-bar"
+        onClick={handleClick}
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
       >

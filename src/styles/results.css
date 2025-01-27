@@ -1,10 +1,15 @@
+/* Results Container */
 .results-container {
-  position: relative;
-  height: calc(100vh - 70px);
-  margin-top: 70px;
-  overflow: hidden;
+  position: fixed;
+  top: 70px;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  background: #000;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Map View */
@@ -22,7 +27,6 @@
 .separator-section {
   position: relative;
   width: 100%;
-  height: 8%;
   background: #000;
   z-index: 2;
 }
@@ -72,10 +76,10 @@
 #restaurant-list {
   flex: 1;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   background: #000;
-  min-height: 10%;
-  max-height: 90%;
-  transition: height 0.3s ease;
+  position: relative;
 }
 
 /* Filters */
@@ -87,6 +91,7 @@
   overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 .filters-container::-webkit-scrollbar {
@@ -207,64 +212,24 @@
 
 /* Restaurant List Styles */
 .restaurant-list {
-  padding: 50px;
-}
-
-.restaurant-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 15px;
-  margin-bottom: 20px;
-  overflow: hidden;
-  transition: transform 0.3s ease;
-}
-
-.restaurant-card:hover {
-  transform: translateY(-2px);
-}
-
-.restaurant-image {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-}
-
-.restaurant-info {
   padding: 20px;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
 }
 
-.restaurant-info h3 {
-  margin: 0 0 10px;
-  font-size: 1.5rem;
-}
-
-.restaurant-meta {
-  color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 10px;
-}
-
-.restaurant-description {
-  margin-bottom: 10px;
-  line-height: 1.5;
-}
-
-.restaurant-address {
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 0.9rem;
-}
-
+/* Responsive Styles */
 @media (max-width: 768px) {
   .filter-button {
     padding: 6px 15px;
     font-size: 14px;
   }
 
-  .restaurant-image {
-    height: 150px;
-  }
-
   .filter-modal {
     width: 90%;
     max-height: 80vh;
+  }
+
+  .results-container {
+    top: 60px;
   }
 }
