@@ -26,117 +26,92 @@ export default function Filters({ selectedFilters, onFilterChange }: FiltersProp
     onFilterChange(newFilters);
   };
 
-  const toggleFilter = (filter: string) => {
-    setActiveFilter(activeFilter === filter ? null : filter);
+  const closeModal = () => {
+    setActiveFilter(null);
+  };
+
+  const renderFilterModal = (type: string) => {
+    const options = {
+      meals: [ // Changed from 'meal' to 'meals' to match the selectedFilters interface
+        { value: 'breakfast', label: 'Breakfast' },
+        { value: 'brunch', label: 'Brunch' },
+        { value: 'lunch', label: 'Lunch' },
+        { value: 'dinner', label: 'Dinner' }
+      ],
+      price: [
+        { value: '$', label: '$' },
+        { value: '$$', label: '$$' },
+        { value: '$$$', label: '$$$' },
+        { value: '$$$$', label: '$$$$' }
+      ],
+      cuisine: [
+        'American', 'Italian', 'Japanese', 'Chinese', 'Mexican',
+        'Thai', 'Indian', 'French', 'Mediterranean', 'Korean'
+      ].map(c => ({ value: c.toLowerCase(), label: c }))
+    };
+
+    const titles = {
+      meals: 'Meal',
+      price: 'Price Range',
+      cuisine: 'Cuisine'
+    };
+
+    return (
+      <>
+        <div 
+          className={`modal-backdrop ${activeFilter === type ? 'show' : ''}`}
+          onClick={closeModal}
+        />
+        <div className={`filter-modal ${activeFilter === type ? 'show' : ''}`}>
+          <div className="filter-modal-header">
+            <span className="filter-modal-title">{titles[type as keyof typeof titles]}</span>
+            <button className="filter-modal-close" onClick={closeModal}>×</button>
+          </div>
+          {options[type as keyof typeof options].map(({ value, label }) => (
+            <label key={value} className="filter-option">
+              <input
+                type="checkbox"
+                checked={selectedFilters[type as keyof typeof selectedFilters].has(value)}
+                onChange={() => handleFilterChange(type, value)}
+              />
+              {label}
+            </label>
+          ))}
+        </div>
+      </>
+    );
   };
 
   return (
     <div className="filters-container">
       <div className="filter-group">
-        <button 
-          className={`filter-button ${activeFilter === 'meal' ? 'active' : ''}`}
-          onClick={() => toggleFilter('meal')}
+        <button
+          className={`filter-button ${activeFilter === 'meals' ? 'active' : ''}`}
+          onClick={() => setActiveFilter(activeFilter === 'meals' ? null : 'meals')}
         >
-          Meal
+          Meal {selectedFilters.meals.size > 0 && `(${selectedFilters.meals.size})`}
         </button>
-        <div className={`filter-options ${activeFilter === 'meal' ? 'show' : ''}`}>
-          <label className="filter-option">
-            <input 
-              type="checkbox" 
-              checked={selectedFilters.meals.has('breakfast')}
-              onChange={() => handleFilterChange('meals', 'breakfast')}
-            /> 
-            Breakfast
-          </label>
-          <label className="filter-option">
-            <input 
-              type="checkbox" 
-              checked={selectedFilters.meals.has('brunch')}
-              onChange={() => handleFilterChange('meals', 'brunch')}
-            /> 
-            Brunch
-          </label>
-          <label className="filter-option">
-            <input 
-              type="checkbox" 
-              checked={selectedFilters.meals.has('lunch')}
-              onChange={() => handleFilterChange('meals', 'lunch')}
-            /> 
-            Lunch
-          </label>
-          <label className="filter-option">
-            <input 
-              type="checkbox" 
-              checked={selectedFilters.meals.has('dinner')}
-              onChange={() => handleFilterChange('meals', 'dinner')}
-            /> 
-            Dinner
-          </label>
-        </div>
+        {renderFilterModal('meals')}
       </div>
 
       <div className="filter-group">
-        <button 
+        <button
           className={`filter-button ${activeFilter === 'price' ? 'active' : ''}`}
-          onClick={() => toggleFilter('price')}
+          onClick={() => setActiveFilter(activeFilter === 'price' ? null : 'price')}
         >
-          Price
+          Price {selectedFilters.price.size > 0 && `(${selectedFilters.price.size})`}
         </button>
-        <div className={`filter-options ${activeFilter === 'price' ? 'show' : ''}`}>
-          <label className="filter-option">
-            <input 
-              type="checkbox" 
-              checked={selectedFilters.price.has('$')}
-              onChange={() => handleFilterChange('price', '$')}
-            /> 
-            $
-          </label>
-          <label className="filter-option">
-            <input 
-              type="checkbox" 
-              checked={selectedFilters.price.has('$$')}
-              onChange={() => handleFilterChange('price', '$$')}
-            /> 
-            $$
-          </label>
-          <label className="filter-option">
-            <input 
-              type="checkbox" 
-              checked={selectedFilters.price.has('$$$')}
-              onChange={() => handleFilterChange('price', '$$$')}
-            /> 
-            $$$
-          </label>
-          <label className="filter-option">
-            <input 
-              type="checkbox" 
-              checked={selectedFilters.price.has('$$$$')}
-              onChange={() => handleFilterChange('price', '$$$$')}
-            /> 
-            $$$$
-          </label>
-        </div>
+        {renderFilterModal('price')}
       </div>
 
       <div className="filter-group">
-        <button 
+        <button
           className={`filter-button ${activeFilter === 'cuisine' ? 'active' : ''}`}
-          onClick={() => toggleFilter('cuisine')}
+          onClick={() => setActiveFilter(activeFilter === 'cuisine' ? null : 'cuisine')}
         >
-          Cuisine
+          Cuisine {selectedFilters.cuisine.size > 0 && `(${selectedFilters.cuisine.size})`}
         </button>
-        <div className={`filter-options ${activeFilter === 'cuisine' ? 'show' : ''}`}>
-          {['American', 'Italian', 'Japanese', 'Chinese', 'Mexican', 'Thai', 'Indian', 'French', 'Mediterranean', 'Korean'].map(cuisine => (
-            <label key={cuisine} className="filter-option">
-              <input 
-                type="checkbox" 
-                checked={selectedFilters.cuisine.has(cuisine.toLowerCase())}
-                onChange={() => handleFilterChange('cuisine', cuisine.toLowerCase())}
-              /> 
-              {cuisine}
-            </label>
-          ))}
-        </div>
+        {renderFilterModal('cuisine')}
       </div>
     </div>
   );
