@@ -1,6 +1,13 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 function Header() {
+  const location = useLocation();
+  
+  // Don't render the header on the homepage
+  if (location.pathname === '/') {
+    return null;
+  }
+
   return (
     <div className="site-header">
       <div className="site-header-content">

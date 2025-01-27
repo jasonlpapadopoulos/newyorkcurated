@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { cuisines } from '../../../../data/sample-restaurants';
 
 interface FiltersProps {
   selectedFilters: {
@@ -31,25 +30,14 @@ export default function Filters({ selectedFilters, onFilterChange }: FiltersProp
     setActiveFilter(activeFilter === filter ? null : filter);
   };
 
-  // Close filters when clicking outside
-  const handleClickOutside = (e: React.MouseEvent) => {
-    const target = e.target as HTMLElement;
-    if (!target.closest('.filter-group')) {
-      setActiveFilter(null);
-    }
-  };
-
   return (
-    <div className="filters-container" onClick={handleClickOutside}>
+    <div className="filters-container">
       <div className="filter-group">
         <button 
           className={`filter-button ${activeFilter === 'meal' ? 'active' : ''}`}
           onClick={() => toggleFilter('meal')}
         >
           Meal
-          <span className="filter-count">
-            {selectedFilters.meals.size ? selectedFilters.meals.size : ''}
-          </span>
         </button>
         <div className={`filter-options ${activeFilter === 'meal' ? 'show' : ''}`}>
           <label className="filter-option">
@@ -93,9 +81,6 @@ export default function Filters({ selectedFilters, onFilterChange }: FiltersProp
           onClick={() => toggleFilter('price')}
         >
           Price
-          <span className="filter-count">
-            {selectedFilters.price.size ? selectedFilters.price.size : ''}
-          </span>
         </button>
         <div className={`filter-options ${activeFilter === 'price' ? 'show' : ''}`}>
           <label className="filter-option">
@@ -139,12 +124,9 @@ export default function Filters({ selectedFilters, onFilterChange }: FiltersProp
           onClick={() => toggleFilter('cuisine')}
         >
           Cuisine
-          <span className="filter-count">
-            {selectedFilters.cuisine.size ? selectedFilters.cuisine.size : ''}
-          </span>
         </button>
         <div className={`filter-options ${activeFilter === 'cuisine' ? 'show' : ''}`}>
-          {cuisines.map(cuisine => (
+          {['American', 'Italian', 'Japanese', 'Chinese', 'Mexican', 'Thai', 'Indian', 'French', 'Mediterranean', 'Korean'].map(cuisine => (
             <label key={cuisine} className="filter-option">
               <input 
                 type="checkbox" 

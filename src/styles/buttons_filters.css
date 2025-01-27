@@ -46,13 +46,13 @@
   .choice-button {
     background-color: black;
     color: white;
-    border: 0.1rem solid white; /* Replacing 1px with 0.1rem */
-    padding: 0.3rem 0.6rem; /* Replacing 5px 10px with rem units */
-    margin: 0 0.3rem; /* Replacing 0 5px with rem units */
+    border: 0.1rem solid white;
+    padding: 0.3rem 0.6rem;
+    margin: 0 0.3rem;
     cursor: pointer;
-    transition: all 0.3s ease; /* Keeping the transition duration in seconds */
-    font-size: 1.25rem; /* Control the font size (optional, default is 1rem) */
-    border-radius: 0.2rem; /* Add optional rounding (e.g., 2px -> 0.2rem) */
+    transition: all 0.3s ease;
+    font-size: 1.25rem;
+    border-radius: 0.2rem;
 }
   
   .choice-button:hover {
@@ -68,10 +68,10 @@
     position: sticky;
     top: 0;
     display: flex;
-    background-color: black; /* Ensure background covers content when scrolling */
-      z-index: 10; /* Keep filters above scrolling content */
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Optional: adds a subtle shadow */
-      padding-bottom: 10px;
+    background-color: black;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding-bottom: 10px;
   }
   
   .filter-group {
@@ -83,7 +83,6 @@
   .filter-button {
     width: 100%;
     padding: 12px 20px;
-    /* background-color: #202020; */
     background: linear-gradient(45deg, rgba(255, 107, 107, 0.2), rgba(78, 205, 196, 0.2));
     border: 2px solid white;
     color: white;
@@ -105,24 +104,23 @@
     color: black;
   }
   
-  .filter-options {
-    position: absolute;
-    max-height: 300px;
-    overflow-y: auto;
-    top: calc(100% + 10px);
-    /* left: 0; */
-      right: 0;
-    width: 120%;
-    background-color: rgb(20, 20, 20);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 15px;
-    padding: 15px;
-    display: none;
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: all 0.3s ease;
-    z-index: 1000;
-  }
+.filter-options {
+  position: absolute;
+  max-height: 300px;
+  overflow-y: auto;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 120%;
+  background-color: rgb(20, 20, 20);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  padding: 15px;
+  visibility: hidden; /* Change from display: none */
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
   
   .filter-options::-webkit-scrollbar {
       width: 10px;
@@ -137,16 +135,15 @@
       background-color: #555;
   }
 
-  .filter-options.show {
-    display: block;
-    opacity: 1;
-    transform: translateY(0);
-    width: auto; /* Allows it to grow based on content */
-    min-width: fit-content; /* Ensures it matches the content */
-    max-width: 300px; /* Sets a maximum width */
-    white-space: nowrap; /* Prevents wrapping of long words */
-
-    text-overflow: ellipsis; /* Adds ellipsis if content overflows */
+.filter-options.show {
+  visibility: visible; /* Change from display: block */
+  opacity: 1;
+  transform: translateY(0);
+  width: auto;
+  min-width: fit-content;
+  max-width: 300px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
   
   .filter-option {
@@ -250,12 +247,10 @@
   
   .bottom-toggle-button {
     position: fixed;
-    bottom: 20px; /* Slightly elevated from bottom */
-    left: 75%; /* Center horizontally */
-    transform: translateX(-50%); /* Ensure precise centering */
-    z-index: 100; /* Ensure button stays on top */
-    
-    /* Optional styling to make button look modern */
+    bottom: 20px;
+    left: 75%;
+    transform: translateX(-50%);
+    z-index: 100;
     padding: 10px 20px;
     background: linear-gradient(90deg, rgba(255, 107, 107, 0.3), rgba(78, 205, 196, 0.3));
     background-color: black;
@@ -266,6 +261,7 @@
     cursor: pointer;
     transition: all 0.3s ease;
 }
+
 .bottom-toggle-button:hover {
     background-color: #0056b3;
     box-shadow: 0 6px 8px rgba(0,0,0,0.15);

@@ -41,11 +41,11 @@ export default function Results() {
         </div>
 
         <div className="separator-section">
-          <ResizeHandle onResize={handleResize} />
           <Filters 
             selectedFilters={selectedFilters}
             onFilterChange={setSelectedFilters}
           />
+          <ResizeHandle onResize={handleResize} />
         </div>
 
         <div 
