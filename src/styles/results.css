@@ -94,12 +94,12 @@
 /* Restaurant List */
 #restaurant-list {
   flex: 1;
-  overflow-y: scroll;
+  position: relative;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
   background: #000;
-  position: relative;
-  transition: height 0.2s ease;
+  height: calc(100% - 40px) !important;
 }
 
 /* Filters */
@@ -232,41 +232,36 @@
 
 /* Restaurant List Styles */
 .restaurant-list {
-  padding: 20px;
+  height: 100%;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-y: contain;
-  touch-action: pan-y;
+  padding: 20px;
 }
 
 /* Responsive Styles */
 @media (max-width: 768px) {
-  .filter-button {
-    padding: 6px 15px;
-    font-size: 14px;
-  }
-
-  .filter-modal {
-    width: 90%;
-    max-height: 80vh;
-  }
-
   .results-container {
     top: 60px;
   }
-
-  .resize-handle {
-    height: 48px; /* Even larger touch target on mobile */
-  }
-
-  .resize-handle-indicator {
-    width: 60px; /* Wider indicator on mobile */
-    height: 6px; /* Thicker indicator on mobile */
-  }
-
+  
   #restaurant-list {
-    height: calc(100% - 40px) !important; /* Force correct height on mobile */
-    overflow-y: auto !important; /* Force scrolling on mobile */
+    height: calc(100% - 48px) !important; /* Account for larger resize handle */
+    overflow-y: auto !important;
     -webkit-overflow-scrolling: touch;
     position: relative;
+  }
+  
+  .restaurant-list {
+    padding: 12px; /* Slightly smaller padding on mobile */
+  }
+  
+  .place-box {
+    margin: 12px auto;
+    padding: 12px;
+  }
+  
+  .place-image {
+    height: 200px; /* Smaller images on mobile */
   }
 }
