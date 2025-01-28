@@ -32,7 +32,6 @@ export default function ResizeHandle({ onResize }: ResizeHandleProps) {
         list.style.height = `${100 - newMapHeight - 8}%`;
       }
       
-      // Also call onResize to keep state in sync
       onResize(newMapHeight);
     };
 
@@ -63,8 +62,11 @@ export default function ResizeHandle({ onResize }: ResizeHandleProps) {
 
     const handleMouseMove = (e: MouseEvent) => handleMove(e.clientY);
     const handleTouchMove = (e: TouchEvent) => {
-      e.preventDefault(); // Prevent scrolling while dragging
-      handleMove(e.touches[0].clientY);
+      // Only prevent default if we're actually dragging
+      if (isDraggingRef.current) {
+        e.preventDefault();
+        handleMove(e.touches[0].clientY);
+      }
     };
 
     document.addEventListener('mousemove', handleMouseMove);
@@ -105,15 +107,16 @@ export default function ResizeHandle({ onResize }: ResizeHandleProps) {
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
-    e.preventDefault(); // Prevent any default touch behavior
+    // Only prevent default for the handle itself
+    e.preventDefault();
     handleStart(e.touches[0].clientY);
   };
 
   return (
     <div 
       className={`resize-handle ${isSnapping ? 'snapping' : ''}`}
-      onTouchStart={handleTouchStart}
       onMouseDown={handleMouseDown}
+      onTouchStart={handleTouchStart}
     >
       <div className="resize-handle-bar">
         <div className="resize-handle-indicator" />
