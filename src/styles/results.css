@@ -9,7 +9,6 @@
   flex-direction: column;
   overflow: hidden;
   background: #000;
-  -webkit-overflow-scrolling: touch;
 }
 
 /* Map View */
@@ -17,10 +16,10 @@
   width: 100%;
   height: 33%;
   position: relative;
-  transition: height 0.3s ease;
-  min-height: 10%;
-  max-height: 90%;
+  min-height: 5%;
+  max-height: 95%;
   z-index: 1;
+  transition: height 0.2s ease;
 }
 
 /* Separator Section */
@@ -34,17 +33,28 @@
 /* Resize Handle */
 .resize-handle {
   width: 100%;
-  height: 24px;
+  height: 40px;
   cursor: row-resize;
   display: flex;
   align-items: center;
   justify-content: center;
   user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
   touch-action: none;
+  background: rgba(255, 255, 255, 0.05);
+  position: relative;
+  z-index: 1000; /* Ensure handle is above other elements */
 }
 
-.resize-handle.snapping .resize-handle-bar {
-  transition: transform 0.3s ease;
+.resize-handle:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.resize-handle.snapping #map-view,
+.resize-handle.snapping #restaurant-list {
+  transition: height 0.3s ease;
 }
 
 .resize-handle-bar {
@@ -61,25 +71,35 @@
   height: 4px;
   background: rgba(255, 255, 255, 0.3);
   border-radius: 2px;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .resize-handle:hover .resize-handle-indicator {
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.7);
+  width: 50px;
 }
 
-.resize-handle:active .resize-handle-indicator {
-  background: rgba(255, 255, 255, 0.7);
+/* Ensure smooth transitions */
+#map-view,
+#restaurant-list {
+  transition: height 0.3s ease;
+}
+
+/* Disable transitions during drag */
+.resize-handle.dragging #map-view,
+.resize-handle.dragging #restaurant-list {
+  transition: none;
 }
 
 /* Restaurant List */
 #restaurant-list {
   flex: 1;
-  overflow-y: auto;
+  overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
   background: #000;
   position: relative;
+  transition: height 0.2s ease;
 }
 
 /* Filters */
@@ -215,6 +235,7 @@
   padding: 20px;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-y: contain;
+  touch-action: pan-y;
 }
 
 /* Responsive Styles */
@@ -231,5 +252,21 @@
 
   .results-container {
     top: 60px;
+  }
+
+  .resize-handle {
+    height: 48px; /* Even larger touch target on mobile */
+  }
+
+  .resize-handle-indicator {
+    width: 60px; /* Wider indicator on mobile */
+    height: 6px; /* Thicker indicator on mobile */
+  }
+
+  #restaurant-list {
+    height: calc(100% - 40px) !important; /* Force correct height on mobile */
+    overflow-y: auto !important; /* Force scrolling on mobile */
+    -webkit-overflow-scrolling: touch;
+    position: relative;
   }
 }

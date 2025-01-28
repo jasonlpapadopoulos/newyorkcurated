@@ -33,12 +33,22 @@ export default function Results() {
         }
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  const handleResize = (newHeight: number) => {
+    setMapHeight(newHeight);
+    // Ensure we're updating both elements together
+    const mapView = document.getElementById('map-view');
+    const list = document.getElementById('restaurant-list');
+    if (mapView && list) {
+      mapView.style.height = `${newHeight}%`;
+      list.style.height = `${100 - newHeight - 8}%`;
+    }
+  };
 
   return (
     <>
@@ -49,7 +59,6 @@ export default function Results() {
           content={`Discover the best ${category} spots in New York City`} 
         />
       </Helmet>
-
       <div className="results-container">
         <div 
           id="map-view" 
@@ -57,15 +66,13 @@ export default function Results() {
         >
           <Map restaurants={sampleRestaurants} />
         </div>
-
         <div className="separator-section">
-          <ResizeHandle onResize={setMapHeight} />
+          <ResizeHandle onResize={handleResize} />
           <Filters 
             selectedFilters={selectedFilters}
             onFilterChange={setSelectedFilters}
           />
         </div>
-
         <div 
           id="restaurant-list"
           style={{ height: `${100 - mapHeight - 8}%` }}
