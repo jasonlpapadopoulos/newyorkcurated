@@ -22,6 +22,45 @@
   transition: height 0.2s ease;
 }
 
+/* Custom popup styling */
+.maplibregl-popup {
+  z-index: 2;
+}
+
+.maplibregl-popup-content {
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-family: 'Roboto', sans-serif;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.maplibregl-popup-tip {
+  display: none;
+}
+
+/* Position controls away from header */
+.maplibregl-control-container {
+  margin-bottom: 20px;
+}
+
+/* Custom marker */
+.custom-marker {
+  width: 24px;
+  height: 24px;
+  background-color: #fff;
+  border: 2px solid #000;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.custom-marker:hover {
+  transform: scale(1.2);
+  background-color: #4ecdc4;
+}
+
 /* Separator Section */
 .separator-section {
   position: relative;

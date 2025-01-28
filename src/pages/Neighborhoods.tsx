@@ -1,6 +1,6 @@
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import neighborhoodsData from '../data/neighborhoods.json';
 
 interface Neighborhood {
@@ -86,7 +86,7 @@ function Neighborhoods() {
   const handleSubmit = () => {
     if (selectedNeighborhoods.length > 0) {
       localStorage.setItem('selectedNeighborhoods', JSON.stringify(selectedNeighborhoods));
-      navigate('/results?category=' + (category === 'eat' ? 'food' : 'drinks'));
+      navigate(`/results?category=${category === 'eat' ? 'food' : 'drinks'}&neighborhoods=${selectedNeighborhoods.join(',')}`);
     }
   };
 

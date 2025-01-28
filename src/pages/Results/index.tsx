@@ -6,18 +6,26 @@ import List from './components/List';
 import ResizeHandle from './components/ResizeHandle';
 import Filters from './components/Filters';
 import { sampleRestaurants } from '../../data/sample-restaurants';
-import 'leaflet/dist/leaflet.css';
 import '../../styles/places.css';
 
 export default function Results() {
   const [searchParams] = useSearchParams();
   const category = searchParams.get('category') || 'food';
+  const neighborhoodsParam = searchParams.get('neighborhoods');
   const [mapHeight, setMapHeight] = useState(33);
+  const [selectedRestaurantId, setSelectedRestaurantId] = useState<string | null>(null);
   const [selectedFilters, setSelectedFilters] = useState({
     meals: new Set<string>(),
     price: new Set<string>(),
     cuisine: new Set<string>()
   });
+
+  useEffect(() => {
+    if (neighborhoodsParam) {
+      const neighborhoods = neighborhoodsParam.split(',');
+      localStorage.setItem('selectedNeighborhoods', JSON.stringify(neighborhoods));
+    }
+  }, [neighborhoodsParam]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -39,9 +47,14 @@ export default function Results() {
     };
   }, []);
 
+  const handleMarkerClick = (restaurantId: string) => {
+    setSelectedRestaurantId(restaurantId);
+    // Set map height to 30% when a marker is clicked
+    setMapHeight(30);
+  };
+
   const handleResize = (newHeight: number) => {
     setMapHeight(newHeight);
-    // Ensure we're updating both elements together
     const mapView = document.getElementById('map-view');
     const list = document.getElementById('restaurant-list');
     if (mapView && list) {
@@ -64,7 +77,10 @@ export default function Results() {
           id="map-view" 
           style={{ height: `${mapHeight}%` }}
         >
-          <Map restaurants={sampleRestaurants} />
+          <Map 
+            restaurants={sampleRestaurants} 
+            onMarkerClick={handleMarkerClick}
+          />
         </div>
         <div className="separator-section">
           <ResizeHandle onResize={handleResize} />
@@ -77,7 +93,10 @@ export default function Results() {
           id="restaurant-list"
           style={{ height: `${100 - mapHeight - 8}%` }}
         >
-          <List restaurants={sampleRestaurants} />
+          <List 
+            restaurants={sampleRestaurants}
+            selectedRestaurantId={selectedRestaurantId}
+          />
         </div>
       </div>
     </>
