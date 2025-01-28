@@ -3,9 +3,9 @@ import { Helmet } from 'react-helmet-async';
 import { useState } from 'react';
 
 function Home() {
-  const [activeIndex, setActiveIndex] = useState(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
-  const toggleAccordion = (index) => {
+  const toggleAccordion = (index: number): void => {
     setActiveIndex(index === activeIndex ? null : index);
   };
 
