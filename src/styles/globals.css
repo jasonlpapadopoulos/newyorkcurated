@@ -1,0 +1,15 @@
+@import url('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css');
+
+/* Import modular CSS files */
+@import './general.css';
+@import './banner.css';
+@import './account.css';
+@import './buttons_filters.css';
+@import './categories.css';
+@import './checkboxes.css';
+@import './icons.css';
+@import './individual_place.css';
+@import './map_views.css';
+@import './sections.css';
+@import './animations.css';
+@import './results.css';
