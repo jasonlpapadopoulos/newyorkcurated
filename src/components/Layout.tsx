@@ -1,7 +1,11 @@
-import { Outlet } from 'react-router-dom';
+import type { ReactNode } from 'react';
 
-function Layout() {
-  return <Outlet />;
+interface LayoutProps {
+  children: ReactNode;
+}
+
+function Layout({ children }: LayoutProps) {
+  return <>{children}</>;
 }
 
 export default Layout;
