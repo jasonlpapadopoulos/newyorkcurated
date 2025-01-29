@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 function SideMenu() {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,8 +18,8 @@ function SideMenu() {
         </div>
       </button>
       <nav className="menu-content">
-        <Link to="/account">My Account</Link>
-        <Link to="/about">About</Link>
+        <Link href="/account">My Account</Link>
+        <Link href="/about">About</Link>
       </nav>
     </div>
   );
