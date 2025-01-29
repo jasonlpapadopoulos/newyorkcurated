@@ -56,10 +56,13 @@ export default function List({ restaurants, selectedRestaurantId }: ListProps) {
           <a href={`/place/${restaurant.id}`}>
             <div className="place-content">
               <h3 className="place-name">{restaurant.name}</h3>
-              <p className="place-neighborhood">{getNeighborhoodName(restaurant.neighborhood)}</p>
-              <p className="place-meta">
-                {restaurant.cuisine}, {restaurant.price}
-              </p>
+              <div className="place-info">
+                <span className="place-neighborhood">{getNeighborhoodName(restaurant.neighborhood)}</span>
+                <span>·</span>
+                <span className="place-cuisine">{restaurant.cuisine}</span>
+                <span>·</span>
+                <span>{restaurant.price}</span>
+              </div>
               <img 
                 src={restaurant.imageUrl} 
                 alt={restaurant.name}

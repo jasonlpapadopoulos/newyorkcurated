@@ -45,7 +45,20 @@ export default function ResizeHandle({ onResize }: ResizeHandleProps) {
       setIsSnapping(true);
       const mapView = document.getElementById('map-view');
       const currentHeight = mapView ? parseFloat(mapView.style.height) : 33;
-      const targetHeight = currentHeight > 50 ? 95 : 5;
+      
+      // Determine snap target based on current height
+      let targetHeight;
+      if (currentHeight > 70) {
+        targetHeight = 95; // Full map view
+      } else if (currentHeight < 30) {
+        targetHeight = 5; // Full list view
+      } else if (currentHeight > 45) {
+        targetHeight = 66; // Map dominant
+      } else if (currentHeight < 35) {
+        targetHeight = 20; // List dominant
+      } else {
+        targetHeight = 33; // Balanced view
+      }
       
       // Re-enable transitions for snap animation
       if (mapView) {

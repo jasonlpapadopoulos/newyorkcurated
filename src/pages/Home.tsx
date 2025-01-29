@@ -35,9 +35,11 @@ function Home() {
           <h1 className="big-title">New York Curated</h1>
           <p className="subtitle">The best things to do in New York.</p>
           <p className="comment">Handpicked, like upstate apples.</p>
-          <Link to="/what-are-you-looking-for" className="explore-button">
-            Explore
-          </Link>
+          <div className="button-container">
+            <Link to="/what-are-you-looking-for" className="explore-button">
+              Explore
+            </Link>
+          </div>
         </div>
       </div>
       <section className="faq-section">

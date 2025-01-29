@@ -1,13 +1,14 @@
 .categories-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
-  width: min(90%, 600px);
+  gap: 2.5rem;  /* Increased gap */
+  width: min(90%, 800px);  /* Increased from 600px to 800px */
   margin: 2rem auto;
   padding: 0 1rem;
   opacity: 0;
   animation: fadeIn 1s ease-in forwards;
   animation-delay: 0.5s;
+  height: 25vh;
 }
 
 .category-option {
@@ -59,12 +60,22 @@
 /* Mobile-specific adjustments */
 @media screen and (max-width: 768px) {
   .categories-container {
-    gap: 1rem;
+    gap: 1.5rem;  /* Increased mobile gap */
     padding: 0 1rem;
     width: 95%;
   }
-
   .category-text {
-    font-size: clamp(1.25rem, 4vw, 1.5rem);
+    font-size: clamp(1.25rem, 5vw, 1.75rem);  /* Slightly larger text */
+  }
+}
+
+/* Add a larger screen breakpoint for even bigger displays */
+@media screen and (min-width: 1200px) {
+  .categories-container {
+    width: min(90%, 1000px);  /* Allow even larger on big screens */
+    gap: 3rem;  /* Larger gap for bigger screens */
+  }
+  .category-text {
+    font-size: clamp(1.5rem, 2.5vw, 2.75rem);
   }
 }

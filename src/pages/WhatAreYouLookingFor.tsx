@@ -37,14 +37,14 @@ function WhatAreYouLookingFor() {
 
       <h2 className="title">What are you looking for?</h2>
 
-      <div className="categories-container">
+      <div className="categories-container" style={{ animationDelay: '0.375s' }}>
         <CategoryOption
-          backgroundImage="https://plus.unsplash.com/premium_photo-1673108852141-e8c3c22a4a22?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Zm9vZHxlbnwwfHwwfHx8MA%3D%3D"
+          backgroundImage="https://plus.unsplash.com/premium_photo-1698867575634-d39ef95fa6a7?q=80&w=2970&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           label="Food"
           onClick={() => setCategory('eat')}
         />
         <CategoryOption
-          backgroundImage="https://images.unsplash.com/photo-1575023782549-62ca0d244b39?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bWFydGluaXxlbnwwfHwwfHx8MA%3D%3D"
+          backgroundImage="https://images.unsplash.com/photo-1593433855865-6046a14605b9?q=80&w=2970&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           label="Drinks"
           onClick={() => setCategory('drink')}
         />

@@ -1,5 +1,4 @@
-@import url('https://cdnjs.cloudflare.com/ajax/libs/roboto/2.0.0/css/roboto.min.css');
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap');
+/* Import leaflet CSS */
 @import url('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css');
 
 /* Import modular CSS files */
