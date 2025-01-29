@@ -1,0 +1,81 @@
+.categories-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2.5rem;  /* Increased gap */
+  width: min(90%, 800px);  /* Increased from 600px to 800px */
+  margin: 2rem auto;
+  padding: 0 1rem;
+  opacity: 0;
+  animation: fadeIn 1s ease-in forwards;
+  animation-delay: 0.5s;
+  height: 25vh;
+}
+
+.category-option {
+  aspect-ratio: 1/1;
+  width: 100%;
+  border-radius: 15px;
+  border: 2px solid white;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.category-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  transition: background-color 0.3s ease;
+}
+
+.category-option:hover {
+  transform: translateY(-5px);
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+.category-option:hover .category-overlay {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.category-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: clamp(1.25rem, 2vw, 2.5rem);
+  font-weight: bold;
+  text-align: center;
+  z-index: 2;
+  width: 100%;
+  padding: 1rem;
+}
+
+/* Mobile-specific adjustments */
+@media screen and (max-width: 768px) {
+  .categories-container {
+    gap: 1.5rem;  /* Increased mobile gap */
+    padding: 0 1rem;
+    width: 95%;
+  }
+  .category-text {
+    font-size: clamp(1.25rem, 5vw, 1.75rem);  /* Slightly larger text */
+  }
+}
+
+/* Add a larger screen breakpoint for even bigger displays */
+@media screen and (min-width: 1200px) {
+  .categories-container {
+    width: min(90%, 1000px);  /* Allow even larger on big screens */
+    gap: 3rem;  /* Larger gap for bigger screens */
+  }
+  .category-text {
+    font-size: clamp(1.5rem, 2.5vw, 2.75rem);
+  }
+}

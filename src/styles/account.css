@@ -1,0 +1,15 @@
+.account-section {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: white;
+    text-decoration: none;
+  }
+  
+  .account-section:hover {
+    opacity: 0.8;
+  }
+  
+  .account-section span {
+    margin-right: 10px;
+  }
