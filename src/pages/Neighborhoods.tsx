@@ -1,6 +1,7 @@
-import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
+import { useRouter } from 'next/router';
+import Head from 'next/head';
 import { useState } from 'react';
+import type { NextPage } from 'next';
 import neighborhoodsData from '../data/neighborhoods.json';
 
 interface Neighborhood {
@@ -29,10 +30,9 @@ interface NeighborhoodsData {
   };
 }
 
-function Neighborhoods() {
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const category = searchParams.get('to');
+const Neighborhoods: NextPage = () => {
+  const router = useRouter();
+  const { to: category } = router.query;
   const [selectedNeighborhoods, setSelectedNeighborhoods] = useState<string[]>([]);
 
   const title = category === 'eat' ? 'Food' : 'Drinks';
@@ -40,7 +40,6 @@ function Neighborhoods() {
     ? (neighborhoodsData as NeighborhoodsData).food 
     : (neighborhoodsData as NeighborhoodsData).drinks;
 
-  // Handle section toggle
   const toggleSection = (event: React.MouseEvent<HTMLDivElement>) => {
     const header = event.currentTarget;
     const content = header.nextElementSibling as HTMLElement;
@@ -49,7 +48,6 @@ function Neighborhoods() {
     content.classList.toggle('open');
   };
 
-  // Handle select all functionality
   const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>, section: HTMLElement) => {
     const checkboxes = section.querySelectorAll<HTMLInputElement>('input[name="neighborhood"]');
     checkboxes.forEach(checkbox => {
@@ -58,7 +56,6 @@ function Neighborhoods() {
     updateSelectedNeighborhoods();
   };
 
-  // Handle individual checkbox changes
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>, section: HTMLElement) => {
     if (event.target.name === 'neighborhood') {
       const selectAll = section.querySelector<HTMLInputElement>('.select-all');
@@ -75,22 +72,19 @@ function Neighborhoods() {
     }
   };
 
-  // Update selected neighborhoods
   const updateSelectedNeighborhoods = () => {
     const selected = Array.from(document.querySelectorAll<HTMLInputElement>('input[name="neighborhood"]:checked'))
       .map(checkbox => checkbox.value);
     setSelectedNeighborhoods(selected);
   };
 
-  // Handle submit
   const handleSubmit = () => {
     if (selectedNeighborhoods.length > 0) {
       localStorage.setItem('selectedNeighborhoods', JSON.stringify(selectedNeighborhoods));
-      navigate(`/results?category=${category === 'eat' ? 'food' : 'drinks'}&neighborhoods=${selectedNeighborhoods.join(',')}`);
+      router.push(`/results?category=${category === 'eat' ? 'food' : 'drinks'}&neighborhoods=${selectedNeighborhoods.join(',')}`);
     }
   };
 
-  // Render Manhattan areas (Uptown, Midtown, Downtown)
   const renderManhattanAreas = (areas: ManhattanArea) => {
     return Object.entries(areas).map(([areaName, neighborhoods]) => (
       <div key={areaName} className="section area">
@@ -129,7 +123,6 @@ function Neighborhoods() {
     ));
   };
 
-  // Render borough section (Brooklyn, Queens)
   const renderBoroughSection = (boroughName: string, neighborhoods: Neighborhood[] | undefined) => {
     if (!neighborhoods) return null;
     
@@ -172,10 +165,10 @@ function Neighborhoods() {
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>NYC {title} Neighborhoods</title>
         <meta name="description" content={`Discover the best neighborhoods for ${title.toLowerCase()} in New York City.`} />
-      </Helmet>
+      </Head>
       <h4 className="title">Neighborhood</h4>
       <div className="sections-container">
         {data.manhattan && (
@@ -190,7 +183,6 @@ function Neighborhoods() {
           </div>
         )}
         {renderBoroughSection('Brooklyn', data.brooklyn)}
-        {/* Only render Queens section for food category */}
         {category === 'eat' && renderBoroughSection('Queens', (data as NeighborhoodsData['food']).queens)}
       </div>
       <button 
@@ -202,6 +194,6 @@ function Neighborhoods() {
       </button>
     </>
   );
-}
+};
 
 export default Neighborhoods;

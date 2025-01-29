@@ -1,8 +1,9 @@
-import { Link } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 import { useState } from 'react';
+import Link from 'next/link';
+import Head from 'next/head';
+import type { NextPage } from 'next';
 
-function Home() {
+const Home: NextPage = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   const toggleAccordion = (index: number): void => {
@@ -26,17 +27,17 @@ function Home() {
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>New York Curated</title>
         <meta name="description" content="The best things to do in New York." />
-      </Helmet>
+      </Head>
       <div className="hero">
         <div className="hero-content">
           <h1 className="big-title">New York Curated</h1>
           <p className="subtitle">The best things to do in New York.</p>
           <p className="comment">Handpicked, like upstate apples.</p>
           <div className="button-container">
-            <Link to="/what-are-you-looking-for" className="explore-button">
+            <Link href="/what-are-you-looking-for" className="explore-button">
               Explore
             </Link>
           </div>
@@ -62,6 +63,6 @@ function Home() {
       </section>
     </>
   );
-}
+};
 
 export default Home;

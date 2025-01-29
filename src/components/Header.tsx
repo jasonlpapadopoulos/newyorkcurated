@@ -1,10 +1,11 @@
-import { Link, useLocation } from 'react-router-dom';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 function Header() {
-  const location = useLocation();
+  const router = useRouter();
   
   // Don't render the header on the homepage
-  if (location.pathname === '/') {
+  if (router.pathname === '/') {
     return null;
   }
 
@@ -13,7 +14,7 @@ function Header() {
       <div className="site-header-content">
         <div className="header-top">
           <div className="banner">
-            <Link to="/">nyCurated</Link>
+            <Link href="/">nyCurated</Link>
           </div>
         </div>
       </div>
