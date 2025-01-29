@@ -6,60 +6,58 @@ import List from './components/List';
 import ResizeHandle from './components/ResizeHandle';
 import Filters from './components/Filters';
 import { sampleRestaurants } from '../../data/sample-restaurants';
+import { sampleBars } from '../../data/sample-bars';
+import { Restaurant } from '../../types/restaurant';
+import { Bar } from '../../types/bar';
 import '../../styles/places.css';
+
+type Place = Restaurant | Bar;
 
 export default function Results() {
   const [searchParams] = useSearchParams();
   const category = searchParams.get('category') || 'food';
-  const neighborhoodsParam = searchParams.get('neighborhoods');
+  const neighborhoods = searchParams.get('neighborhoods')?.split(',') || [];
+  
   const [mapHeight, setMapHeight] = useState(33);
-  const [selectedRestaurantId, setSelectedRestaurantId] = useState<string | null>(null);
+  const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [selectedFilters, setSelectedFilters] = useState({
     meals: new Set<string>(),
     price: new Set<string>(),
-    cuisine: new Set<string>()
+    cuisine: new Set<string>(),
+    setting: new Set<string>()
   });
 
-  useEffect(() => {
-    if (neighborhoodsParam) {
-      const neighborhoods = neighborhoodsParam.split(',');
-      localStorage.setItem('selectedNeighborhoods', JSON.stringify(neighborhoods));
+  const places = category === 'drinks' ? sampleBars : sampleRestaurants;
+  const filteredPlaces = places.filter(place => {
+    const neighborhoodMatch = neighborhoods.includes(place.neighborhood);
+    const priceMatch = selectedFilters.price.size === 0 || selectedFilters.price.has(place.price);
+    
+    let categoryMatch = true;
+    if (category === 'food') {
+      const mealMatch = selectedFilters.meals.size === 0 || 
+        [...selectedFilters.meals].some(meal => place.meals[meal.toLowerCase() as keyof typeof place.meals]);
+      const cuisineMatch = selectedFilters.cuisine.size === 0 || 
+        selectedFilters.cuisine.has(place.cuisine.toLowerCase());
+      categoryMatch = mealMatch && cuisineMatch;
+    } else {
+      const settingMatch = selectedFilters.setting.size === 0 || 
+        selectedFilters.setting.has(place.setting);
+      categoryMatch = settingMatch;
     }
-  }, [neighborhoodsParam]);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
-      if (!target.closest('.filter-group')) {
-        const activeFilter = document.querySelector('.filter-button.active');
-        if (activeFilter) {
-          activeFilter.classList.remove('active');
-          const options = activeFilter.nextElementSibling;
-          if (options) {
-            options.classList.remove('show');
-          }
-        }
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+    return neighborhoodMatch && priceMatch && categoryMatch;
+  });
 
-  const handleMarkerClick = (restaurantId: string) => {
-    setSelectedRestaurantId(restaurantId);
-    // Set map height to 30% when a marker is clicked
-    setMapHeight(30);
+  const handleMarkerClick = (place: Place) => {
+    setSelectedPlace(place);
+    setMapHeight(95); // Set to map dominant view with minimal list view
   };
 
   const handleResize = (newHeight: number) => {
     setMapHeight(newHeight);
-    const mapView = document.getElementById('map-view');
-    const list = document.getElementById('restaurant-list');
-    if (mapView && list) {
-      mapView.style.height = `${newHeight}%`;
-      list.style.height = `${100 - newHeight - 8}%`;
+    // Clear selected place when resizing
+    if (newHeight < 90) {
+      setSelectedPlace(null);
     }
   };
 
@@ -73,32 +71,57 @@ export default function Results() {
         />
       </Helmet>
       <div className="results-container">
-        <div 
-          id="map-view" 
-          style={{ height: `${mapHeight}%` }}
-        >
+        <div id="map-view" style={{ height: `${mapHeight}%` }}>
           <Map 
-            restaurants={sampleRestaurants} 
+            places={filteredPlaces} 
             onMarkerClick={handleMarkerClick}
           />
         </div>
         <div className="separator-section">
           <ResizeHandle onResize={handleResize} />
           <Filters 
+            category={category}
             selectedFilters={selectedFilters}
             onFilterChange={setSelectedFilters}
           />
         </div>
-        <div 
-          id="restaurant-list"
-          style={{ height: `${100 - mapHeight - 8}%` }}
-        >
+        <div id="restaurant-list" style={{ height: `${100 - mapHeight - 8}%` }}>
           <List 
-            restaurants={sampleRestaurants}
-            selectedRestaurantId={selectedRestaurantId}
+            places={filteredPlaces}
+            selectedPlaceId={selectedPlace?.id || null}
           />
         </div>
       </div>
+
+      {/* Place Toaster */}
+      {selectedPlace && (
+        <div className="place-toaster show">
+          <div className="place-content">
+            <h3 className="place-name">{selectedPlace.name}</h3>
+            <div className="place-info">
+              <span>{selectedPlace.neighborhood}</span>
+              <span>·</span>
+              <span>{'cuisine' in selectedPlace ? selectedPlace.cuisine : selectedPlace.setting}</span>
+              <span>·</span>
+              <span>{selectedPlace.price}</span>
+            </div>
+            <img 
+              src={selectedPlace.imageUrl} 
+              alt={selectedPlace.name}
+              className="place-image"
+            />
+            <div className="description-container">
+              <p className="place-description">{selectedPlace.description}</p>
+            </div>
+            <button 
+              className="place-toaster-close"
+              onClick={() => setSelectedPlace(null)}
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }

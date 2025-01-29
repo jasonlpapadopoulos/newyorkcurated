@@ -49,7 +49,7 @@ export default function ResizeHandle({ onResize }: ResizeHandleProps) {
       // Determine snap target based on current height
       let targetHeight;
       if (currentHeight > 70) {
-        targetHeight = 95; // Full map view
+        targetHeight = 100; // Full map view
       } else if (currentHeight < 30) {
         targetHeight = 5; // Full list view
       } else if (currentHeight > 45) {

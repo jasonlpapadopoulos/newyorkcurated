@@ -1,15 +1,18 @@
 import { useState } from 'react';
+import { settings } from '../../../../data/sample-bars';
 
 interface FiltersProps {
+  category: string;
   selectedFilters: {
     meals: Set<string>;
     price: Set<string>;
     cuisine: Set<string>;
+    setting: Set<string>;
   };
   onFilterChange: (filters: any) => void;
 }
 
-export default function Filters({ selectedFilters, onFilterChange }: FiltersProps) {
+export default function Filters({ category, selectedFilters, onFilterChange }: FiltersProps) {
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
 
   const handleFilterChange = (type: string, value: string) => {
@@ -32,7 +35,7 @@ export default function Filters({ selectedFilters, onFilterChange }: FiltersProp
 
   const renderFilterModal = (type: string) => {
     const options = {
-      meals: [ // Changed from 'meal' to 'meals' to match the selectedFilters interface
+      meals: [
         { value: 'breakfast', label: 'Breakfast' },
         { value: 'brunch', label: 'Brunch' },
         { value: 'lunch', label: 'Lunch' },
@@ -47,13 +50,15 @@ export default function Filters({ selectedFilters, onFilterChange }: FiltersProp
       cuisine: [
         'American', 'Italian', 'Japanese', 'Chinese', 'Mexican',
         'Thai', 'Indian', 'French', 'Mediterranean', 'Korean'
-      ].map(c => ({ value: c.toLowerCase(), label: c }))
+      ].map(c => ({ value: c.toLowerCase(), label: c })),
+      setting: settings.map(s => ({ value: s, label: s }))
     };
 
     const titles = {
       meals: 'Meal',
       price: 'Price Range',
-      cuisine: 'Cuisine'
+      cuisine: 'Cuisine',
+      setting: 'Setting'
     };
 
     return (
@@ -86,16 +91,6 @@ export default function Filters({ selectedFilters, onFilterChange }: FiltersProp
     <div className="filters-container">
       <div className="filter-group">
         <button
-          className={`filter-button ${activeFilter === 'meals' ? 'active' : ''}`}
-          onClick={() => setActiveFilter(activeFilter === 'meals' ? null : 'meals')}
-        >
-          Meal {selectedFilters.meals.size > 0 && `(${selectedFilters.meals.size})`}
-        </button>
-        {renderFilterModal('meals')}
-      </div>
-
-      <div className="filter-group">
-        <button
           className={`filter-button ${activeFilter === 'price' ? 'active' : ''}`}
           onClick={() => setActiveFilter(activeFilter === 'price' ? null : 'price')}
         >
@@ -104,15 +99,39 @@ export default function Filters({ selectedFilters, onFilterChange }: FiltersProp
         {renderFilterModal('price')}
       </div>
 
-      <div className="filter-group">
-        <button
-          className={`filter-button ${activeFilter === 'cuisine' ? 'active' : ''}`}
-          onClick={() => setActiveFilter(activeFilter === 'cuisine' ? null : 'cuisine')}
-        >
-          Cuisine {selectedFilters.cuisine.size > 0 && `(${selectedFilters.cuisine.size})`}
-        </button>
-        {renderFilterModal('cuisine')}
-      </div>
+      {category === 'food' ? (
+        <>
+          <div className="filter-group">
+            <button
+              className={`filter-button ${activeFilter === 'meals' ? 'active' : ''}`}
+              onClick={() => setActiveFilter(activeFilter === 'meals' ? null : 'meals')}
+            >
+              Meal {selectedFilters.meals.size > 0 && `(${selectedFilters.meals.size})`}
+            </button>
+            {renderFilterModal('meals')}
+          </div>
+
+          <div className="filter-group">
+            <button
+              className={`filter-button ${activeFilter === 'cuisine' ? 'active' : ''}`}
+              onClick={() => setActiveFilter(activeFilter === 'cuisine' ? null : 'cuisine')}
+            >
+              Cuisine {selectedFilters.cuisine.size > 0 && `(${selectedFilters.cuisine.size})`}
+            </button>
+            {renderFilterModal('cuisine')}
+          </div>
+        </>
+      ) : (
+        <div className="filter-group">
+          <button
+            className={`filter-button ${activeFilter === 'setting' ? 'active' : ''}`}
+            onClick={() => setActiveFilter(activeFilter === 'setting' ? null : 'setting')}
+          >
+            Setting {selectedFilters.setting.size > 0 && `(${selectedFilters.setting.size})`}
+          </button>
+          {renderFilterModal('setting')}
+        </div>
+      )}
     </div>
   );
 }

@@ -1,9 +1,12 @@
 import { useEffect, useRef } from 'react';
 import { Restaurant } from '../../../../types/restaurant';
+import { Bar } from '../../../../types/bar';
+
+type Place = Restaurant | Bar;
 
 interface ListProps {
-  restaurants: Restaurant[];
-  selectedRestaurantId: string | null;
+  places: Place[];
+  selectedPlaceId: string | null;
 }
 
 const getNeighborhoodName = (value: string): string => {
@@ -33,44 +36,56 @@ const getNeighborhoodName = (value: string): string => {
   return names[value] || value;
 };
 
-export default function List({ restaurants, selectedRestaurantId }: ListProps) {
+export default function List({ places, selectedPlaceId }: ListProps) {
   const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (selectedRestaurantId && listRef.current) {
-      const selectedElement = listRef.current.querySelector(`[data-restaurant-id="${selectedRestaurantId}"]`);
+    if (selectedPlaceId && listRef.current) {
+      const selectedElement = listRef.current.querySelector(`[data-place-id="${selectedPlaceId}"]`);
       if (selectedElement) {
         selectedElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     }
-  }, [selectedRestaurantId]);
+  }, [selectedPlaceId]);
+
+  if (!places || places.length === 0) {
+    return (
+      <div className="restaurant-list" ref={listRef}>
+        <p className="no-results">No places found matching your criteria.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="restaurant-list" ref={listRef}>
-      {restaurants.map(restaurant => (
+      {places.map(place => (
         <div 
-          key={restaurant.id} 
-          className={`place-box ${selectedRestaurantId === restaurant.id ? 'place-box-selected' : ''}`}
-          data-restaurant-id={restaurant.id}
+          key={place.id} 
+          className={`place-box ${selectedPlaceId === place.id ? 'place-box-selected' : ''}`}
+          data-place-id={place.id}
         >
-          <a href={`/place/${restaurant.id}`}>
+          <a href={`/place/${place.id}`}>
             <div className="place-content">
-              <h3 className="place-name">{restaurant.name}</h3>
+              <h3 className="place-name">{place.name}</h3>
               <div className="place-info">
-                <span className="place-neighborhood">{getNeighborhoodName(restaurant.neighborhood)}</span>
+                <span className="place-neighborhood">{getNeighborhoodName(place.neighborhood)}</span>
                 <span>·</span>
-                <span className="place-cuisine">{restaurant.cuisine}</span>
+                {'cuisine' in place ? (
+                  <span className="place-cuisine">{place.cuisine}</span>
+                ) : (
+                  <span className="place-setting">{place.setting}</span>
+                )}
                 <span>·</span>
-                <span>{restaurant.price}</span>
+                <span>{place.price}</span>
               </div>
               <img 
-                src={restaurant.imageUrl} 
-                alt={restaurant.name}
+                src={place.imageUrl} 
+                alt={place.name}
                 className="place-image"
               />
               <div className="description-container">
                 <p className="place-description">
-                  {restaurant.description}
+                  {place.description}
                 </p>
               </div>
             </div>
