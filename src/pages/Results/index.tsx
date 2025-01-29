@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import Map from './components/Map';
@@ -32,30 +32,30 @@ export default function Results() {
     const neighborhoodMatch = neighborhoods.includes(place.neighborhood);
     const priceMatch = selectedFilters.price.size === 0 || selectedFilters.price.has(place.price);
     
-    let categoryMatch = true;
     if (category === 'food') {
+      const restaurant = place as Restaurant;
       const mealMatch = selectedFilters.meals.size === 0 || 
-        [...selectedFilters.meals].some(meal => place.meals[meal.toLowerCase() as keyof typeof place.meals]);
+        [...selectedFilters.meals].some(meal => 
+          restaurant.meals[meal.toLowerCase() as keyof typeof restaurant.meals]
+        );
       const cuisineMatch = selectedFilters.cuisine.size === 0 || 
-        selectedFilters.cuisine.has(place.cuisine.toLowerCase());
-      categoryMatch = mealMatch && cuisineMatch;
+        selectedFilters.cuisine.has(restaurant.cuisine.toLowerCase());
+      return neighborhoodMatch && priceMatch && mealMatch && cuisineMatch;
     } else {
+      const bar = place as Bar;
       const settingMatch = selectedFilters.setting.size === 0 || 
-        selectedFilters.setting.has(place.setting);
-      categoryMatch = settingMatch;
+        selectedFilters.setting.has(bar.setting);
+      return neighborhoodMatch && priceMatch && settingMatch;
     }
-
-    return neighborhoodMatch && priceMatch && categoryMatch;
   });
 
   const handleMarkerClick = (place: Place) => {
     setSelectedPlace(place);
-    setMapHeight(95); // Set to map dominant view with minimal list view
+    setMapHeight(95);
   };
 
   const handleResize = (newHeight: number) => {
     setMapHeight(newHeight);
-    // Clear selected place when resizing
     if (newHeight < 90) {
       setSelectedPlace(null);
     }
@@ -93,7 +93,6 @@ export default function Results() {
         </div>
       </div>
 
-      {/* Place Toaster */}
       {selectedPlace && (
         <div className="place-toaster show">
           <div className="place-content">
@@ -101,7 +100,9 @@ export default function Results() {
             <div className="place-info">
               <span>{selectedPlace.neighborhood}</span>
               <span>·</span>
-              <span>{'cuisine' in selectedPlace ? selectedPlace.cuisine : selectedPlace.setting}</span>
+              <span>
+                {'cuisine' in selectedPlace ? selectedPlace.cuisine : selectedPlace.setting}
+              </span>
               <span>·</span>
               <span>{selectedPlace.price}</span>
             </div>
