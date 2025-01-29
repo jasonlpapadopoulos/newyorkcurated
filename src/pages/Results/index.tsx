@@ -10,7 +10,6 @@ import { sampleRestaurants } from '../../data/sample-restaurants';
 import { sampleBars } from '../../data/sample-bars';
 import type { Restaurant } from '../../types/restaurant';
 import type { Bar } from '../../types/bar';
-import '../../styles/places.css';
 
 type Place = Restaurant | Bar;
 
@@ -36,7 +35,7 @@ const Results: NextPage = () => {
     if (category === 'food') {
       const restaurant = place as Restaurant;
       const mealMatch = selectedFilters.meals.size === 0 || 
-        [...selectedFilters.meals].some(meal => 
+        Array.from(selectedFilters.meals).some(meal => 
           restaurant.meals[meal.toLowerCase() as keyof typeof restaurant.meals]
         );
       const cuisineMatch = selectedFilters.cuisine.size === 0 || 

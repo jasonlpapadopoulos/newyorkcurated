@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Restaurant } from '../../types/restaurant';
 import { Bar } from '../../types/bar';
+import styles from '../../styles/places.module.css';
 
 type Place = Restaurant | Bar;
 
@@ -61,19 +62,19 @@ export default function List({ places, selectedPlaceId }: ListProps) {
       {places.map(place => (
         <div 
           key={place.id} 
-          className={`place-box ${selectedPlaceId === place.id ? 'place-box-selected' : ''}`}
+          className={`${styles.placeBox} ${selectedPlaceId === place.id ? styles.placeBoxSelected : ''}`}
           data-place-id={place.id}
         >
           <a href={`/place/${place.id}`}>
-            <div className="place-content">
-              <h3 className="place-name">{place.name}</h3>
-              <div className="place-info">
-                <span className="place-neighborhood">{getNeighborhoodName(place.neighborhood)}</span>
+            <div className={styles.placeContent}>
+              <h3 className={styles.placeName}>{place.name}</h3>
+              <div className={styles.placeInfo}>
+                <span className={styles.placeNeighborhood}>{getNeighborhoodName(place.neighborhood)}</span>
                 <span>·</span>
                 {'cuisine' in place ? (
-                  <span className="place-cuisine">{place.cuisine}</span>
+                  <span className={styles.placeCuisine}>{place.cuisine}</span>
                 ) : (
-                  <span className="place-setting">{place.setting}</span>
+                  <span className={styles.placeSetting}>{place.setting}</span>
                 )}
                 <span>·</span>
                 <span>{place.price}</span>
@@ -81,10 +82,10 @@ export default function List({ places, selectedPlaceId }: ListProps) {
               <img 
                 src={place.imageUrl} 
                 alt={place.name}
-                className="place-image"
+                className={styles.placeImage}
               />
-              <div className="description-container">
-                <p className="place-description">
+              <div className={styles.descriptionContainer}>
+                <p className={styles.placeDescription}>
                   {place.description}
                 </p>
               </div>
