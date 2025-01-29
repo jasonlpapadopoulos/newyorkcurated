@@ -1,22 +1,23 @@
 import { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
-import Map from './components/Map';
-import List from './components/List';
-import ResizeHandle from './components/ResizeHandle';
-import Filters from './components/Filters';
+import { useRouter } from 'next/router';
+import Head from 'next/head';
+import type { NextPage } from 'next';
+import Map from '../../components/Map';
+import List from '../../components/List';
+import ResizeHandle from '../../components/ResizeHandle';
+import Filters from '../../components/Filters';
 import { sampleRestaurants } from '../../data/sample-restaurants';
 import { sampleBars } from '../../data/sample-bars';
-import { Restaurant } from '../../types/restaurant';
-import { Bar } from '../../types/bar';
+import type { Restaurant } from '../../types/restaurant';
+import type { Bar } from '../../types/bar';
 import '../../styles/places.css';
 
 type Place = Restaurant | Bar;
 
-export default function Results() {
-  const [searchParams] = useSearchParams();
-  const category = searchParams.get('category') || 'food';
-  const neighborhoods = searchParams.get('neighborhoods')?.split(',') || [];
+const Results: NextPage = () => {
+  const router = useRouter();
+  const { category = 'food', neighborhoods = '' } = router.query;
+  const neighborhoodList = typeof neighborhoods === 'string' ? neighborhoods.split(',') : [];
   
   const [mapHeight, setMapHeight] = useState(33);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
@@ -29,7 +30,7 @@ export default function Results() {
 
   const places = category === 'drinks' ? sampleBars : sampleRestaurants;
   const filteredPlaces = places.filter(place => {
-    const neighborhoodMatch = neighborhoods.includes(place.neighborhood);
+    const neighborhoodMatch = neighborhoodList.includes(place.neighborhood);
     const priceMatch = selectedFilters.price.size === 0 || selectedFilters.price.has(place.price);
     
     if (category === 'food') {
@@ -63,13 +64,13 @@ export default function Results() {
 
   return (
     <>
-      <Helmet>
+      <Head>
         <title>NYC {category === 'food' ? 'Food' : 'Drinks'}</title>
         <meta 
           name="description" 
           content={`Discover the best ${category} spots in New York City`} 
         />
-      </Helmet>
+      </Head>
       <div className="results-container">
         <div id="map-view" style={{ height: `${mapHeight}%` }}>
           <Map 
@@ -80,7 +81,7 @@ export default function Results() {
         <div className="separator-section">
           <ResizeHandle onResize={handleResize} />
           <Filters 
-            category={category}
+            category={category as string}
             selectedFilters={selectedFilters}
             onFilterChange={setSelectedFilters}
           />
@@ -125,4 +126,6 @@ export default function Results() {
       )}
     </>
   );
-}
+};
+
+export default Results;
