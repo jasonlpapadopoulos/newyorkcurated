@@ -15,8 +15,12 @@ export async function query(q: string, values: any[] = []) {
     const results = await db.query(q, values);
     await db.end();
     return results;
-  } catch (e) {
-    throw Error(e.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    // If it's not an Error instance, convert it to a string
+    throw new Error(String(error));
   }
 }
 
