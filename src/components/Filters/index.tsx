@@ -36,7 +36,6 @@ export default function Filters({ category, selectedFilters, onFilterChange }: F
   const renderFilterModal = (type: string) => {
     const options = {
       meals: [
-        { value: 'breakfast', label: 'Breakfast' },
         { value: 'brunch', label: 'Brunch' },
         { value: 'lunch', label: 'Lunch' },
         { value: 'dinner', label: 'Dinner' }

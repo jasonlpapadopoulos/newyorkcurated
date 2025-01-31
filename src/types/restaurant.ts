@@ -1,20 +1,19 @@
 export interface Restaurant {
   id: string;
-  name: string;
+  place_name: string;
   description: string;
   cuisine: string;
+  cuisine_clean: string;
   neighborhood: string;
-  price: '$' | '$$' | '$$$' | '$$$$';
+  neighborhood_clean: string;
+  budget: '$' | '$$' | '$$$' | '$$$$';
   meals: {
-    breakfast: boolean;
     brunch: boolean;
     lunch: boolean;
     dinner: boolean;
   };
-  coordinates: {
-    lat: number;
-    lng: number;
-  };
+  lat: number;
+  lon: number;
   rating: number;
-  imageUrl: string;
+  image_url: string;
 }

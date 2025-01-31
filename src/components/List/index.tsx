@@ -67,7 +67,7 @@ export default function List({ places, selectedPlaceId }: ListProps) {
         >
           <a href={`/place/${place.id}`}>
             <div className={styles.placeContent}>
-              <h3 className={styles.placeName}>{place.name}</h3>
+              <h3 className={styles.placeName}>{place.place_name}</h3>
               <div className={styles.placeInfo}>
                 <span className={styles.placeNeighborhood}>{getNeighborhoodName(place.neighborhood)}</span>
                 <span>·</span>
@@ -77,11 +77,11 @@ export default function List({ places, selectedPlaceId }: ListProps) {
                   <span className={styles.placeSetting}>{place.setting}</span>
                 )}
                 <span>·</span>
-                <span>{place.price}</span>
+                <span>{place.budget}</span>
               </div>
               <img 
-                src={place.imageUrl} 
-                alt={place.name}
+                src={place.image_url} 
+                alt={place.place_name}
                 className={styles.placeImage}
               />
               <div className={styles.descriptionContainer}>

@@ -23,7 +23,7 @@ export default function MapClient({ places = [], onMarkerClick }: MapProps) {
 
     mapRef.current = L.map(mapContainerRef.current, {
       center: [40.7128, -74.0060],
-      zoom: 13,
+      zoom: 10,
       zoomControl: false,
       attributionControl: false,
       minZoom: 11
@@ -58,13 +58,12 @@ export default function MapClient({ places = [], onMarkerClick }: MapProps) {
 
     const bounds = L.latLngBounds([]);
     const validPlaces = places.filter(place => 
-      place.coordinates && 
-      place.coordinates.lat && 
-      place.coordinates.lng
+      place.lat && 
+      place.lon
     );
 
     validPlaces.forEach(place => {
-      const marker = L.marker([place.coordinates.lat, place.coordinates.lng], {
+      const marker = L.marker([place.lat, place.lon], {
         icon: L.icon({
           iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
           shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
@@ -81,7 +80,7 @@ export default function MapClient({ places = [], onMarkerClick }: MapProps) {
         offset: [0, -30],
         opacity: 0.9,
         className: 'place-label'
-      }).setContent(place.name);
+      }).setContent(place.place_name);
       
       marker.addTo(mapRef.current!);
       marker.bindTooltip(tooltip);
@@ -92,12 +91,12 @@ export default function MapClient({ places = [], onMarkerClick }: MapProps) {
 
       markersRef.current.push(marker);
       labelsRef.current.push(tooltip);
-      bounds.extend([place.coordinates.lat, place.coordinates.lng]);
+      bounds.extend([place.lat, place.lon]);
     });
 
-    if (bounds.isValid()) {
-      mapRef.current.fitBounds(bounds.pad(0.2));
-    }
+    // if (bounds.isValid()) {
+    //   mapRef.current.fitBounds(bounds.pad(0.2));
+    // }
   }, [places, onMarkerClick]);
 
   return (

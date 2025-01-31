@@ -1,5 +1,5 @@
 {
-  "food": {
+  "drinks": {
     "manhattan": {
       "uptown": [
         { "name": "Harlem", "value": "harlem" },
@@ -7,50 +7,112 @@
         { "name": "Upper West Side", "value": "upper-west-side" }
       ],
       "midtown": [
+        { "name": "Flatiron", "value": "flatiron" },
         { "name": "Hell's Kitchen", "value": "hells-kitchen" },
-        { "name": "Korea Town", "value": "korea-town" },
+        { "name": "Kips Bay", "value": "kips-bay" },
+        { "name": "Midtown", "value": "midtown" },
+        { "name": "Midtown East", "value": "midtown-east" },
+        { "name": "Midtown West", "value": "midtown-west" },
         { "name": "Murray Hill", "value": "murray-hill" },
-        { "name": "Midtown", "value": "midtown" }
+        { "name": "NoMad", "value": "nomad" },
+        { "name": "Theater District/Times Square", "value": "theater-district-times-square" }
       ],
       "downtown": [
-        { "name": "East Village", "value": "east-village" },
-        { "name": "West Village", "value": "west-village" },
-        { "name": "Lower East Side", "value": "lower-east-side" },
-        { "name": "SoHo", "value": "soho" },
+        { "name": "Alphabet City", "value": "alphabet-city" },
+        { "name": "Bowery", "value": "bowery" },
         { "name": "Chinatown", "value": "chinatown" },
-        { "name": "Little Italy", "value": "little-italy" }
+        { "name": "East Village", "value": "east-village" },
+        { "name": "FiDi", "value": "fidi" },
+        { "name": "Greenwich Village", "value": "greenwich-village" },
+        { "name": "Little Italy", "value": "little-italy" },
+        { "name": "Lower East Side", "value": "lower-east-side" },
+        { "name": "Meatpacking", "value": "meatpacking" },
+        { "name": "NoHo", "value": "noho" },
+        { "name": "NoLiTa", "value": "nolita" },
+        { "name": "Roosevelt Island", "value": "roosevelt-island" },
+        { "name": "SoHo", "value": "soho" },
+        { "name": "Tribeca", "value": "tribeca" },
+        { "name": "Union Square", "value": "union-square" },
+        { "name": "West Village", "value": "west-village" }
       ]
     },
     "brooklyn": [
-      { "name": "Williamsburg", "value": "williamsburg" },
-      { "name": "DUMBO", "value": "dumbo" },
+      { "name": "BedStuy", "value": "bedstuy" },
+      { "name": "Brooklyn Heights", "value": "brooklyn-heights" },
+      { "name": "Bushwick", "value": "bushwick" },
+      { "name": "Clinton Hill", "value": "clinton-hill" },
+      { "name": "Cobble Hill", "value": "cobble-hill" },
+      { "name": "Downtown Brooklyn", "value": "downtown-brooklyn" },
+      { "name": "Flatbush", "value": "flatbush" },
+      { "name": "Gowanus", "value": "gowanus" },
+      { "name": "Greenpoint", "value": "greenpoint" },
       { "name": "Park Slope", "value": "park-slope" },
-      { "name": "Bushwick", "value": "bushwick" }
+      { "name": "Red Hook", "value": "red-hook" },
+      { "name": "Williamsburg", "value": "williamsburg" }
+    ],
+    "queens": [
+      { "name": "Long Island City", "value": "long-island-city" }
+    ]
+  },
+  "food": {
+    "manhattan": {
+      "uptown": [
+        { "name": "East Harlem", "value": "east-harlem" },
+        { "name": "Harlem", "value": "harlem" },
+        { "name": "Upper East Side", "value": "upper-east-side" },
+        { "name": "Upper West Side", "value": "upper-west-side" }
+      ],
+      "midtown": [
+        { "name": "Flatiron", "value": "flatiron" },
+        { "name": "Gramercy Park", "value": "gramercy-park" },
+        { "name": "Hell's Kitchen", "value": "hells-kitchen" },
+        { "name": "Hudson Yards", "value": "hudson-yards" },
+        { "name": "Kips Bay", "value": "kips-bay" },
+        { "name": "Korea Town", "value": "korea-town" },
+        { "name": "Midtown", "value": "midtown" },
+        { "name": "Midtown East", "value": "midtown-east" },
+        { "name": "Murray Hill", "value": "murray-hill" },
+        { "name": "NoMad", "value": "nomad" },
+        { "name": "Theater District/Times Square", "value": "theater-district-times-square" },
+        { "name": "Turtle Bay", "value": "turtle-bay" },
+        { "name": "Union Square", "value": "union-square" }
+      ],
+      "downtown": [
+        { "name": "Alphabet City", "value": "alphabet-city" },
+        { "name": "Battery Park City", "value": "battery-park-city" },
+        { "name": "Bowery", "value": "bowery" },
+        { "name": "Chinatown", "value": "chinatown" },
+        { "name": "Chelsea", "value": "chelsea" },
+        { "name": "East Village", "value": "east-village" },
+        { "name": "FiDi", "value": "fidi" },
+        { "name": "Greenwich Village", "value": "greenwich-village" },
+        { "name": "Little Italy", "value": "little-italy" },
+        { "name": "Lower East Side", "value": "lower-east-side" },
+        { "name": "Meatpacking", "value": "meatpacking" },
+        { "name": "NoHo", "value": "noho" },
+        { "name": "NoLiTa", "value": "nolita" },
+        { "name": "SoHo", "value": "soho" },
+        { "name": "Tribeca", "value": "tribeca" }
+      ]
+    },
+    "brooklyn": [
+      { "name": "BedStuy", "value": "bedstuy" },
+      { "name": "Boerum Hill", "value": "boerum-hill" },
+      { "name": "Brooklyn Heights", "value": "brooklyn-heights" },
+      { "name": "Bushwick", "value": "bushwick" },
+      { "name": "Clinton Hill", "value": "clinton-hill" },
+      { "name": "Cobble Hill", "value": "cobble-hill" },
+      { "name": "DUMBO", "value": "dumbo" },
+      { "name": "Downtown Brooklyn", "value": "downtown-brooklyn" },
+      { "name": "Greenpoint", "value": "greenpoint" },
+      { "name": "Midwood", "value": "midwood" },
+      { "name": "Prospect Heights", "value": "prospect-heights" },
+      { "name": "Red Hook", "value": "red-hook" },
+      { "name": "Williamsburg", "value": "williamsburg" }
     ],
     "queens": [
       { "name": "Astoria", "value": "astoria" },
-      { "name": "Long Island City", "value": "long-island-city" },
-      { "name": "Flushing", "value": "flushing" }
-    ]
-  },
-  "drinks": {
-    "manhattan": {
-      "downtown": [
-        { "name": "East Village", "value": "east-village" },
-        { "name": "Lower East Side", "value": "lower-east-side" },
-        { "name": "West Village", "value": "west-village" }
-      ],
-      "midtown": [
-        { "name": "Hell's Kitchen", "value": "hells-kitchen" },
-        { "name": "Murray Hill", "value": "murray-hill" }
-      ]
-    },
-    "brooklyn": [
-      { "name": "Williamsburg", "value": "williamsburg" },
-      { "name": "Bushwick", "value": "bushwick" }
-    ],
-    "queens": [
-      { "name": "Astoria", "value": "astoria" }
+      { "name": "Jackson Heights", "value": "jackson-heights" }
     ]
   }
 }

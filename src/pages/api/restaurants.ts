@@ -1,0 +1,61 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { query } from '../../lib/db';
+import type { Restaurant } from '../../types/restaurant';
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  try {
+    const { neighborhoods } = req.query;
+    const neighborhoodList = typeof neighborhoods === 'string' ? neighborhoods.split(',') : [];
+
+    const restaurantQuery = `
+      SELECT 
+        id,
+        place_name,
+        description,
+        cuisine,
+        cuisine_clean,
+        neighborhood,
+        neighborhood_clean,
+        budget,
+        brunch,
+        lunch,
+        dinner,
+        lat,
+        lon,
+        image_url
+      FROM food
+      WHERE neighborhood_clean IN (?)
+    `;
+
+    const results = await query(restaurantQuery, [neighborhoodList]);
+    
+    // Transform the flat database results into the Restaurant type
+    const restaurants: Restaurant[] = (results as any[]).map(row => ({
+      id: row.id,
+      place_name: row.place_name,
+      description: row.description,
+      cuisine: row.cuisine,
+      cuisine_clean: row.cuisine_clean,
+      neighborhood: row.neighborhood,
+      neighborhood_clean: row.neighborhood_clean,
+      budget: row.budget,
+      meals: {
+        brunch: Boolean(row.brunch),
+        lunch: Boolean(row.lunch),
+        dinner: Boolean(row.dinner)
+      },
+      lat: row.lat,
+      lon: row.lon,
+      rating: row.rating,
+      image_url: row.image_url
+    }));
+
+    res.status(200).json(restaurants);
+  } catch (error) {
+    console.error('Error fetching restaurants:', error);
+    res.status(500).json({ error: 'Error fetching restaurants' });
+  }
+}

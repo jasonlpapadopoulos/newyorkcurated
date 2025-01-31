@@ -1,12 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import type { NextPage } from 'next';
 import Map from '../../components/Map';
 import List from '../../components/List';
 import Filters from '../../components/Filters';
 import SEO from '../../components/SEO';
-import { sampleRestaurants } from '../../data/sample-restaurants';
-import { sampleBars } from '../../data/sample-bars';
 import type { Restaurant } from '../../types/restaurant';
 import type { Bar } from '../../types/bar';
 
@@ -20,6 +18,9 @@ const Results: NextPage = () => {
   
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
+  const [places, setPlaces] = useState<Place[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedFilters, setSelectedFilters] = useState({
     meals: new Set<string>(),
     price: new Set<string>(),
@@ -27,10 +28,29 @@ const Results: NextPage = () => {
     setting: new Set<string>()
   });
 
-  const places = category === 'drinks' ? sampleBars : sampleRestaurants;
+  useEffect(() => {
+    const fetchPlaces = async () => {
+      if (!neighborhoods) return;
+      
+      setLoading(true);
+      try {
+        const endpoint = category === 'food' ? 'restaurants' : 'bars';
+        const response = await fetch(`/api/${endpoint}?neighborhoods=${neighborhoods}`);
+        if (!response.ok) throw new Error('Failed to fetch places');
+        const data = await response.json();
+        setPlaces(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPlaces();
+  }, [neighborhoods, category]);
+
   const filteredPlaces = places.filter(place => {
-    const neighborhoodMatch = neighborhoodList.includes(place.neighborhood);
-    const priceMatch = selectedFilters.price.size === 0 || selectedFilters.price.has(place.price);
+    const priceMatch = selectedFilters.price.size === 0 || selectedFilters.price.has(place.budget);
     
     if (category === 'food') {
       const restaurant = place as Restaurant;
@@ -39,13 +59,15 @@ const Results: NextPage = () => {
           restaurant.meals[meal.toLowerCase() as keyof typeof restaurant.meals]
         );
       const cuisineMatch = selectedFilters.cuisine.size === 0 || 
-        selectedFilters.cuisine.has(restaurant.cuisine.toLowerCase());
-      return neighborhoodMatch && priceMatch && mealMatch && cuisineMatch;
+        selectedFilters.cuisine.has(restaurant.cuisine_clean);
+      return priceMatch && mealMatch && cuisineMatch;
     } else {
       const bar = place as Bar;
       const settingMatch = selectedFilters.setting.size === 0 || 
-        selectedFilters.setting.has(bar.setting);
-      return neighborhoodMatch && priceMatch && settingMatch;
+        Array.from(selectedFilters.setting).some(setting => 
+          bar[setting.toLowerCase() as keyof Bar]
+        );
+      return priceMatch && settingMatch;
     }
   });
 
@@ -58,8 +80,17 @@ const Results: NextPage = () => {
     setSelectedPlace(null);
   };
 
+  if (loading) {
+    return <div className="loading">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="error">Error: {error}</div>;
+  }
+
   const title = `Best ${category === 'food' ? 'Restaurants' : 'Bars'} in ${neighborhoodList.join(', ')} | NYC Curated`;
-  const description = `Discover the best ${category === 'food' ? 'places to eat' : 'bars'} in ${neighborhoodList.join(', ')}. Hand-picked recommendations for ${category === 'food' ? 'restaurants' : 'bars'} in New York City.`;
+  // const description = `Discover the best ${category === 'food' ? 'places to eat' : 'bars'} in ${neighborhoodList.join(', ')}. Hand-picked recommendations for ${category === 'food' ? 'restaurants' : 'bars'} in New York City.`;
+  const description = `Hand-picked recommendations for ${category === 'food' ? 'restaurants' : 'bars'} in New York City.`;
 
   return (
     <>
@@ -106,19 +137,28 @@ const Results: NextPage = () => {
         {selectedPlace && viewMode === 'map' && (
           <div className="place-toaster show">
             <div className="place-content">
-              <h3 className="place-name">{selectedPlace.name}</h3>
+              <h3 className="place-name">{selectedPlace.place_name}</h3>
               <div className="place-info">
                 <span>{selectedPlace.neighborhood}</span>
                 <span>·</span>
-                <span>
-                  {'cuisine' in selectedPlace ? selectedPlace.cuisine : selectedPlace.setting}
-                </span>
+                {'cuisine' in selectedPlace ? (
+                  <span>{selectedPlace.cuisine}</span>
+                ) : (
+                  <span>
+                    {Object.entries(selectedPlace)
+                      .filter(([key, value]) => 
+                        ['cocktail', 'dive', 'jazz', 'wine', 'rooftop', 'speakeasy', 'beer', 'pub'].includes(key) && value
+                      )
+                      .map(([key]) => key.charAt(0).toUpperCase() + key.slice(1))
+                      .join(', ')}
+                  </span>
+                )}
                 <span>·</span>
-                <span>{selectedPlace.price}</span>
+                <span>{selectedPlace.budget}</span>
               </div>
               <img 
-                src={selectedPlace.imageUrl} 
-                alt={selectedPlace.name}
+                src={selectedPlace.image_url} 
+                alt={selectedPlace.place_name}
                 className="place-image"
               />
               <div className="description-container">

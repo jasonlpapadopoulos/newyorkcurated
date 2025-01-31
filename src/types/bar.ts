@@ -1,14 +1,19 @@
 export interface Bar {
   id: string;
-  name: string;
+  place_name: string;
   description: string;
   neighborhood: string;
-  price: '$' | '$$' | '$$$' | '$$$$';
-  setting: 'Speakeasy' | 'Dive Bar' | 'Live Jazz' | 'Cocktail Bar' | 'Wine Bar';
-  coordinates: {
-    lat: number;
-    lng: number;
-  };
-  rating: number;
-  imageUrl: string;
+  neighborhood_clean: string;
+  budget: '$' | '$$' | '$$$' | '$$$$';
+  lat: number;
+  lon: number;
+  image_url: string;
+  cocktail: boolean;
+  dive: boolean;
+  jazz: boolean;
+  wine: boolean;
+  rooftop: boolean;
+  speakeasy: boolean;
+  beer: boolean;
+  pub: boolean;
 }
