@@ -74,7 +74,7 @@ export default function List({ places, selectedPlaceId }: ListProps) {
                 {'cuisine' in place ? (
                   <span className={styles.placeCuisine}>{place.cuisine}</span>
                 ) : (
-                  <span className={styles.placeSetting}>{place.setting}</span>
+                  <span className={styles.placeSetting}>{}</span>
                 )}
                 <span>·</span>
                 <span>{place.budget}</span>
