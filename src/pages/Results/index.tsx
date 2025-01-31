@@ -39,8 +39,12 @@ const Results: NextPage = () => {
         if (!response.ok) throw new Error('Failed to fetch places');
         const data = await response.json();
         setPlaces(data);
-      } catch (err) {
-        setError(err.message);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError('An unknown error occurred');
+        }
       } finally {
         setLoading(false);
       }
@@ -89,8 +93,7 @@ const Results: NextPage = () => {
   }
 
   const title = `Best ${category === 'food' ? 'Restaurants' : 'Bars'} in ${neighborhoodList.join(', ')} | NYC Curated`;
-  // const description = `Discover the best ${category === 'food' ? 'places to eat' : 'bars'} in ${neighborhoodList.join(', ')}. Hand-picked recommendations for ${category === 'food' ? 'restaurants' : 'bars'} in New York City.`;
-  const description = `Hand-picked recommendations for ${category === 'food' ? 'restaurants' : 'bars'} in New York City.`;
+  const description = `Discover the best ${category === 'food' ? 'places to eat' : 'bars'} in ${neighborhoodList.join(', ')}. Hand-picked recommendations for ${category === 'food' ? 'restaurants' : 'bars'} in New York City.`;
 
   return (
     <>
