@@ -1,24 +1,24 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import Head from 'next/head';
 import type { NextPage } from 'next';
 import Map from '../../components/Map';
 import List from '../../components/List';
-import ResizeHandle from '../../components/ResizeHandle';
 import Filters from '../../components/Filters';
+import SEO from '../../components/SEO';
 import { sampleRestaurants } from '../../data/sample-restaurants';
 import { sampleBars } from '../../data/sample-bars';
 import type { Restaurant } from '../../types/restaurant';
 import type { Bar } from '../../types/bar';
 
 type Place = Restaurant | Bar;
+type ViewMode = 'list' | 'map';
 
 const Results: NextPage = () => {
   const router = useRouter();
   const { category = 'food', neighborhoods = '' } = router.query;
   const neighborhoodList = typeof neighborhoods === 'string' ? neighborhoods.split(',') : [];
   
-  const [mapHeight, setMapHeight] = useState(33);
+  const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [selectedFilters, setSelectedFilters] = useState({
     meals: new Set<string>(),
@@ -51,78 +51,89 @@ const Results: NextPage = () => {
 
   const handleMarkerClick = (place: Place) => {
     setSelectedPlace(place);
-    setMapHeight(95);
   };
 
-  const handleResize = (newHeight: number) => {
-    setMapHeight(newHeight);
-    if (newHeight < 90) {
-      setSelectedPlace(null);
-    }
+  const toggleView = () => {
+    setViewMode(prev => prev === 'list' ? 'map' : 'list');
+    setSelectedPlace(null);
   };
+
+  const title = `Best ${category === 'food' ? 'Restaurants' : 'Bars'} in ${neighborhoodList.join(', ')} | NYC Curated`;
+  const description = `Discover the best ${category === 'food' ? 'places to eat' : 'bars'} in ${neighborhoodList.join(', ')}. Hand-picked recommendations for ${category === 'food' ? 'restaurants' : 'bars'} in New York City.`;
 
   return (
     <>
-      <Head>
-        <title>NYC {category === 'food' ? 'Food' : 'Drinks'}</title>
-        <meta 
-          name="description" 
-          content={`Discover the best ${category} spots in New York City`} 
-        />
-      </Head>
+      <SEO 
+        title={title}
+        description={description}
+      />
       <div className="results-container">
-        <div id="map-view" style={{ height: `${mapHeight}%` }}>
-          <Map 
-            places={filteredPlaces} 
-            onMarkerClick={handleMarkerClick}
-          />
+        <div className="view-toggle">
+          <button 
+            className={`view-toggle-option ${viewMode === 'list' ? 'active' : ''}`}
+            onClick={() => setViewMode('list')}
+          >
+            List
+          </button>
+          <button 
+            className={`view-toggle-option ${viewMode === 'map' ? 'active' : ''}`}
+            onClick={() => setViewMode('map')}
+          >
+            Map
+          </button>
         </div>
-        <div className="separator-section">
-          <ResizeHandle onResize={handleResize} />
-          <Filters 
-            category={category as string}
-            selectedFilters={selectedFilters}
-            onFilterChange={setSelectedFilters}
-          />
-        </div>
-        <div id="restaurant-list" style={{ height: `${100 - mapHeight - 8}%` }}>
-          <List 
-            places={filteredPlaces}
-            selectedPlaceId={selectedPlace?.id || null}
-          />
-        </div>
-      </div>
 
-      {selectedPlace && (
-        <div className="place-toaster show">
-          <div className="place-content">
-            <h3 className="place-name">{selectedPlace.name}</h3>
-            <div className="place-info">
-              <span>{selectedPlace.neighborhood}</span>
-              <span>·</span>
-              <span>
-                {'cuisine' in selectedPlace ? selectedPlace.cuisine : selectedPlace.setting}
-              </span>
-              <span>·</span>
-              <span>{selectedPlace.price}</span>
-            </div>
-            <img 
-              src={selectedPlace.imageUrl} 
-              alt={selectedPlace.name}
-              className="place-image"
+        <Filters 
+          category={category as string}
+          selectedFilters={selectedFilters}
+          onFilterChange={setSelectedFilters}
+        />
+
+        <div className="view-container">
+          {viewMode === 'list' ? (
+            <List 
+              places={filteredPlaces}
+              selectedPlaceId={selectedPlace?.id || null}
             />
-            <div className="description-container">
-              <p className="place-description">{selectedPlace.description}</p>
-            </div>
-            <button 
-              className="place-toaster-close"
-              onClick={() => setSelectedPlace(null)}
-            >
-              ×
-            </button>
-          </div>
+          ) : (
+            <Map 
+              places={filteredPlaces} 
+              onMarkerClick={handleMarkerClick}
+            />
+          )}
         </div>
-      )}
+
+        {selectedPlace && viewMode === 'map' && (
+          <div className="place-toaster show">
+            <div className="place-content">
+              <h3 className="place-name">{selectedPlace.name}</h3>
+              <div className="place-info">
+                <span>{selectedPlace.neighborhood}</span>
+                <span>·</span>
+                <span>
+                  {'cuisine' in selectedPlace ? selectedPlace.cuisine : selectedPlace.setting}
+                </span>
+                <span>·</span>
+                <span>{selectedPlace.price}</span>
+              </div>
+              <img 
+                src={selectedPlace.imageUrl} 
+                alt={selectedPlace.name}
+                className="place-image"
+              />
+              <div className="description-container">
+                <p className="place-description">{selectedPlace.description}</p>
+              </div>
+              <button 
+                className="place-toaster-close"
+                onClick={() => setSelectedPlace(null)}
+              >
+                ×
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </>
   );
 };

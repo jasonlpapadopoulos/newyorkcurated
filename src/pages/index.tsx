@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
-import Head from 'next/head';
 import type { NextPage } from 'next';
+import SEO from '../components/SEO';
 
 const Home: NextPage = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -27,10 +27,12 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>New York Curated</title>
-        <meta name="description" content="The best things to do in New York." />
-      </Head>
+      <SEO 
+        title="New York Curated - The Best Things to Do in NYC"
+        description="Discover the best restaurants, bars, and experiences in New York City."
+        slogan="Hand-picked recommendations for the best of NYC, curated like upstate apples."
+        url="https://newyorkcurated.com"
+      />
       <div className="hero">
         <div className="hero-content">
           <h1 className="big-title">New York Curated</h1>

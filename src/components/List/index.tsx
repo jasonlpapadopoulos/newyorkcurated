@@ -51,14 +51,14 @@ export default function List({ places, selectedPlaceId }: ListProps) {
 
   if (!places || places.length === 0) {
     return (
-      <div className="restaurant-list" ref={listRef}>
+      <div id="restaurant-list" ref={listRef}>
         <p className="no-results">No places found matching your criteria.</p>
       </div>
     );
   }
 
   return (
-    <div className="restaurant-list" ref={listRef}>
+    <div id="restaurant-list" ref={listRef}>
       {places.map(place => (
         <div 
           key={place.id} 
