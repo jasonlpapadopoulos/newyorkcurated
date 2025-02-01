@@ -3,6 +3,7 @@
   min-height: 100vh;
   background: #000;
   color: #fff;
+  align-items: center;
 }
 
 .place-hero {
@@ -36,6 +37,7 @@
   padding: 2rem;
   position: relative;
   z-index: 1;
+  align-items: center;
 }
 
 .place-title {
@@ -75,6 +77,9 @@
   color: rgba(255, 255, 255, 0.9);
   font-weight: 300;
   letter-spacing: 0.3px;
+  margin-left: 2px;
+  margin-right: 2px;
+  text-align: center;
 }
 
 .place-map {
@@ -115,38 +120,27 @@
     font-size: 3rem;
   }
   
-  .place-content {
+  .individual-place-content {
     max-width: 90%;
   }
 }
 
 @media (max-width: 768px) {
-  .place-hero {
-    height: 50vh;
-  }
-
-  .place-content {
-    margin-top: -50px;
+  .individual-place-content {
+    margin: 0 auto; /* Ensures centering */
     padding: 1.5rem;
+    text-align: center; /* Ensures title and text are centered */
   }
 
   .place-title {
     font-size: 2.5rem;
+    text-align: center;
+    word-break: break-word; /* Prevents long words from getting cut off */
   }
 
-  .place-meta {
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    font-size: 1rem;
-  }
-
+  .place-meta,
   .place-description {
-    font-size: 1.1rem;
-    line-height: 1.6;
-  }
-
-  .place-map {
-    height: 300px;
+    text-align: center;
   }
 }
 
@@ -155,15 +149,18 @@
     height: 40vh;
   }
 
-  .place-title {
-    font-size: 2rem;
+  .individual-place-content {
+    padding: 1rem;
+    margin-top: 0; /* Remove negative margin to prevent content from getting hidden */
   }
 
-  .place-content {
-    padding: 1rem;
+  .place-title {
+    font-size: 2rem;
+    text-align: center;
   }
 
   .place-description {
     font-size: 1rem;
+    text-align: center;
   }
 }
