@@ -6,7 +6,10 @@ import type { Restaurant } from '../../../types/restaurant';
 import type { Bar } from '../../../types/bar';
 
 const Map = dynamic(() => import('../../../components/Map/MapClient'), {
-  ssr: false
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-[400px] bg-gray-900 animate-pulse rounded-lg" />
+  ),
 });
 
 type Place = Restaurant | Bar;
@@ -20,49 +23,71 @@ export default function PlacePage() {
 
   useEffect(() => {
     const fetchPlace = async () => {
-      if (!neighborhood || !name) return;
+      if (!neighborhood || !name) {
+        console.log('Missing query parameters:', { neighborhood, name });
+        return;
+      }
       
       try {
         // Convert query parameters to strings
         const neighborhoodStr = Array.isArray(neighborhood) ? neighborhood[0] : neighborhood;
         const nameStr = Array.isArray(name) ? name[0] : name;
         
-        console.log('Fetching place data:', { neighborhood: neighborhoodStr, name: nameStr });
-        const response = await fetch(
-          `/api/places?neighborhood=${encodeURIComponent(neighborhoodStr)}&name=${encodeURIComponent(nameStr)}`
-        );
+        const url = `/api/places?neighborhood=${encodeURIComponent(neighborhoodStr)}&name=${encodeURIComponent(nameStr)}`;
+        console.log('Fetching from URL:', url);
+        
+        const response = await fetch(url);
+        console.log('Response status:', response.status);
         
         if (!response.ok) {
-          const errorData = await response.json().catch(() => null);
-          console.error('Error response:', {
-            status: response.status,
-            statusText: response.statusText,
-            errorData
-          });
-          
-          throw new Error(
-            errorData?.error || 
-            `Failed to fetch place data (${response.status})`
-          );
+          let errorMessage = `HTTP error! status: ${response.status}`;
+          try {
+            const errorData = await response.json();
+            console.error('Error response data:', errorData);
+            errorMessage = errorData.error || errorMessage;
+          } catch (e) {
+            console.error('Failed to parse error response:', e);
+          }
+          throw new Error(errorMessage);
         }
         
-        const data = await response.json();
-        console.log('Place data received:', data);
+        let data;
+        try {
+          data = await response.json();
+          console.log('Successfully parsed response data:', data);
+        } catch (e) {
+          console.error('Failed to parse response JSON:', e);
+          throw new Error('Failed to parse response data');
+        }
+        
+        if (!data) {
+          throw new Error('No data received from API');
+        }
+        
         setPlace(data);
       } catch (error) {
-        console.error('Error fetching place:', error);
-        setError(error instanceof Error ? error.message : 'Failed to load place data');
+        console.error('Error in fetchPlace:', error);
+        setError(error instanceof Error ? error.message : 'An unknown error occurred');
       } finally {
         setLoading(false);
       }
     };
 
-    if (neighborhood && name) {
+    if (router.isReady) {
       setLoading(true);
       setError(null);
       fetchPlace();
     }
-  }, [neighborhood, name]);
+  }, [router.isReady, neighborhood, name]);
+
+  // Early return if the router is not ready
+  if (!router.isReady) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="loading">Initializing...</div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
@@ -76,11 +101,11 @@ export default function PlacePage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="error">
-          <h2>Error</h2>
-          <p>{error || 'Place not found'}</p>
+          <h2 className="text-xl font-bold mb-4">Error</h2>
+          <p className="text-red-500">{error || 'Place not found'}</p>
           <button 
             onClick={() => router.back()}
-            className="mt-4 px-4 py-2 bg-white text-black rounded hover:bg-gray-200"
+            className="mt-4 px-4 py-2 bg-white text-black rounded hover:bg-gray-200 transition-colors"
           >
             Go Back
           </button>
@@ -90,11 +115,12 @@ export default function PlacePage() {
   }
 
   const isRestaurant = 'cuisine' in place;
+  const title = `${place.place_name} - ${isRestaurant ? place.cuisine : 'Bar'} in ${place.neighborhood} | NYC Curated`;
 
   return (
     <>
       <SEO 
-        title={`${place.place_name} - ${isRestaurant ? place.cuisine : 'Bar'} in ${place.neighborhood} | NYC Curated`}
+        title={title}
         description={place.description}
         image={place.image_url}
       />
