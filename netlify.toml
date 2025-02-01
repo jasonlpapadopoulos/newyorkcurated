@@ -3,35 +3,17 @@
   publish = ".next"
 
 [build.environment]
-  NEXT_USE_NETLIFY_EDGE = "true"
   NODE_VERSION = "18"
+  NEXT_USE_NETLIFY_EDGE = "true"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-# Handle results page with query parameters
 [[redirects]]
-  from = "/results"
-  to = "/results"
+  from = "/_next/static/*"
+  to = "/_next/static/:splat"
   status = 200
-  force = true
-  query = {category = ":category", neighborhoods = ":neighborhoods"}
 
-# Fallback for results with any query parameters
-[[redirects]]
-  from = "/results"
-  to = "/results"
-  status = 200
-  force = true
-
-# Handle place pages
-[[redirects]]
-  from = "/place/*"
-  to = "/place/[...params]"
-  status = 200
-  force = true
-
-# Final fallback
 [[redirects]]
   from = "/*"
   to = "/index.html"
