@@ -71,7 +71,7 @@ export default function PlacePage() {
           />
         </div>
 
-        <div className="individual-place-content">
+        <div className="place-content">
           <h1 className="place-title">{place.place_name}</h1>
           
           <div className="place-meta">
@@ -97,13 +97,7 @@ export default function PlacePage() {
 
           <div className="place-map">
             <Map 
-              places={[{
-                ...place,
-                coordinates: {
-                  lat: place.lat,
-                  lng: place.lon
-                }
-              }]}
+              places={[place]}
               onMarkerClick={() => {}}
             />
           </div>
