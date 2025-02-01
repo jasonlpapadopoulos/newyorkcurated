@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Restaurant } from '../../types/restaurant';
 import { Bar } from '../../types/bar';
 import styles from '../../styles/places.module.css';
+import { generatePlaceUrl } from '../../utils/url';
 
 type Place = Restaurant | Bar;
 
@@ -65,7 +66,7 @@ export default function List({ places, selectedPlaceId }: ListProps) {
           className={`${styles.placeBox} ${selectedPlaceId === place.id ? styles.placeBoxSelected : ''}`}
           data-place-id={place.id}
         >
-          <a href={`/place/${place.id}`}>
+          <a href={generatePlaceUrl(place)}>
             <div className={styles.placeContent}>
               <h3 className={styles.placeName}>{place.place_name}</h3>
               <div className={styles.placeInfo}>
