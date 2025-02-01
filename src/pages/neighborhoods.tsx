@@ -81,7 +81,10 @@ const Neighborhoods: NextPage = () => {
   const handleSubmit = () => {
     if (selectedNeighborhoods.length > 0) {
       localStorage.setItem('selectedNeighborhoods', JSON.stringify(selectedNeighborhoods));
-      router.push(`/results?category=${category === 'eat' ? 'food' : 'drinks'}&neighborhoods=${selectedNeighborhoods.join(',')}`);
+      const encodedNeighborhoods = selectedNeighborhoods
+        .map(n => encodeURIComponent(n))
+        .join('%2C'); // URL-encoded comma
+      router.push(`/results?category=${category === 'eat' ? 'food' : 'drinks'}&neighborhoods=${encodedNeighborhoods}`);
     }
   };
 

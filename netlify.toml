@@ -9,22 +9,31 @@
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
+# Handle results page with query parameters
 [[redirects]]
   from = "/results"
   to = "/results"
   status = 200
+  force = true
+  query = {category = ":category", neighborhoods = ":neighborhoods"}
 
+# Fallback for results with any query parameters
 [[redirects]]
-  from = "/results/*"
+  from = "/results"
   to = "/results"
   status = 200
+  force = true
 
+# Handle place pages
 [[redirects]]
   from = "/place/*"
   to = "/place/[...params]"
   status = 200
+  force = true
 
+# Final fallback
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  force = true

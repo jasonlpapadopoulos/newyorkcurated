@@ -8,7 +8,9 @@ export default async function handler(
 ) {
   try {
     const { neighborhoods } = req.query;
-    const neighborhoodList = typeof neighborhoods === 'string' ? neighborhoods.split(',') : [];
+    const neighborhoodList = typeof neighborhoods === 'string' 
+      ? neighborhoods.split(',').map(n => decodeURIComponent(n))
+      : [];
 
     const restaurantQuery = `
       SELECT 
@@ -32,7 +34,6 @@ export default async function handler(
 
     const results = await query(restaurantQuery, [neighborhoodList]);
     
-    // Transform the flat database results into the Restaurant type
     const restaurants: Restaurant[] = (results as any[]).map(row => ({
       id: row.id,
       place_name: row.place_name,

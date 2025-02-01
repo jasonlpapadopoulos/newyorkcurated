@@ -8,7 +8,9 @@ export default async function handler(
 ) {
   try {
     const { neighborhoods } = req.query;
-    const neighborhoodList = typeof neighborhoods === 'string' ? neighborhoods.split(',') : [];
+    const neighborhoodList = typeof neighborhoods === 'string' 
+      ? neighborhoods.split(',').map(n => decodeURIComponent(n))
+      : [];
 
     const barQuery = `
       SELECT 
@@ -35,7 +37,6 @@ export default async function handler(
 
     const results = await query(barQuery, [neighborhoodList]);
     
-    // Transform the flat database results into the Bar type
     const bars: Bar[] = (results as any[]).map(row => ({
       id: row.id,
       place_name: row.place_name,

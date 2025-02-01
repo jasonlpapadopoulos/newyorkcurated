@@ -20,28 +20,139 @@ interface PlacePageProps {
   error?: string;
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps<PlacePageProps> = async ({ params }) => {
   try {
-    console.log("Fetching place data with params:", params); // Debug log
-
-    const response = await fetch(`https://newyorkcurated.com/api/places?neighborhood=${params?.neighborhood}&name=${params?.name}`);
+    const { neighborhood, name } = params || {};
     
-    if (!response.ok) {
-      throw new Error(`API returned ${response.status}`);
+    if (!neighborhood || !name) {
+      return {
+        props: {
+          place: null,
+          error: 'Missing parameters'
+        }
+      };
     }
 
-    const place = await response.json();
-    console.log("API Response:", place); // Log API response
+    // Clean and normalize the parameters
+    const cleanNeighborhood = String(neighborhood).trim().toLowerCase();
+    const cleanName = String(name).trim().toLowerCase();
 
-    return { props: { place } };
-  } catch (error) {
-    console.error("Error in getServerSideProps:", error);
+    // Try restaurants first
+    const restaurantQuery = `
+      SELECT 
+        id,
+        place_name,
+        description,
+        cuisine,
+        cuisine_clean,
+        neighborhood,
+        neighborhood_clean,
+        budget,
+        brunch,
+        lunch,
+        dinner,
+        lat,
+        lon,
+        image_url
+      FROM food
+      WHERE neighborhood_clean = ? 
+      AND LOWER(REPLACE(REPLACE(place_name, ' ', '-'), '''', '')) = ?
+      LIMIT 1
+    `;
+
+    let results = await query(restaurantQuery, [cleanNeighborhood, cleanName]);
+    
+    if (Array.isArray(results) && results.length > 0) {
+      const row = results[0] as any;
+      const restaurant: Restaurant = {
+        id: row.id,
+        place_name: row.place_name,
+        description: row.description,
+        cuisine: row.cuisine,
+        cuisine_clean: row.cuisine_clean,
+        neighborhood: row.neighborhood,
+        neighborhood_clean: row.neighborhood_clean,
+        budget: row.budget,
+        meals: {
+          brunch: Boolean(row.brunch),
+          lunch: Boolean(row.lunch),
+          dinner: Boolean(row.dinner)
+        },
+        lat: row.lat,
+        lon: row.lon,
+        image_url: row.image_url
+      };
+      return { props: { place: restaurant } };
+    }
+
+    // If not found in restaurants, try bars
+    const barQuery = `
+      SELECT 
+        id,
+        place_name,
+        description,
+        neighborhood,
+        neighborhood_clean,
+        budget,
+        lat,
+        lon,
+        image_url,
+        cocktail,
+        dive,
+        jazz,
+        wine,
+        rooftop,
+        speakeasy,
+        beer,
+        pub
+      FROM drinks
+      WHERE neighborhood_clean = ?
+      AND LOWER(REPLACE(REPLACE(place_name, ' ', '-'), '''', '')) = ?
+      LIMIT 1
+    `;
+
+    results = await query(barQuery, [cleanNeighborhood, cleanName]);
+    
+    if (Array.isArray(results) && results.length > 0) {
+      const row = results[0] as any;
+      const bar: Bar = {
+        id: row.id,
+        place_name: row.place_name,
+        description: row.description,
+        neighborhood: row.neighborhood,
+        neighborhood_clean: row.neighborhood_clean,
+        budget: row.budget,
+        lat: row.lat,
+        lon: row.lon,
+        image_url: row.image_url,
+        cocktail: Boolean(row.cocktail),
+        dive: Boolean(row.dive),
+        jazz: Boolean(row.jazz),
+        wine: Boolean(row.wine),
+        rooftop: Boolean(row.rooftop),
+        speakeasy: Boolean(row.speakeasy),
+        beer: Boolean(row.beer),
+        pub: Boolean(row.pub)
+      };
+      return { props: { place: bar } };
+    }
+
     return {
-      props: { place: null, error: "Failed to load place data" },
+      props: {
+        place: null,
+        error: 'Place not found'
+      }
+    };
+  } catch (error) {
+    console.error('Server-side error:', error);
+    return {
+      props: {
+        place: null,
+        error: 'Failed to load place data'
+      }
     };
   }
 };
-
 
 export default function PlacePage({ place, error }: PlacePageProps) {
   const router = useRouter();
