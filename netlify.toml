@@ -4,6 +4,27 @@
 
 [build.environment]
   NEXT_USE_NETLIFY_EDGE = "true"
+  NODE_VERSION = "18"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+[[redirects]]
+  from = "/results"
+  to = "/results"
+  status = 200
+
+[[redirects]]
+  from = "/results/*"
+  to = "/results"
+  status = 200
+
+[[redirects]]
+  from = "/place/*"
+  to = "/place/[...params]"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
