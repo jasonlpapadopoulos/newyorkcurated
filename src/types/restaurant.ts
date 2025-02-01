@@ -14,6 +14,5 @@ export interface Restaurant {
   };
   lat: number;
   lon: number;
-  rating: number;
   image_url: string;
 }

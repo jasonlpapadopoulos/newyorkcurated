@@ -49,7 +49,6 @@ export default async function handler(
       },
       lat: row.lat,
       lon: row.lon,
-      rating: row.rating,
       image_url: row.image_url
     }));
 

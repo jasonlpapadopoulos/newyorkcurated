@@ -45,7 +45,6 @@ export default async function handler(
       budget: row.budget,
       lat: row.lat,
       lon: row.lon,
-      rating: row.rating,
       image_url: row.image_url,
       cocktail: Boolean(row.cocktail),
       dive: Boolean(row.dive),
