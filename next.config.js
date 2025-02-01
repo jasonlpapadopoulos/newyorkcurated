@@ -4,20 +4,16 @@ const nextConfig = {
   swcMinify: true,
   webpack: (config, { dev }) => {
     if (!dev) {
-      config.devtool = false; // Fully disable eval() in production
+      config.devtool = false;
     }
 
-    // Ensure Webpack minimizes everything and avoids eval()
     config.optimization = {
       ...config.optimization,
-      minimize: true, // Minify everything (but no usedExports)
+      minimize: true,
     };
 
     return config;
-  },
-  experimental: {
-    optimizeCss: false, // Prevents eval() from sneaking into styles
-  },
+  }
 };
 
 module.exports = nextConfig;
