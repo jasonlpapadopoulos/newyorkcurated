@@ -1,4 +1,4 @@
-import type { GetServerSideProps } from 'next';
+import { GetServerSideProps } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import SEO from '../../../components/SEO';
@@ -9,7 +9,7 @@ import { query } from '../../../lib/db';
 const Map = dynamic(() => import('../../../components/Map/MapClient'), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-[400px] bg-gray-900 animate-pulse rounded-lg" />
+    <div style={{ width: '100%', height: '400px', background: '#1a1a1a' }} />
   ),
 });
 
@@ -20,167 +20,24 @@ interface PlacePageProps {
   error?: string;
 }
 
-export const getServerSideProps: GetServerSideProps<PlacePageProps> = async ({ params }) => {
-  try {
-    const { neighborhood, name } = params || {};
-    
-    if (!neighborhood || !name) {
-      return {
-        props: {
-          place: null,
-          error: 'Missing parameters'
-        }
-      };
-    }
-
-    // Clean and normalize the parameters
-    const cleanNeighborhood = String(neighborhood).trim().toLowerCase();
-    const cleanName = String(name).trim().toLowerCase();
-
-    // Try restaurants first
-    const restaurantQuery = `
-      SELECT 
-        id,
-        place_name,
-        description,
-        cuisine,
-        cuisine_clean,
-        neighborhood,
-        neighborhood_clean,
-        budget,
-        brunch,
-        lunch,
-        dinner,
-        lat,
-        lon,
-        image_url
-      FROM food
-      WHERE neighborhood_clean = ? 
-      AND LOWER(REPLACE(REPLACE(place_name, ' ', '-'), '''', '')) = ?
-      LIMIT 1
-    `;
-
-    let results = await query(restaurantQuery, [cleanNeighborhood, cleanName]);
-    
-    if (Array.isArray(results) && results.length > 0) {
-      const row = results[0] as any;
-      const restaurant: Restaurant = {
-        id: row.id,
-        place_name: row.place_name,
-        description: row.description,
-        cuisine: row.cuisine,
-        cuisine_clean: row.cuisine_clean,
-        neighborhood: row.neighborhood,
-        neighborhood_clean: row.neighborhood_clean,
-        budget: row.budget,
-        meals: {
-          brunch: Boolean(row.brunch),
-          lunch: Boolean(row.lunch),
-          dinner: Boolean(row.dinner)
-        },
-        lat: row.lat,
-        lon: row.lon,
-        image_url: row.image_url
-      };
-      return { props: { place: restaurant } };
-    }
-
-    // If not found in restaurants, try bars
-    const barQuery = `
-      SELECT 
-        id,
-        place_name,
-        description,
-        neighborhood,
-        neighborhood_clean,
-        budget,
-        lat,
-        lon,
-        image_url,
-        cocktail,
-        dive,
-        jazz,
-        wine,
-        rooftop,
-        speakeasy,
-        beer,
-        pub
-      FROM drinks
-      WHERE neighborhood_clean = ?
-      AND LOWER(REPLACE(REPLACE(place_name, ' ', '-'), '''', '')) = ?
-      LIMIT 1
-    `;
-
-    results = await query(barQuery, [cleanNeighborhood, cleanName]);
-    
-    if (Array.isArray(results) && results.length > 0) {
-      const row = results[0] as any;
-      const bar: Bar = {
-        id: row.id,
-        place_name: row.place_name,
-        description: row.description,
-        neighborhood: row.neighborhood,
-        neighborhood_clean: row.neighborhood_clean,
-        budget: row.budget,
-        lat: row.lat,
-        lon: row.lon,
-        image_url: row.image_url,
-        cocktail: Boolean(row.cocktail),
-        dive: Boolean(row.dive),
-        jazz: Boolean(row.jazz),
-        wine: Boolean(row.wine),
-        rooftop: Boolean(row.rooftop),
-        speakeasy: Boolean(row.speakeasy),
-        beer: Boolean(row.beer),
-        pub: Boolean(row.pub)
-      };
-      return { props: { place: bar } };
-    }
-
-    return {
-      props: {
-        place: null,
-        error: 'Place not found'
-      }
-    };
-  } catch (error) {
-    console.error('Server-side error:', error);
-    return {
-      props: {
-        place: null,
-        error: 'Failed to load place data'
-      }
-    };
-  }
-};
-
-export default function PlacePage({ place, error }: PlacePageProps) {
+const PlacePage = ({ place, error }: PlacePageProps) => {
   const router = useRouter();
 
   if (error || !place) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="error">
-          <h2 className="text-xl font-bold mb-4">Error</h2>
-          <p className="text-red-500">{error || 'Place not found'}</p>
-          <button 
-            onClick={() => router.back()}
-            className="mt-4 px-4 py-2 bg-white text-black rounded hover:bg-gray-200 transition-colors"
-          >
-            Go Back
-          </button>
-        </div>
+      <div className="error">
+        <p>{error || 'Place not found'}</p>
+        <button onClick={() => router.back()}>Go Back</button>
       </div>
     );
   }
 
   const isRestaurant = 'cuisine' in place;
-  const title = `${place.place_name} - ${isRestaurant ? place.cuisine : 'Bar'} in ${place.neighborhood} | NYC Curated`;
 
   return (
     <>
       <SEO 
-        title={title}
+        title={`${place.place_name} - ${isRestaurant ? place.cuisine : 'Bar'} in ${place.neighborhood} | NYC Curated`}
         description={place.description}
         image={place.image_url}
       />
@@ -228,4 +85,92 @@ export default function PlacePage({ place, error }: PlacePageProps) {
       </div>
     </>
   );
-}
+};
+
+export const getServerSideProps: GetServerSideProps<PlacePageProps> = async ({ params }) => {
+  try {
+    const { neighborhood, name } = params || {};
+    
+    if (!neighborhood || !name) {
+      return { props: { place: null, error: 'Invalid parameters' } };
+    }
+
+    // Try restaurants first
+    const restaurantQuery = `
+      SELECT * FROM food 
+      WHERE neighborhood_clean = ? 
+      AND LOWER(REPLACE(place_name, ' ', '-')) = ?
+      LIMIT 1
+    `;
+
+    let results = await query(restaurantQuery, [neighborhood, name]);
+    
+    if (Array.isArray(results) && results.length > 0) {
+      const row = results[0] as any;
+      const restaurant: Restaurant = {
+        id: row.id,
+        place_name: row.place_name,
+        description: row.description,
+        cuisine: row.cuisine,
+        cuisine_clean: row.cuisine_clean,
+        neighborhood: row.neighborhood,
+        neighborhood_clean: row.neighborhood_clean,
+        budget: row.budget,
+        meals: {
+          brunch: Boolean(row.brunch),
+          lunch: Boolean(row.lunch),
+          dinner: Boolean(row.dinner)
+        },
+        lat: row.lat,
+        lon: row.lon,
+        image_url: row.image_url
+      };
+      return { props: { place: restaurant } };
+    }
+
+    // If not found in restaurants, try bars
+    const barQuery = `
+      SELECT * FROM drinks 
+      WHERE neighborhood_clean = ? 
+      AND LOWER(REPLACE(place_name, ' ', '-')) = ?
+      LIMIT 1
+    `;
+
+    results = await query(barQuery, [neighborhood, name]);
+    
+    if (Array.isArray(results) && results.length > 0) {
+      const row = results[0] as any;
+      const bar: Bar = {
+        id: row.id,
+        place_name: row.place_name,
+        description: row.description,
+        neighborhood: row.neighborhood,
+        neighborhood_clean: row.neighborhood_clean,
+        budget: row.budget,
+        lat: row.lat,
+        lon: row.lon,
+        image_url: row.image_url,
+        cocktail: Boolean(row.cocktail),
+        dive: Boolean(row.dive),
+        jazz: Boolean(row.jazz),
+        wine: Boolean(row.wine),
+        rooftop: Boolean(row.rooftop),
+        speakeasy: Boolean(row.speakeasy),
+        beer: Boolean(row.beer),
+        pub: Boolean(row.pub)
+      };
+      return { props: { place: bar } };
+    }
+
+    return { props: { place: null, error: 'Place not found' } };
+  } catch (error) {
+    return { 
+      props: { 
+        place: null, 
+        error: error instanceof Error ? error.message : 'Failed to load place'
+      } 
+    };
+  }
+};
+
+export default PlacePage;
