@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react';
 import { Restaurant } from '../../types/restaurant';
 import { Bar } from '../../types/bar';
 import styles from '../../styles/places.module.css';
-import { generatePlaceUrl } from '../../utils/url';
 
 type Place = Restaurant | Bar;
 
@@ -38,6 +37,29 @@ const getNeighborhoodName = (value: string): string => {
   return names[value] || value;
 };
 
+const handlePlaceClick = async (place: Place, event: React.MouseEvent) => {
+  event.preventDefault();
+  
+  const nameSlug = place.place_name
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-');
+    
+  const apiUrl = `/api/places?neighborhood=${place.neighborhood_clean}&name=${nameSlug}`;
+  
+  try {
+    const response = await fetch(apiUrl);
+    if (!response.ok) throw new Error('Failed to fetch place data');
+    
+    const data = await response.json();
+    // If we successfully get the data, then navigate to the place page
+    window.location.href = `/place/${place.neighborhood_clean}/${nameSlug}`;
+  } catch (error) {
+    console.error('Error fetching place:', error);
+    alert('Unable to load place details. Please try again.');
+  }
+};
+
 export default function List({ places, selectedPlaceId }: ListProps) {
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -66,7 +88,7 @@ export default function List({ places, selectedPlaceId }: ListProps) {
           className={`${styles.placeBox} ${selectedPlaceId === place.id ? styles.placeBoxSelected : ''}`}
           data-place-id={place.id}
         >
-          <a href={generatePlaceUrl(place)}>
+          <a href="#" onClick={(e) => handlePlaceClick(place, e)}>
             <div className={styles.placeContent}>
               <h3 className={styles.placeName}>{place.place_name}</h3>
               <div className={styles.placeInfo}>

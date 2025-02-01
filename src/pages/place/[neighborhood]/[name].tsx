@@ -6,12 +6,13 @@ import type { Restaurant } from '../../../types/restaurant';
 import type { Bar } from '../../../types/bar';
 import { query } from '../../../lib/db';
 
-const Map = dynamic(() => import('../../../components/Map/MapClient'), {
-  ssr: false,
-  loading: () => (
-    <div style={{ width: '100%', height: '400px', background: '#1a1a1a' }} />
-  ),
-});
+// Commenting out Map import since we won't use it for now
+// const Map = dynamic(() => import('../../../components/Map/MapClient'), {
+//   ssr: false,
+//   loading: () => (
+//     <div style={{ width: '100%', height: '400px', background: '#1a1a1a' }} />
+//   ),
+// });
 
 type Place = Restaurant | Bar;
 
@@ -75,12 +76,13 @@ const PlacePage = ({ place, error }: PlacePageProps) => {
 
           <p className="place-description">{place.description}</p>
 
-          <div className="place-map">
+          {/* Commenting out map section to test if it's causing the issue */}
+          {/* <div className="place-map">
             <Map 
               places={[place]}
               onMarkerClick={() => {}}
             />
-          </div>
+          </div> */}
         </div>
       </div>
     </>
