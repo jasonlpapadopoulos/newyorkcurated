@@ -1,64 +1,231 @@
-import { useEffect, useState } from 'react';
+import type { GetServerSideProps } from 'next';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
+import SEO from '../../../components/SEO';
+import type { Restaurant } from '../../../types/restaurant';
+import type { Bar } from '../../../types/bar';
+import { query } from '../../../lib/db';
 
-const PlacePage = () => {
-  const router = useRouter();
-  const { neighborhood, name } = router.query;
-  const [data, setData] = useState<any>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+const Map = dynamic(() => import('../../../components/Map/MapClient'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-[400px] bg-gray-900 animate-pulse rounded-lg" />
+  ),
+});
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!neighborhood || !name) return;
+type Place = Restaurant | Bar;
 
-      try {
-        console.log('Fetching data for:', { neighborhood, name });
-        const response = await fetch(`/api/places?neighborhood=${neighborhood}&name=${name}`);
-        console.log('Response status:', response.status);
-        
-        const json = await response.json();
-        console.log('Response data:', json);
-        
-        if (!response.ok) {
-          throw new Error(json.error || 'Failed to fetch data');
+interface PlacePageProps {
+  place: Place | null;
+  error?: string;
+}
+
+export const getServerSideProps: GetServerSideProps<PlacePageProps> = async ({ params }) => {
+  try {
+    const { neighborhood, name } = params || {};
+    
+    if (!neighborhood || !name) {
+      return {
+        props: {
+          place: null,
+          error: 'Missing parameters'
         }
-        
-        setData(json);
-      } catch (err) {
-        console.error('Error:', err);
-        setError(err instanceof Error ? err.message : 'An error occurred');
-      } finally {
-        setLoading(false);
+      };
+    }
+
+    // Clean and normalize the parameters
+    const cleanNeighborhood = String(neighborhood).trim().toLowerCase();
+    const cleanName = String(name).trim().toLowerCase();
+
+    // Try restaurants first
+    const restaurantQuery = `
+      SELECT 
+        id,
+        place_name,
+        description,
+        cuisine,
+        cuisine_clean,
+        neighborhood,
+        neighborhood_clean,
+        budget,
+        brunch,
+        lunch,
+        dinner,
+        lat,
+        lon,
+        image_url
+      FROM food
+      WHERE neighborhood_clean = ? 
+      AND LOWER(REPLACE(REPLACE(place_name, ' ', '-'), '''', '')) = ?
+      LIMIT 1
+    `;
+
+    let results = await query(restaurantQuery, [cleanNeighborhood, cleanName]);
+    
+    if (Array.isArray(results) && results.length > 0) {
+      const row = results[0] as any;
+      const restaurant: Restaurant = {
+        id: row.id,
+        place_name: row.place_name,
+        description: row.description,
+        cuisine: row.cuisine,
+        cuisine_clean: row.cuisine_clean,
+        neighborhood: row.neighborhood,
+        neighborhood_clean: row.neighborhood_clean,
+        budget: row.budget,
+        meals: {
+          brunch: Boolean(row.brunch),
+          lunch: Boolean(row.lunch),
+          dinner: Boolean(row.dinner)
+        },
+        lat: row.lat,
+        lon: row.lon,
+        image_url: row.image_url
+      };
+      return { props: { place: restaurant } };
+    }
+
+    // If not found in restaurants, try bars
+    const barQuery = `
+      SELECT 
+        id,
+        place_name,
+        description,
+        neighborhood,
+        neighborhood_clean,
+        budget,
+        lat,
+        lon,
+        image_url,
+        cocktail,
+        dive,
+        jazz,
+        wine,
+        rooftop,
+        speakeasy,
+        beer,
+        pub
+      FROM drinks
+      WHERE neighborhood_clean = ?
+      AND LOWER(REPLACE(REPLACE(place_name, ' ', '-'), '''', '')) = ?
+      LIMIT 1
+    `;
+
+    results = await query(barQuery, [cleanNeighborhood, cleanName]);
+    
+    if (Array.isArray(results) && results.length > 0) {
+      const row = results[0] as any;
+      const bar: Bar = {
+        id: row.id,
+        place_name: row.place_name,
+        description: row.description,
+        neighborhood: row.neighborhood,
+        neighborhood_clean: row.neighborhood_clean,
+        budget: row.budget,
+        lat: row.lat,
+        lon: row.lon,
+        image_url: row.image_url,
+        cocktail: Boolean(row.cocktail),
+        dive: Boolean(row.dive),
+        jazz: Boolean(row.jazz),
+        wine: Boolean(row.wine),
+        rooftop: Boolean(row.rooftop),
+        speakeasy: Boolean(row.speakeasy),
+        beer: Boolean(row.beer),
+        pub: Boolean(row.pub)
+      };
+      return { props: { place: bar } };
+    }
+
+    return {
+      props: {
+        place: null,
+        error: 'Place not found'
       }
     };
-
-    fetchData();
-  }, [neighborhood, name]);
-
-  if (loading) {
-    return <div>Loading...</div>;
+  } catch (error) {
+    console.error('Server-side error:', error);
+    return {
+      props: {
+        place: null,
+        error: 'Failed to load place data'
+      }
+    };
   }
+};
 
-  if (error) {
+export default function PlacePage({ place, error }: PlacePageProps) {
+  const router = useRouter();
+
+  if (error || !place) {
     return (
-      <div>
-        <h1>Error</h1>
-        <p>{error}</p>
-        <pre>{JSON.stringify({ neighborhood, name }, null, 2)}</pre>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="error">
+          <h2 className="text-xl font-bold mb-4">Error</h2>
+          <p className="text-red-500">{error || 'Place not found'}</p>
+          <button 
+            onClick={() => router.back()}
+            className="mt-4 px-4 py-2 bg-white text-black rounded hover:bg-gray-200 transition-colors"
+          >
+            Go Back
+          </button>
+        </div>
       </div>
     );
   }
 
-  return (
-    <div style={{ padding: '20px' }}>
-      <h1>Raw API Response</h1>
-      <h2>Query Parameters:</h2>
-      <pre>{JSON.stringify({ neighborhood, name }, null, 2)}</pre>
-      <h2>Data:</h2>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
-    </div>
-  );
-};
+  const isRestaurant = 'cuisine' in place;
+  const title = `${place.place_name} - ${isRestaurant ? place.cuisine : 'Bar'} in ${place.neighborhood} | NYC Curated`;
 
-export default PlacePage;
+  return (
+    <>
+      <SEO 
+        title={title}
+        description={place.description}
+        image={place.image_url}
+      />
+      
+      <div className="place-page">
+        <div className="place-hero">
+          <img 
+            src={place.image_url} 
+            alt={place.place_name}
+            className="place-hero-image"
+          />
+        </div>
+
+        <div className="place-content">
+          <h1 className="place-title">{place.place_name}</h1>
+          
+          <div className="place-meta">
+            <span>{place.neighborhood}</span>
+            <span className="separator">·</span>
+            {isRestaurant ? (
+              <span>{place.cuisine}</span>
+            ) : (
+              <span>
+                {Object.entries(place)
+                  .filter(([key, value]) => 
+                    ['cocktail', 'dive', 'jazz', 'wine', 'rooftop', 'speakeasy', 'beer', 'pub'].includes(key) && value
+                  )
+                  .map(([key]) => key.charAt(0).toUpperCase() + key.slice(1))
+                  .join(', ')}
+              </span>
+            )}
+            <span className="separator">·</span>
+            <span>{place.budget}</span>
+          </div>
+
+          <p className="place-description">{place.description}</p>
+
+          <div className="place-map">
+            <Map 
+              places={[place]}
+              onMarkerClick={() => {}}
+            />
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
