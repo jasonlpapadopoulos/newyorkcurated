@@ -10,15 +10,13 @@ const nextConfig = {
           {
             key: 'Content-Security-Policy',
             value: [
-              "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com",
-              "img-src 'self' https: data:",
-              "font-src 'self' https://fonts.gstatic.com",
-              "connect-src 'self' https://*.supabase.co https://*.basemaps.cartocdn.com",
-              "frame-ancestors 'none'",
-              "base-uri 'self'",
-              "form-action 'self'",
+              "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:",
+              "script-src * 'unsafe-inline' 'unsafe-eval'",
+              "style-src * 'unsafe-inline'",
+              "img-src * data: blob:",
+              "font-src * data:",
+              "connect-src *",
+              "media-src *"
             ].join('; ')
           }
         ]
