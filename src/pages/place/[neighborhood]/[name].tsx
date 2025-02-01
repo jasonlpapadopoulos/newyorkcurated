@@ -23,33 +23,64 @@ export default function PlacePage() {
       if (!neighborhood || !name) return;
       
       try {
-        let response = await fetch(`/api/places?neighborhood=${neighborhood}&name=${name}`);
+        console.log('Fetching place data:', { neighborhood, name });
+        const response = await fetch(`/api/places?neighborhood=${encodeURIComponent(neighborhood)}&name=${encodeURIComponent(name)}`);
+        
         if (!response.ok) {
-          throw new Error('Place not found');
+          const errorData = await response.json().catch(() => null);
+          console.error('Error response:', {
+            status: response.status,
+            statusText: response.statusText,
+            errorData
+          });
+          
+          throw new Error(
+            errorData?.error || 
+            `Failed to fetch place data (${response.status})`
+          );
         }
         
         const data = await response.json();
+        console.log('Place data received:', data);
         setPlace(data);
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError('An unknown error occurred');
-        }
+      } catch (error) {
+        console.error('Error fetching place:', error);
+        setError(error instanceof Error ? error.message : 'Failed to load place data');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchPlace();
+    if (neighborhood && name) {
+      setLoading(true);
+      setError(null);
+      fetchPlace();
+    }
   }, [neighborhood, name]);
 
   if (loading) {
-    return <div className="loading">Loading...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="loading">Loading...</div>
+      </div>
+    );
   }
 
   if (error || !place) {
-    return <div className="error">Error: {error || 'Place not found'}</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="error">
+          <h2>Error</h2>
+          <p>{error || 'Place not found'}</p>
+          <button 
+            onClick={() => router.back()}
+            className="mt-4 px-4 py-2 bg-white text-black rounded hover:bg-gray-200"
+          >
+            Go Back
+          </button>
+        </div>
+      </div>
+    );
   }
 
   const isRestaurant = 'cuisine' in place;
