@@ -23,8 +23,14 @@ export default function PlacePage() {
       if (!neighborhood || !name) return;
       
       try {
-        console.log('Fetching place data:', { neighborhood, name });
-        const response = await fetch(`/api/places?neighborhood=${encodeURIComponent(neighborhood)}&name=${encodeURIComponent(name)}`);
+        // Convert query parameters to strings
+        const neighborhoodStr = Array.isArray(neighborhood) ? neighborhood[0] : neighborhood;
+        const nameStr = Array.isArray(name) ? name[0] : name;
+        
+        console.log('Fetching place data:', { neighborhood: neighborhoodStr, name: nameStr });
+        const response = await fetch(
+          `/api/places?neighborhood=${encodeURIComponent(neighborhoodStr)}&name=${encodeURIComponent(nameStr)}`
+        );
         
         if (!response.ok) {
           const errorData = await response.json().catch(() => null);
