@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import type { GetServerSideProps } from 'next';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 import SEO from '../../../components/SEO';
 import type { Restaurant } from '../../../types/restaurant';
 import type { Bar } from '../../../types/bar';
+import { query } from '../../../lib/db';
 
 const Map = dynamic(() => import('../../../components/Map/MapClient'), {
   ssr: false,
@@ -14,88 +15,147 @@ const Map = dynamic(() => import('../../../components/Map/MapClient'), {
 
 type Place = Restaurant | Bar;
 
-export default function PlacePage() {
-  const router = useRouter();
-  const { neighborhood, name } = router.query;
-  const [place, setPlace] = useState<Place | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+interface PlacePageProps {
+  place: Place | null;
+  error?: string;
+}
 
-  useEffect(() => {
-    const fetchPlace = async () => {
-      if (!neighborhood || !name) {
-        console.log('Missing query parameters:', { neighborhood, name });
-        return;
-      }
-      
-      try {
-        // Convert query parameters to strings
-        const neighborhoodStr = Array.isArray(neighborhood) ? neighborhood[0] : neighborhood;
-        const nameStr = Array.isArray(name) ? name[0] : name;
-        
-        const url = `/api/places?neighborhood=${encodeURIComponent(neighborhoodStr)}&name=${encodeURIComponent(nameStr)}`;
-        console.log('Fetching from URL:', url);
-        
-        const response = await fetch(url);
-        console.log('Response status:', response.status);
-        
-        if (!response.ok) {
-          let errorMessage = `HTTP error! status: ${response.status}`;
-          try {
-            const errorData = await response.json();
-            console.error('Error response data:', errorData);
-            errorMessage = errorData.error || errorMessage;
-          } catch (e) {
-            console.error('Failed to parse error response:', e);
-          }
-          throw new Error(errorMessage);
+export const getServerSideProps: GetServerSideProps<PlacePageProps> = async ({ params }) => {
+  try {
+    const { neighborhood, name } = params || {};
+    
+    if (!neighborhood || !name) {
+      return {
+        props: {
+          place: null,
+          error: 'Missing parameters'
         }
-        
-        let data;
-        try {
-          data = await response.json();
-          console.log('Successfully parsed response data:', data);
-        } catch (e) {
-          console.error('Failed to parse response JSON:', e);
-          throw new Error('Failed to parse response data');
-        }
-        
-        if (!data) {
-          throw new Error('No data received from API');
-        }
-        
-        setPlace(data);
-      } catch (error) {
-        console.error('Error in fetchPlace:', error);
-        setError(error instanceof Error ? error.message : 'An unknown error occurred');
-      } finally {
-        setLoading(false);
+      };
+    }
+
+    // Clean and normalize the parameters
+    const cleanNeighborhood = String(neighborhood).trim().toLowerCase();
+    const cleanName = String(name).trim().toLowerCase();
+
+    // Try restaurants first
+    const restaurantQuery = `
+      SELECT 
+        id,
+        place_name,
+        description,
+        cuisine,
+        cuisine_clean,
+        neighborhood,
+        neighborhood_clean,
+        budget,
+        brunch,
+        lunch,
+        dinner,
+        lat,
+        lon,
+        image_url
+      FROM food
+      WHERE neighborhood_clean = ? 
+      AND LOWER(REPLACE(REPLACE(place_name, ' ', '-'), '''', '')) = ?
+      LIMIT 1
+    `;
+
+    let results = await query(restaurantQuery, [cleanNeighborhood, cleanName]);
+    
+    if (Array.isArray(results) && results.length > 0) {
+      const row = results[0] as any;
+      const restaurant: Restaurant = {
+        id: row.id,
+        place_name: row.place_name,
+        description: row.description,
+        cuisine: row.cuisine,
+        cuisine_clean: row.cuisine_clean,
+        neighborhood: row.neighborhood,
+        neighborhood_clean: row.neighborhood_clean,
+        budget: row.budget,
+        meals: {
+          brunch: Boolean(row.brunch),
+          lunch: Boolean(row.lunch),
+          dinner: Boolean(row.dinner)
+        },
+        lat: row.lat,
+        lon: row.lon,
+        image_url: row.image_url
+      };
+      return { props: { place: restaurant } };
+    }
+
+    // If not found in restaurants, try bars
+    const barQuery = `
+      SELECT 
+        id,
+        place_name,
+        description,
+        neighborhood,
+        neighborhood_clean,
+        budget,
+        lat,
+        lon,
+        image_url,
+        cocktail,
+        dive,
+        jazz,
+        wine,
+        rooftop,
+        speakeasy,
+        beer,
+        pub
+      FROM drinks
+      WHERE neighborhood_clean = ?
+      AND LOWER(REPLACE(REPLACE(place_name, ' ', '-'), '''', '')) = ?
+      LIMIT 1
+    `;
+
+    results = await query(barQuery, [cleanNeighborhood, cleanName]);
+    
+    if (Array.isArray(results) && results.length > 0) {
+      const row = results[0] as any;
+      const bar: Bar = {
+        id: row.id,
+        place_name: row.place_name,
+        description: row.description,
+        neighborhood: row.neighborhood,
+        neighborhood_clean: row.neighborhood_clean,
+        budget: row.budget,
+        lat: row.lat,
+        lon: row.lon,
+        image_url: row.image_url,
+        cocktail: Boolean(row.cocktail),
+        dive: Boolean(row.dive),
+        jazz: Boolean(row.jazz),
+        wine: Boolean(row.wine),
+        rooftop: Boolean(row.rooftop),
+        speakeasy: Boolean(row.speakeasy),
+        beer: Boolean(row.beer),
+        pub: Boolean(row.pub)
+      };
+      return { props: { place: bar } };
+    }
+
+    return {
+      props: {
+        place: null,
+        error: 'Place not found'
       }
     };
-
-    if (router.isReady) {
-      setLoading(true);
-      setError(null);
-      fetchPlace();
-    }
-  }, [router.isReady, neighborhood, name]);
-
-  // Early return if the router is not ready
-  if (!router.isReady) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="loading">Initializing...</div>
-      </div>
-    );
+  } catch (error) {
+    console.error('Server-side error:', error);
+    return {
+      props: {
+        place: null,
+        error: 'Failed to load place data'
+      }
+    };
   }
+};
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="loading">Loading...</div>
-      </div>
-    );
-  }
+export default function PlacePage({ place, error }: PlacePageProps) {
+  const router = useRouter();
 
   if (error || !place) {
     return (
