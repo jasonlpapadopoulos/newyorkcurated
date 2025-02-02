@@ -25,6 +25,6 @@
 
   [[redirects]]
   from = "/place/*"
-  to = "/place/[...params]"
+  to = "/place/:splat"
   status = 200
   force = true
