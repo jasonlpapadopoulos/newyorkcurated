@@ -10,13 +10,6 @@
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-# Handle API routes first
-[[redirects]]
-  from = "/api/*"
-  to = "/api/:splat"
-  status = 200
-  force = true
-
 # Handle results page with query parameters
 [[redirects]]
   from = "/results"
