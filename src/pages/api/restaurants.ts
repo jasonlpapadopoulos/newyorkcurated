@@ -8,9 +8,18 @@ export default async function handler(
 ) {
   try {
     const { neighborhoods } = req.query;
+    
+    if (!neighborhoods) {
+      return res.status(400).json({ error: 'Missing neighborhoods parameter' });
+    }
+
     const neighborhoodList = typeof neighborhoods === 'string' 
       ? neighborhoods.split(',').map(n => decodeURIComponent(n))
       : [];
+
+    if (neighborhoodList.length === 0) {
+      return res.status(400).json({ error: 'Invalid neighborhoods parameter' });
+    }
 
     const restaurantQuery = `
       SELECT 

@@ -30,12 +30,12 @@ const Results: NextPage = () => {
 
   useEffect(() => {
     const fetchPlaces = async () => {
-      if (!neighborhoods || !category) return;
+      if (!neighborhoods) return;
       
       setLoading(true);
       try {
         const endpoint = category === 'food' ? 'restaurants' : 'bars';
-        const response = await fetch(`/api/${endpoint}?neighborhoods=${neighborhoods}&category=${category}`);
+        const response = await fetch(`/api/${endpoint}?neighborhoods=${neighborhoods}`);
         if (!response.ok) throw new Error('Failed to fetch places');
         const data = await response.json();
         setPlaces(data);
@@ -77,11 +77,6 @@ const Results: NextPage = () => {
 
   const handleMarkerClick = (place: Place) => {
     setSelectedPlace(place);
-  };
-
-  const toggleView = () => {
-    setViewMode(prev => prev === 'list' ? 'map' : 'list');
-    setSelectedPlace(null);
   };
 
   if (loading) {
