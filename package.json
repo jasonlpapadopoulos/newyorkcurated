@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@netlify/plugin-nextjs": "^5.9.4",
     "@types/leaflet": "^1.9.8",
     "@types/node": "^20.10.5",
     "@types/react": "^18.2.43",
@@ -22,5 +21,8 @@
     "react-helmet-async": "^2.0.4",
     "serverless-mysql": "^1.5.5",
     "typescript": "^5.2.2"
+  },
+  "devDependencies": {
+    "@netlify/plugin-nextjs": "^5.9.4"
   }
 }

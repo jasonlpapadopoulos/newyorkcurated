@@ -1,28 +1,19 @@
 [build]
   command = "npm run build"
-  publish = ".next"
+  publish = ".next/standalone"
 
 [build.environment]
   NEXT_USE_NETLIFY_EDGE = "true"
   NODE_VERSION = "18"
-  # Enable CSS optimization
   NEXT_OPTIMIZE_CSS = "true"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-# Handle results page with query parameters
+# Handle results page with any parameters
 [[redirects]]
-  from = "/results"
-  to = "/results"
-  status = 200
-  force = true
-  query = {category = ":category", neighborhoods = ":neighborhoods"}
-
-# Fallback for results with any query parameters
-[[redirects]]
-  from = "/results"
-  to = "/results"
+  from = "/results/*"
+  to = "/results/:splat"
   status = 200
   force = true
 
@@ -42,6 +33,6 @@
 # Final fallback
 [[redirects]]
   from = "/*"
-  to = "/index.html"
+  to = "/.netlify/functions/next"
   status = 200
   force = true
