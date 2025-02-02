@@ -14,11 +14,11 @@
   to = "/_next/static/:splat"
   status = 200
 
-# Handle all Next.js routes
 [[redirects]]
   from = "/*"
-  to = "/.netlify/functions/nextjs-server"
+  to = "/index.html"
   status = 200
+  force = true
 
 # Handle results page with query parameters
 [[redirects]]
@@ -32,19 +32,5 @@
 [[redirects]]
   from = "/results"
   to = "/results"
-  status = 200
-  force = true
-
-# Handle place pages
-[[redirects]]
-  from = "/place/*"
-  to = "/place/[...params]"
-  status = 200
-  force = true
-
-# Final fallback
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
   status = 200
   force = true
