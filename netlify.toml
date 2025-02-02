@@ -7,7 +7,7 @@
   NODE_VERSION = "18"
 
 [[plugins]]
-  package = "@netlify/plugin-nextjs"
+  package = "@opennextjs/netlify"
 
 # Handle results page with query parameters
 [[redirects]]
