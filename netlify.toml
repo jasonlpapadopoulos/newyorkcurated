@@ -4,12 +4,11 @@
 
 [build.environment]
   NEXT_USE_NETLIFY_EDGE = "true"
-  NODE_VERSION = "18"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-# Handle results page with query parameters
+  # Handle results page with query parameters
 [[redirects]]
   from = "/results"
   to = "/results"
@@ -24,16 +23,15 @@
   status = 200
   force = true
 
-# Handle place pages
-[[redirects]]
+  [[redirects]]
   from = "/place/*"
-  to = "/place/[neighborhood]/[name]"
+  to = "/place/[...params]"
   status = 200
   force = true
+  query = {neighborhood = ":neighborhood", name = ":name"}
 
-# Final fallback
-[[redirects]]
-  from = "/*"
-  to = "/.netlify/functions/next"
+  [[redirects]]
+  from = "/place/:neighborhood/:name"
+  to = "/place/[neighborhood]/[name]"
   status = 200
   force = true
