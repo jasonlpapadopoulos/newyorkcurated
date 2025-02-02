@@ -20,6 +20,14 @@
   status = 200
   force = true
 
+# Handle results page with query parameters
+[[redirects]]
+  from = "/results"
+  to = "/results"
+  status = 200
+  force = true
+  query = {category = ":category", neighborhoods = ":neighborhoods"}
+
 # Fallback for results with any query parameters
 [[redirects]]
   from = "/results"
