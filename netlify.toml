@@ -4,23 +4,6 @@
 
 [build.environment]
   NEXT_USE_NETLIFY_EDGE = "true"
-  NODE_VERSION = "18"
-  NEXT_OPTIMIZE_CSS = "true"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
-
-# Handle results page with query parameters
-[[redirects]]
-  from = "/results"
-  to = "/.netlify/functions/next_results"
-  status = 200
-  force = true
-  query = {category = ":category", neighborhoods = ":neighborhoods"}
-
-# Final fallback for all other routes
-[[redirects]]
-  from = "/*"
-  to = "/.netlify/functions/next"
-  status = 200
-  force = true
