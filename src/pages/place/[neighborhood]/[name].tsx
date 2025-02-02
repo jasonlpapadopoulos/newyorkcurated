@@ -1,4 +1,4 @@
-import type { GetServerSideProps } from 'next';
+import type { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import SEO from '../../../components/SEO';
@@ -18,17 +18,30 @@ type Place = Restaurant | Bar;
 interface PlacePageProps {
   place: Place | null;
   error?: string;
+  debug?: any;
 }
 
-export const getServerSideProps: GetServerSideProps<PlacePageProps> = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const debug: any = {};
+  
   try {
-    const { neighborhood, name } = params || {};
+    debug.requestInfo = {
+      url: context.req.url,
+      params: context.params,
+      query: context.query
+    };
+
+    const { neighborhood, name } = context.params || {};
     
-    if (!neighborhood || !name) {
+    if (!neighborhood || !name || Array.isArray(neighborhood) || Array.isArray(name)) {
+      debug.error = { type: 'invalid_params', params: { neighborhood, name } };
       return {
         props: {
           place: null,
-          error: 'Missing parameters'
+          error: 'Invalid parameters',
+          debug
         }
       };
     }
@@ -36,6 +49,8 @@ export const getServerSideProps: GetServerSideProps<PlacePageProps> = async ({ p
     // Clean and normalize the parameters
     const cleanNeighborhood = String(neighborhood).trim().toLowerCase();
     const cleanName = String(name).trim().toLowerCase();
+
+    debug.cleanParams = { cleanNeighborhood, cleanName };
 
     // Try restaurants first
     const restaurantQuery = `
@@ -61,6 +76,7 @@ export const getServerSideProps: GetServerSideProps<PlacePageProps> = async ({ p
     `;
 
     let results = await query(restaurantQuery, [cleanNeighborhood, cleanName]);
+    debug.restaurantResults = results;
     
     if (Array.isArray(results) && results.length > 0) {
       const row = results[0] as any;
@@ -82,7 +98,7 @@ export const getServerSideProps: GetServerSideProps<PlacePageProps> = async ({ p
         lon: row.lon,
         image_url: row.image_url
       };
-      return { props: { place: restaurant } };
+      return { props: { place: restaurant, debug } };
     }
 
     // If not found in restaurants, try bars
@@ -112,6 +128,7 @@ export const getServerSideProps: GetServerSideProps<PlacePageProps> = async ({ p
     `;
 
     results = await query(barQuery, [cleanNeighborhood, cleanName]);
+    debug.barResults = results;
     
     if (Array.isArray(results) && results.length > 0) {
       const row = results[0] as any;
@@ -134,27 +151,34 @@ export const getServerSideProps: GetServerSideProps<PlacePageProps> = async ({ p
         beer: Boolean(row.beer),
         pub: Boolean(row.pub)
       };
-      return { props: { place: bar } };
+      return { props: { place: bar, debug } };
     }
 
+    debug.error = { type: 'not_found' };
     return {
       props: {
         place: null,
-        error: 'Place not found'
+        error: 'Place not found',
+        debug
       }
     };
   } catch (error) {
-    console.error('Server-side error:', error);
+    debug.error = {
+      type: 'server_error',
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined
+    };
     return {
       props: {
         place: null,
-        error: 'Failed to load place data'
+        error: 'Failed to load place data',
+        debug
       }
     };
   }
 };
 
-export default function PlacePage({ place, error }: PlacePageProps) {
+export default function PlacePage({ place, error, debug }: PlacePageProps) {
   const router = useRouter();
 
   if (error || !place) {
@@ -163,6 +187,11 @@ export default function PlacePage({ place, error }: PlacePageProps) {
         <div className="error">
           <h2 className="text-xl font-bold mb-4">Error</h2>
           <p className="text-red-500">{error || 'Place not found'}</p>
+          {process.env.NODE_ENV !== 'production' && (
+            <pre className="mt-4 p-4 bg-gray-900 text-white rounded overflow-auto max-w-full">
+              {JSON.stringify(debug, null, 2)}
+            </pre>
+          )}
           <button 
             onClick={() => router.back()}
             className="mt-4 px-4 py-2 bg-white text-black rounded hover:bg-gray-200 transition-colors"
