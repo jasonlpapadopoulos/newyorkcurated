@@ -1,6 +1,7 @@
+import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
-import Head from 'next/head';
 import type { NextPage } from 'next';
+import SEO from '../components/SEO';
 
 interface CategoryOptionProps {
   backgroundImage: string;
@@ -28,13 +29,11 @@ const WhatAreYouLookingFor: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>New York Curated - Categories</title>
-        <meta 
-          name="description" 
-          content="Discover food, drinks, and more in New York City." 
-        />
-      </Head>
+      <SEO 
+        title="Choose Your NYC Experience | Food & Drinks | NYC Curated"
+        description="Discover the best food and drinks in New York City. Choose your experience and explore hand-picked recommendations in every neighborhood."
+        slogan="Find the perfect spot in NYC, whether you're craving amazing food or seeking the best bars."
+      />
 
       <h2 className="title">What are you looking for?</h2>
 
@@ -52,6 +51,13 @@ const WhatAreYouLookingFor: NextPage = () => {
       </div>
     </>
   );
+};
+
+export const getStaticProps: GetStaticProps = async () => {
+  return {
+    props: {},
+    revalidate: 3600, // Revalidate every hour
+  };
 };
 
 export default WhatAreYouLookingFor;

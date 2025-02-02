@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { GetServerSideProps } from 'next';
 import dynamic from 'next/dynamic';
 import SEO from '../../../components/SEO';
 import type { Restaurant } from '../../../types/restaurant';
@@ -11,45 +10,13 @@ const Map = dynamic(() => import('../../../components/Map/MapClient'), {
 
 type Place = Restaurant | Bar;
 
-export default function PlacePage() {
-  const router = useRouter();
-  const { neighborhood, name } = router.query;
-  const [place, setPlace] = useState<Place | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+interface PlacePageProps {
+  place: Place;
+}
 
-  useEffect(() => {
-    const fetchPlace = async () => {
-      if (!neighborhood || !name) return;
-      
-      try {
-        let response = await fetch(`/api/places?neighborhood=${neighborhood}&name=${name}`);
-        if (!response.ok) {
-          throw new Error('Place not found');
-        }
-        
-        const data = await response.json();
-        setPlace(data);
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError('An unknown error occurred');
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPlace();
-  }, [neighborhood, name]);
-
-  if (loading) {
-    return <div className="loading">Loading...</div>;
-  }
-
-  if (error || !place) {
-    return <div className="error">Error: {error || 'Place not found'}</div>;
+export default function PlacePage({ place }: PlacePageProps) {
+  if (!place) {
+    return <div className="error">Place not found</div>;
   }
 
   const isRestaurant = 'cuisine' in place;
@@ -105,4 +72,35 @@ export default function PlacePage() {
       </div>
     </>
   );
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ params, req }) => {
+  if (!params?.neighborhood || !params?.name) {
+    return { notFound: true };
+  }
+
+  const protocol = req.headers['x-forwarded-proto'] || 'http';
+  const host = req.headers.host;
+  const baseUrl = `${protocol}://${host}`;
+  
+  try {
+    const response = await fetch(
+      `${baseUrl}/api/places?neighborhood=${params.neighborhood}&name=${params.name}`
+    );
+
+    if (!response.ok) {
+      return { notFound: true };
+    }
+
+    const place = await response.json();
+
+    return {
+      props: {
+        place
+      }
+    };
+  } catch (error) {
+    console.error('Error fetching place:', error);
+    return { notFound: true };
+  }
 }

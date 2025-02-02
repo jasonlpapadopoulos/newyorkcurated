@@ -1,7 +1,8 @@
+import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import Head from 'next/head';
 import { useState } from 'react';
 import type { NextPage } from 'next';
+import SEO from '../components/SEO';
 import neighborhoodsData from '../data/neighborhoods.json';
 
 interface Neighborhood {
@@ -30,15 +31,21 @@ interface NeighborhoodsData {
   };
 }
 
-const Neighborhoods: NextPage = () => {
+interface NeighborhoodsPageProps {
+  category: string;
+}
+
+const Neighborhoods: NextPage<NeighborhoodsPageProps> = ({ category }) => {
   const router = useRouter();
-  const { to: category } = router.query;
   const [selectedNeighborhoods, setSelectedNeighborhoods] = useState<string[]>([]);
 
   const title = category === 'eat' ? 'Food' : 'Drinks';
   const data = category === 'eat' 
     ? (neighborhoodsData as NeighborhoodsData).food 
     : (neighborhoodsData as NeighborhoodsData).drinks;
+
+  const pageTitle = `Choose Your NYC ${title} Neighborhoods | NYC Curated`;
+  const description = `Select your preferred neighborhoods to discover the best ${category === 'eat' ? 'restaurants' : 'bars'} in New York City. Hand-picked recommendations for each area.`;
 
   const toggleSection = (event: React.MouseEvent<HTMLDivElement>) => {
     const header = event.currentTarget;
@@ -168,10 +175,10 @@ const Neighborhoods: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>NYC {title} Neighborhoods</title>
-        <meta name="description" content={`Discover the best neighborhoods for ${title.toLowerCase()} in New York City.`} />
-      </Head>
+      <SEO 
+        title={pageTitle}
+        description={description}
+      />
       <h4 className="title">Neighborhood</h4>
       <div className="sections-container">
         {data.manhattan && (
@@ -197,6 +204,25 @@ const Neighborhoods: NextPage = () => {
       </button>
     </>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const { to: category } = query;
+
+  if (!category || (category !== 'eat' && category !== 'drink')) {
+    return {
+      redirect: {
+        destination: '/what-are-you-looking-for',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      category,
+    },
+  };
 };
 
 export default Neighborhoods;
