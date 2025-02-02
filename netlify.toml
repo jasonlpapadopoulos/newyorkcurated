@@ -1,17 +1,30 @@
 [build]
   command = "npm run build"
-  publish = ".netlify/functions-internal"
+  publish = ".next"
 
 [build.environment]
   NEXT_USE_NETLIFY_EDGE = "true"
-  NODE_VERSION = "18"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-# Handle all routes through Next.js
+  # Handle results page with query parameters
 [[redirects]]
-  from = "/*"
-  to = "/.netlify/functions/nextServer"
+  from = "/results"
+  to = "/results"
+  status = 200
+  force = true
+  query = {category = ":category", neighborhoods = ":neighborhoods"}
+
+# Fallback for results with any query parameters
+[[redirects]]
+  from = "/results"
+  to = "/results"
+  status = 200
+  force = true
+
+  [[redirects]]
+  from = "/place/*"
+  to = "/place/:splat"
   status = 200
   force = true
