@@ -30,12 +30,12 @@ const Results: NextPage = () => {
 
   useEffect(() => {
     const fetchPlaces = async () => {
-      if (!neighborhoods) return;
+      if (!neighborhoods || !category) return;
       
       setLoading(true);
       try {
         const endpoint = category === 'food' ? 'restaurants' : 'bars';
-        const response = await fetch(`/api/${endpoint}?neighborhoods=${neighborhoods}`);
+        const response = await fetch(`/api/${endpoint}?neighborhoods=${neighborhoods}&category=${category}`);
         if (!response.ok) throw new Error('Failed to fetch places');
         const data = await response.json();
         setPlaces(data);
