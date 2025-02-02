@@ -1,4 +1,3 @@
-// In src/pages/place/[neighborhood]/[name].tsx
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
@@ -98,13 +97,7 @@ export default function PlacePage() {
 
           <div className="place-map">
             <Map 
-              places={[{
-                ...place,
-                coordinates: {
-                  lat: place.lat,
-                  lng: place.lon
-                }
-              }]}
+              places={[place]}
               onMarkerClick={() => {}}
             />
           </div>
