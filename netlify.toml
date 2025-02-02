@@ -22,3 +22,9 @@
   to = "/results"
   status = 200
   force = true
+
+  [[redirects]]
+  from = "/place/*"
+  to = "/place/[...params]"
+  status = 200
+  force = true
