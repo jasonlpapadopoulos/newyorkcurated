@@ -19,3 +19,10 @@
   to = "/index.html"
   status = 200
   force = true
+
+# Fallback for results with any query parameters
+[[redirects]]
+  from = "/results"
+  to = "/results"
+  status = 200
+  force = true
