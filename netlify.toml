@@ -9,24 +9,9 @@
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-# Handle dynamic routes for places
-[[redirects]]
-  from = "/place/:neighborhood/:name"
-  to = "/.netlify/functions/place"
-  status = 200
-  force = true
-
-# Handle results page with query parameters
-[[redirects]]
-  from = "/results"
-  to = "/.netlify/functions/results"
-  status = 200
-  force = true
-  query = {category = ":category", neighborhoods = ":neighborhoods"}
-
-# Final fallback
+# Handle all routes through Next.js
 [[redirects]]
   from = "/*"
-  to = "/index.html"
+  to = "/.netlify/functions/nextServer"
   status = 200
   force = true
