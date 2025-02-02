@@ -29,3 +29,9 @@
   status = 200
   force = true
   query = {neighborhood = ":neighborhood", name = ":name"}
+
+  [[redirects]]
+  from = "/place/:neighborhood/:name"
+  to = "/place/[neighborhood]/[name]"
+  status = 200
+  force = true
