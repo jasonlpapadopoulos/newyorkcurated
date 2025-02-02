@@ -21,6 +21,7 @@ export default async function handler(
       return res.status(400).json({ error: 'Invalid neighborhoods parameter' });
     }
 
+    const placeholders = neighborhoodList.map(() => '?').join(',');
     const barQuery = `
       SELECT 
         id,
@@ -41,10 +42,10 @@ export default async function handler(
         beer,
         pub
       FROM drinks
-      WHERE neighborhood_clean IN (?)
+      WHERE neighborhood_clean IN (${placeholders})
     `;
 
-    const results = await query(barQuery, [neighborhoodList]);
+    const results = await query(barQuery, neighborhoodList);
     
     const bars: Bar[] = (results as any[]).map(row => ({
       id: row.id,

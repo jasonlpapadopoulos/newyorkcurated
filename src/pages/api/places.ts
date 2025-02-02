@@ -10,19 +10,13 @@ export default async function handler(
   try {
     const { neighborhood, name } = req.query;
     
-    // Debug log the incoming parameters
-    console.log('API Request params:', { neighborhood, name });
-
     if (!neighborhood || !name) {
-      console.log('Missing parameters');
       return res.status(400).json({ error: 'Missing required parameters' });
     }
 
     // Clean and normalize the parameters
     const cleanNeighborhood = String(neighborhood).trim().toLowerCase();
     const cleanName = String(name).trim().toLowerCase();
-
-    console.log('Cleaned parameters:', { cleanNeighborhood, cleanName });
 
     // Try restaurants first
     const restaurantQuery = `
@@ -46,18 +40,8 @@ export default async function handler(
       AND LOWER(REPLACE(REPLACE(place_name, ' ', '-'), '''', '')) = ?
       LIMIT 1
     `;
-
-    // Debug log the query and parameters
-    console.log('Restaurant query params:', [cleanNeighborhood, cleanName]);
     
-    let results;
-    try {
-      results = await query(restaurantQuery, [cleanNeighborhood, cleanName]);
-      console.log('Restaurant query results:', results);
-    } catch (dbError) {
-      console.error('Restaurant query error:', dbError);
-      throw dbError;
-    }
+    let results = await query(restaurantQuery, [cleanNeighborhood, cleanName]);
     
     if (Array.isArray(results) && results.length > 0) {
       const row = results[0] as any;
@@ -107,17 +91,8 @@ export default async function handler(
       AND LOWER(REPLACE(REPLACE(place_name, ' ', '-'), '''', '')) = ?
       LIMIT 1
     `;
-
-    // Debug log the bar query attempt
-    console.log('Bar query params:', [cleanNeighborhood, cleanName]);
     
-    try {
-      results = await query(barQuery, [cleanNeighborhood, cleanName]);
-      console.log('Bar query results:', results);
-    } catch (dbError) {
-      console.error('Bar query error:', dbError);
-      throw dbError;
-    }
+    results = await query(barQuery, [cleanNeighborhood, cleanName]);
     
     if (Array.isArray(results) && results.length > 0) {
       const row = results[0] as any;
@@ -143,7 +118,6 @@ export default async function handler(
       return res.status(200).json(bar);
     }
 
-    console.log('No results found for either restaurants or bars');
     return res.status(404).json({ 
       error: 'Place not found',
       params: { neighborhood: cleanNeighborhood, name: cleanName }
@@ -151,9 +125,8 @@ export default async function handler(
   } catch (error) {
     console.error('Error fetching place:', error);
     return res.status(500).json({ 
-      error: 'Error fetching place data', 
-      details: error instanceof Error ? error.message : 'Unknown error',
-      timestamp: new Date().toISOString()
+      error: 'Error fetching place data',
+      details: error instanceof Error ? error.message : 'Unknown error'
     });
   }
 }

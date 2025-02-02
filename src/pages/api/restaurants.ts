@@ -21,6 +21,7 @@ export default async function handler(
       return res.status(400).json({ error: 'Invalid neighborhoods parameter' });
     }
 
+    const placeholders = neighborhoodList.map(() => '?').join(',');
     const restaurantQuery = `
       SELECT 
         id,
@@ -38,10 +39,10 @@ export default async function handler(
         lon,
         image_url
       FROM food
-      WHERE neighborhood_clean IN (?)
+      WHERE neighborhood_clean IN (${placeholders})
     `;
 
-    const results = await query(restaurantQuery, [neighborhoodList]);
+    const results = await query(restaurantQuery, neighborhoodList);
     
     const restaurants: Restaurant[] = (results as any[]).map(row => ({
       id: row.id,
