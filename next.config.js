@@ -4,32 +4,19 @@ const nextConfig = {
   swcMinify: true,
   webpack: (config, { dev }) => {
     if (!dev) {
-      config.devtool = false;
+      config.devtool = false; // Fully disable eval() in production
     }
 
+    // Ensure Webpack minimizes everything and avoids eval()
     config.optimization = {
       ...config.optimization,
-      minimize: true,
+      minimize: true, // Minify everything (but no usedExports)
     };
 
     return config;
   },
-  // Ensure CSS modules are handled correctly
-  cssModules: true,
-  // Enable CSS optimization
-  optimizeCss: true,
-  // Configure output directory for Netlify
-  distDir: '.next',
-  // Configure asset prefix for static files
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/' : '',
-  // Configure rewrites
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: '/api/:path*',
-      },
-    ];
+  experimental: {
+    optimizeCss: false, // Prevents eval() from sneaking into styles
   },
 };
 
