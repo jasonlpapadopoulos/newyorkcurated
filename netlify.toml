@@ -9,33 +9,35 @@
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
+# API routes
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/nextjs-server/api/:splat"
+  status = 200
+
+# Handle static assets
 [[redirects]]
   from = "/_next/static/*"
   to = "/_next/static/:splat"
   status = 200
 
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-  force = true
-
 # Handle results page with query parameters
 [[redirects]]
   from = "/results"
-  to = "/results"
+  to = "/.netlify/functions/nextjs-server/results"
   status = 200
   force = true
   query = {category = ":category", neighborhoods = ":neighborhoods"}
 
-# Fallback for results with any query parameters
+# Handle place pages
 [[redirects]]
-  from = "/results"
-  to = "/results"
+  from = "/place/*"
+  to = "/.netlify/functions/nextjs-server/place/:splat"
+  status = 200
+
+# Final catch-all
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/nextjs-server/:splat"
   status = 200
   force = true
-
-[[redirects]]
-  from = "/results/*"
-  to = "/results"
-  status = 200
