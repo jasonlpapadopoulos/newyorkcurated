@@ -25,12 +25,6 @@
   force = true
   query = {category = ":category", neighborhoods = ":neighborhoods"}
 
-# Handle static assets
-[[redirects]]
-  from = "/_next/static/*"
-  to = "/_next/static/:splat"
-  status = 200
-
 # Handle place pages
 [[redirects]]
   from = "/place/*"
