@@ -5,6 +5,8 @@
 [build.environment]
   NEXT_USE_NETLIFY_EDGE = "true"
   NODE_VERSION = "18"
+  # Enable CSS optimization
+  NEXT_OPTIMIZE_CSS = "true"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
@@ -30,6 +32,12 @@
   to = "/place/[...params]"
   status = 200
   force = true
+
+# Handle static assets
+[[redirects]]
+  from = "/_next/static/*"
+  to = "/_next/static/:splat"
+  status = 200
 
 # Final fallback
 [[redirects]]
