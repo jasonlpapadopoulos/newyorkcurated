@@ -25,13 +25,6 @@
   force = true
   query = {category = ":category", neighborhoods = ":neighborhoods"}
 
-# Handle place pages
-[[redirects]]
-  from = "/place/*"
-  to = "/.netlify/functions/next_place"
-  status = 200
-  force = true
-
 # Final fallback for all other routes
 [[redirects]]
   from = "/*"
