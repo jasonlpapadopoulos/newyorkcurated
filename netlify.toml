@@ -28,3 +28,4 @@
   to = "/place/[...params]"
   status = 200
   force = true
+  query = {neighborhood = ":neighborhood", name = ":name"}
