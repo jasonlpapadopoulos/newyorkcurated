@@ -1,4 +1,3 @@
-import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import type { NextPage } from 'next';
 import SEO from '../components/SEO';
@@ -51,13 +50,6 @@ const WhatAreYouLookingFor: NextPage = () => {
       </div>
     </>
   );
-};
-
-export const getStaticProps: GetStaticProps = async () => {
-  return {
-    props: {},
-    revalidate: 3600, // Revalidate every hour
-  };
 };
 
 export default WhatAreYouLookingFor;
