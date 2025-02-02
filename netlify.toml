@@ -34,3 +34,8 @@
   to = "/results"
   status = 200
   force = true
+
+[[redirects]]
+  from = "/results/*"
+  to = "/results"
+  status = 200
