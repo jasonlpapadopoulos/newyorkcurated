@@ -1,6 +1,6 @@
 [build]
   command = "npm run build"
-  publish = ".next/standalone"
+  publish = ".next"
 
 [build.environment]
   NEXT_USE_NETLIFY_EDGE = "true"
@@ -10,27 +10,23 @@
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-# Handle results page with any parameters
 [[redirects]]
   from = "/results/*"
   to = "/results/:splat"
   status = 200
   force = true
 
-# Handle place pages
 [[redirects]]
   from = "/place/*"
   to = "/place/[...params]"
   status = 200
   force = true
 
-# Handle static assets
 [[redirects]]
   from = "/_next/static/*"
   to = "/_next/static/:splat"
   status = 200
 
-# Final fallback
 [[redirects]]
   from = "/*"
   to = "/.netlify/functions/next"
