@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build"   # Runs the build script from package.json
+  command = "next build"   # Runs the build script from package.json
   publish = ".next"           # Tells Netlify to serve the Next.js build
   functions = ".netlify/functions"  # Ensures SSR functions are deployed
 
