@@ -39,14 +39,22 @@ export default function SEO({
         siteName: 'New York Curated',
         type,
       }}
+      additionalLinkTags={[
+        {
+          rel: 'icon',
+          href: '/favicon.ico',
+        },
+        {
+          rel: 'apple-touch-icon',
+          href: '/apple-touch-icon.png',
+        }
+      ]}
       {...(structuredData && {
-        additionalMetaTags: [
-          {
-            name: 'script',
-            type: 'application/ld+json',
-            content: JSON.stringify(structuredData)
-          }
-        ]
+        additionalMetaTags: [{
+          property: 'script',
+          content: JSON.stringify(structuredData),
+          keyOverride: 'structured-data'
+        }]
       })}
     />
   );
