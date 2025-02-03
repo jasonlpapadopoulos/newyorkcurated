@@ -12,6 +12,20 @@ const nextConfig = {
     config.optimization = { ...config.optimization, minimize: true };
     return config;
   },
+  // Add Leaflet CSS to allowed domains
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: *.unsplash.com *.basemaps.cartocdn.com *.cloudflare.com *.leafletjs.com; img-src 'self' data: blob: *.unsplash.com *.basemaps.cartocdn.com;"
+          }
+        ]
+      }
+    ];
+  }
 }
 
 module.exports = nextConfig
