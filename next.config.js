@@ -4,9 +4,6 @@ const nextConfig = {
   swcMinify: true,
   trailingSlash: true, // Ensures consistent URLs
   output: "standalone", // Forces SSR pages to be treated as standalone functions for Netlify
-  experimental: {
-    appDir: true, // Enables new Next.js App Router
-  },
   webpack: (config, { dev }) => {
     if (!dev) config.devtool = false;
     config.optimization = { ...config.optimization, minimize: true };
