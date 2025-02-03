@@ -2,20 +2,25 @@
   command = "npm run build"
   publish = ".next"
 
-[build.environment]
-  NEXT_USE_NETLIFY_EDGE = "true"
-
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
 [[redirects]]
-from = "/results"
-to = "/.netlify/functions/next_results"
-status = 200
-force = true
+  from = "/api/*"
+  to = "/.netlify/functions/next_api_:splat"
+  status = 200
+  force = true
 
+# Ensure `results` page can handle query parameters properly
 [[redirects]]
-from = "/place/*"
-to = "/.netlify/functions/next_place/:splat"
-status = 200
-force = true
+  from = "/results"
+  to = "/.netlify/functions/next_results"
+  status = 200
+  force = true
+
+# Ensure place pages work for SSR
+[[redirects]]
+  from = "/place/*"
+  to = "/.netlify/functions/next_place_:splat"
+  status = 200
+  force = true

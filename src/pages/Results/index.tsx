@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import type { NextPage, GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import type { NextPage } from 'next';
 import Map from '../../components/Map';
 import List from '../../components/List';
 import Filters from '../../components/Filters';
@@ -11,47 +11,24 @@ import type { Bar } from '../../types/bar';
 type Place = Restaurant | Bar;
 type ViewMode = 'list' | 'map';
 
-const Results: NextPage = () => {
+interface ResultsProps {
+  places: Place[];
+  category: string;
+  neighborhoods: string;
+}
+
+const Results: NextPage<ResultsProps> = ({ places, category, neighborhoods }) => {
   const router = useRouter();
-  const { category = 'food', neighborhoods = '' } = router.query;
-  const neighborhoodList = typeof neighborhoods === 'string' ? neighborhoods.split(',') : [];
+  const neighborhoodList = neighborhoods.split(',');
   
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
-  const [places, setPlaces] = useState<Place[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [selectedFilters, setSelectedFilters] = useState({
     meals: new Set<string>(),
     price: new Set<string>(),
     cuisine: new Set<string>(),
     setting: new Set<string>()
   });
-
-  useEffect(() => {
-    const fetchPlaces = async () => {
-      if (!neighborhoods) return;
-      
-      setLoading(true);
-      try {
-        const endpoint = category === 'food' ? 'restaurants' : 'bars';
-        const response = await fetch(`/api/${endpoint}?neighborhoods=${neighborhoods}`);
-        if (!response.ok) throw new Error('Failed to fetch places');
-        const data = await response.json();
-        setPlaces(data);
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError('An unknown error occurred');
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPlaces();
-  }, [neighborhoods, category]);
 
   const filteredPlaces = places.filter(place => {
     const priceMatch = selectedFilters.price.size === 0 || selectedFilters.price.has(place.budget);
@@ -79,23 +56,12 @@ const Results: NextPage = () => {
     setSelectedPlace(place);
   };
 
-  if (loading) {
-    return <div className="loading">Loading...</div>;
-  }
-
-  if (error) {
-    return <div className="error">Error: {error}</div>;
-  }
-
   const title = `Best ${category === 'food' ? 'Restaurants' : 'Bars'} in ${neighborhoodList.join(', ')} | NYC Curated`;
   const description = `Discover the best ${category === 'food' ? 'places to eat' : 'bars'} in ${neighborhoodList.join(', ')}. Hand-picked recommendations for ${category === 'food' ? 'restaurants' : 'bars'} in New York City.`;
 
   return (
     <>
-      <SEO 
-        title={title}
-        description={description}
-      />
+      <SEO title={title} description={description} />
       <div className="results-container">
         <div className="view-toggle">
           <button 
@@ -112,23 +78,13 @@ const Results: NextPage = () => {
           </button>
         </div>
 
-        <Filters 
-          category={category as string}
-          selectedFilters={selectedFilters}
-          onFilterChange={setSelectedFilters}
-        />
+        <Filters category={category} selectedFilters={selectedFilters} onFilterChange={setSelectedFilters} />
 
         <div className="view-container">
           {viewMode === 'list' ? (
-            <List 
-              places={filteredPlaces}
-              selectedPlaceId={selectedPlace?.id || null}
-            />
+            <List places={filteredPlaces} selectedPlaceId={selectedPlace?.id || null} />
           ) : (
-            <Map 
-              places={filteredPlaces} 
-              onMarkerClick={handleMarkerClick}
-            />
+            <Map places={filteredPlaces} onMarkerClick={handleMarkerClick} />
           )}
         </div>
 
@@ -174,6 +130,36 @@ const Results: NextPage = () => {
       </div>
     </>
   );
+};
+
+// ✅ Server-side fetch in `getServerSideProps`
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { query } = context;
+  const category = query.category as string || 'food';
+  const neighborhoods = query.neighborhoods as string || '';
+
+  if (!neighborhoods) {
+    return { props: { places: [], category, neighborhoods } };
+  }
+
+  try {
+    const endpoint = category === 'food' ? 'restaurants' : 'bars';
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/${endpoint}?neighborhoods=${neighborhoods}`;
+    
+    console.log("Fetching from API:", apiUrl);
+    const response = await fetch(apiUrl);
+    
+    if (!response.ok) {
+      console.error("API response error:", response.status);
+      return { props: { places: [], category, neighborhoods } };
+    }
+
+    const places = await response.json();
+    return { props: { places, category, neighborhoods } };
+  } catch (error) {
+    console.error("Error fetching places:", error);
+    return { props: { places: [], category, neighborhoods } };
+  }
 };
 
 export default Results;
