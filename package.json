@@ -1,26 +1,23 @@
 {
-  "name": "plana",
+  "name": "newyorkcurated",
+  "version": "0.1.0",
   "private": true,
-  "version": "0.0.1",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "postinstall": "next telemetry disable"
   },
   "dependencies": {
     "@netlify/plugin-nextjs": "^5.9.4",
-    "@types/leaflet": "^1.9.8",
-    "@types/node": "^20.10.5",
-    "@types/react": "^18.2.43",
-    "@types/react-dom": "^18.2.17",
-    "leaflet": "^1.9.4",
-    "mysql2": "^3.6.5",
-    "next": "^14.2.23",
+    "next": "14.2.23",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-helmet-async": "^2.0.4",
-    "serverless-mysql": "^1.5.5",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
     "typescript": "^5.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
