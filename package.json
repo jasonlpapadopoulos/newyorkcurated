@@ -11,10 +11,15 @@
   "dependencies": {
     "@netlify/plugin-nextjs": "^5.9.4",
     "next": "14.2.23",
+    "next-seo": "^6.5.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "serverless-mysql": "^1.5.5"
   },
   "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
     "typescript": "^5.2.2"
   },
   "engines": {

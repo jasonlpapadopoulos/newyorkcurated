@@ -2,13 +2,16 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  trailingSlash: true, // Ensures consistent URLs
-  output: "standalone", // Forces SSR pages to be treated as standalone functions for Netlify
+  images: {
+    domains: ['images.unsplash.com'],
+    unoptimized: true
+  },
+  output: 'standalone',
   webpack: (config, { dev }) => {
     if (!dev) config.devtool = false;
     config.optimization = { ...config.optimization, minimize: true };
     return config;
   },
-};
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig

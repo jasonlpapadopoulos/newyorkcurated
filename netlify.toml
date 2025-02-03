@@ -1,38 +1,33 @@
 [build]
-  command = "next build"   # Runs the build script from package.json
-  publish = ".next"           # Tells Netlify to serve the Next.js build
-  functions = ".netlify/functions"  # Ensures SSR functions are deployed
+  command = "next build"
+  publish = ".next"
+  functions = "netlify/functions"
 
 [[plugins]]
-  package = "@netlify/plugin-nextjs"  # Required for Next.js SSR
+  package = "@netlify/plugin-nextjs"
 
 [functions]
-  node_bundler = "esbuild"  # Ensures Netlify handles SSR correctly
-  included_files = [".next/server/**/*.js"]  # Forces SSR files to be included
-  external_node_modules = ["next"]  # Ensures Next.js is available in the functions
+  node_bundler = "esbuild"
+  included_files = [".next/server/**/*.js"]
+  external_node_modules = ["next"]
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/nextjs-server"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/nextjs-server"
+  status = 200
+  force = true
 
 [[headers]]
   for = "/*"
   [headers.values]
-    Cache-Control = "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
-
-[[redirects]]
-  # Ensure API routes work
-  from = "/api/*"
-  to = "/.netlify/functions/next_api_:splat"
-  status = 200
-  force = true
-
-  # Ensure `/results` page works with query parameters
-[[redirects]]
-  from = "/results"
-  to = "/.netlify/functions/next_results"
-  status = 200
-  force = true
-
-  # Ensure place pages work for SSR
-[[redirects]]
-  from = "/place/*"
-  to = "/.netlify/functions/next_place_:splat"
-  status = 200
-  force = true
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Content-Security-Policy = "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: *.unsplash.com *.basemaps.cartocdn.com *.cloudflare.com *.leafletjs.com; img-src 'self' data: blob: *.unsplash.com *.basemaps.cartocdn.com;"
