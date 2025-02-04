@@ -2,29 +2,22 @@
   command = "npm run build"
   publish = ".next"
 
-[build.environment]
-  NEXT_USE_NETLIFY_EDGE = "true"
-
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-  # Handle results page with query parameters
-[[redirects]]
-  from = "/results"
-  to = "/results"
-  status = 200
-  force = true
-  query = {category = ":category", neighborhoods = ":neighborhoods"}
+[functions]
+  node_bundler = "esbuild"
+  included_files = [".next/server/**/*.js"]
+  external_node_modules = ["next"]
 
-# Fallback for results with any query parameters
 [[redirects]]
   from = "/results"
-  to = "/results"
+  to = "/.netlify/functions/next_results"
   status = 200
   force = true
 
-  [[redirects]]
+[[redirects]]
   from = "/place/*"
-  to = "/place/:splat"
+  to = "/.netlify/functions/next_place_:splat"
   status = 200
   force = true
