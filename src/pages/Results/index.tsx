@@ -159,7 +159,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const neighborhoodList = typeof neighborhoods === 'string' ? neighborhoods.split(',') : [];
 
   // Important: Use environment variable for base URL
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+  // const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+  const baseUrl = 'https://newyorkcurated.onrender.com/';
 
   try {
     const endpoint = category === 'food' ? 'restaurants' : 'bars';
