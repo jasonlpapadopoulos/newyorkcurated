@@ -1,31 +1,33 @@
 import mysql from 'serverless-mysql';
-import { ConnectionConfig } from 'mysql2';
 
-const dbConfig: ConnectionConfig = {
-  host: process.env.MYSQL_HOST,
-  port: parseInt(process.env.MYSQL_PORT || '3306'),
-  database: process.env.MYSQL_DATABASE,
-  user: process.env.MYSQL_USER,
-  password: process.env.MYSQL_PASSWORD,
-  ssl: {
-    rejectUnauthorized: false
-  },
-  connectTimeout: 10000 // 10 seconds
-};
-
-const db = mysql({ config: dbConfig });
+const db = mysql({
+  config: {
+    host: process.env.MYSQL_HOST,
+    port: parseInt(process.env.MYSQL_PORT || '3306'),
+    database: process.env.MYSQL_DATABASE,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    ssl: {
+      rejectUnauthorized: false
+    },
+    connectTimeout: 10000 // 10 seconds
+  }
+});
 
 export async function query(q: string, values: any[] = []) {
   try {
+    // Verify connection before query
     console.log('Attempting database connection...');
     await db.connect();
     console.log('Database connected successfully');
 
+    // Execute query
     console.log('Executing query:', q);
     console.log('Query parameters:', values);
     const results = await db.query(q, values);
     console.log('Query executed successfully');
 
+    // Clean up
     await db.end();
     return results;
   } catch (error: unknown) {
@@ -36,6 +38,7 @@ export async function query(q: string, values: any[] = []) {
         port: process.env.MYSQL_PORT,
         database: process.env.MYSQL_DATABASE,
         user: process.env.MYSQL_USER,
+        // Don't log the password!
       }
     });
 
