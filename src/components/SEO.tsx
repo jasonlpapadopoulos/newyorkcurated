@@ -1,4 +1,4 @@
-import { Helmet } from 'react-helmet-async';
+import Head from 'next/head';
 
 interface SEOProps {
   title: string;
@@ -12,7 +12,7 @@ interface SEOProps {
 export default function SEO({ 
   title, 
   description,
-  slogan = "The best things to do in New York. Handpicked, like upstate apples.", // Default slogan
+  slogan = "The best things to do in New York. Handpicked, like upstate apples.", 
   image = 'https://images.unsplash.com/photo-1518563172008-e56c5dfbaef6?q=80&w=3087',
   url = 'https://newyorkcurated.com',
   type = 'website'
@@ -26,8 +26,7 @@ export default function SEO({
     : description;
 
   return (
-    <Helmet>
-      {/* Basic metadata */}
+    <Head>
       <title>{title}</title>
       <meta name="description" content={fullDescription} />
       
@@ -52,6 +51,6 @@ export default function SEO({
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta name="robots" content="index, follow" />
       <link rel="canonical" href={url} />
-    </Helmet>
+    </Head>
   );
 }

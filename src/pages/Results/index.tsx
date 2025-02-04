@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
-import type { NextPage } from 'next';
 import Map from '../../components/Map';
 import List from '../../components/List';
 import Filters from '../../components/Filters';
@@ -11,16 +11,23 @@ import type { Bar } from '../../types/bar';
 type Place = Restaurant | Bar;
 type ViewMode = 'list' | 'map';
 
-const Results: NextPage = () => {
+interface ResultsPageProps {
+  initialPlaces: Place[];
+  category: string;
+  neighborhoods: string[];
+  error?: string;
+}
+
+const Results: NextPage<ResultsPageProps> = ({ 
+  initialPlaces, 
+  category, 
+  neighborhoods, 
+  error 
+}) => {
   const router = useRouter();
-  const { category = 'food', neighborhoods = '' } = router.query;
-  const neighborhoodList = typeof neighborhoods === 'string' ? neighborhoods.split(',') : [];
-  
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
-  const [places, setPlaces] = useState<Place[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [places, setPlaces] = useState<Place[]>(initialPlaces);
   const [selectedFilters, setSelectedFilters] = useState({
     meals: new Set<string>(),
     price: new Set<string>(),
@@ -28,30 +35,9 @@ const Results: NextPage = () => {
     setting: new Set<string>()
   });
 
-  useEffect(() => {
-    const fetchPlaces = async () => {
-      if (!neighborhoods) return;
-      
-      setLoading(true);
-      try {
-        const endpoint = category === 'food' ? 'restaurants' : 'bars';
-        const response = await fetch(`/api/${endpoint}?neighborhoods=${neighborhoods}`);
-        if (!response.ok) throw new Error('Failed to fetch places');
-        const data = await response.json();
-        setPlaces(data);
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError('An unknown error occurred');
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPlaces();
-  }, [neighborhoods, category]);
+  if (error) {
+    return <div className="error">Error: {error}</div>;
+  }
 
   const filteredPlaces = places.filter(place => {
     const priceMatch = selectedFilters.price.size === 0 || selectedFilters.price.has(place.budget);
@@ -79,16 +65,8 @@ const Results: NextPage = () => {
     setSelectedPlace(place);
   };
 
-  if (loading) {
-    return <div className="loading">Loading...</div>;
-  }
-
-  if (error) {
-    return <div className="error">Error: {error}</div>;
-  }
-
-  const title = `Best ${category === 'food' ? 'Restaurants' : 'Bars'} in ${neighborhoodList.join(', ')} | NYC Curated`;
-  const description = `Discover the best ${category === 'food' ? 'places to eat' : 'bars'} in ${neighborhoodList.join(', ')}. Hand-picked recommendations for ${category === 'food' ? 'restaurants' : 'bars'} in New York City.`;
+  const title = `Best ${category === 'food' ? 'Restaurants' : 'Bars'} in ${neighborhoods.join(', ')} | NYC Curated`;
+  const description = `Discover the best ${category === 'food' ? 'places to eat' : 'bars'} in ${neighborhoods.join(', ')}. Hand-picked recommendations for ${category === 'food' ? 'restaurants' : 'bars'} in New York City.`;
 
   return (
     <>
@@ -113,7 +91,7 @@ const Results: NextPage = () => {
         </div>
 
         <Filters 
-          category={category as string}
+          category={category}
           selectedFilters={selectedFilters}
           onFilterChange={setSelectedFilters}
         />
@@ -174,6 +152,43 @@ const Results: NextPage = () => {
       </div>
     </>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { category = 'food', neighborhoods = '' } = context.query;
+  const neighborhoodList = typeof neighborhoods === 'string' ? neighborhoods.split(',') : [];
+
+  // Important: Use environment variable for base URL
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+
+  try {
+    const endpoint = category === 'food' ? 'restaurants' : 'bars';
+    const response = await fetch(`${baseUrl}/api/${endpoint}?neighborhoods=${neighborhoods}`);
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch ${endpoint}: ${response.statusText}`);
+    }
+
+    const initialPlaces = await response.json();
+
+    return {
+      props: {
+        initialPlaces,
+        category: category as string,
+        neighborhoods: neighborhoodList
+      }
+    };
+  } catch (error) {
+    console.error('Server-side fetch error:', error);
+    return {
+      props: {
+        initialPlaces: [],
+        category: category as string,
+        neighborhoods: neighborhoodList,
+        error: error instanceof Error ? error.message : 'An unknown error occurred'
+      }
+    };
+  }
 };
 
 export default Results;
