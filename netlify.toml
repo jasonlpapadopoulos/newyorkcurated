@@ -3,10 +3,18 @@
   publish = ".next"
 
 [build.environment]
-  NEXT_USE_NETLIFY_EDGE = "true"
+  NODE_VERSION = "18"
+  NEXT_PUBLIC_API_URL = "https://newyorkcurated.onrender.com"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+# Redirect API calls to your Render backend
+[[redirects]]
+  from = "/api/*"
+  to = "https://newyorkcurated.onrender.com/api/:splat"
+  status = 200
+  force = true
 
   # Handle results page with query parameters
 [[redirects]]
