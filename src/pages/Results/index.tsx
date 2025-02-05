@@ -161,6 +161,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   // Important: Use environment variable for base URL
   // const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
   const baseUrl = 'https://newyorkcurated.onrender.com/';
+  const endpoint = 'food';
+  console.log("Fetching from:", `${baseUrl}/api/${endpoint}?neighborhoods=${neighborhoods}`);
 
   try {
     const endpoint = category === 'food' ? 'restaurants' : 'bars';
