@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import Map from '../../components/Map';
@@ -16,13 +16,15 @@ interface ResultsPageProps {
   category: string;
   neighborhoods: string[];
   error?: string;
+  debugLog?: string; // ✅ Added debug log
 }
 
 const Results: NextPage<ResultsPageProps> = ({ 
   initialPlaces, 
   category, 
   neighborhoods, 
-  error 
+  error, 
+  debugLog 
 }) => {
   const router = useRouter();
   const [viewMode, setViewMode] = useState<ViewMode>('list');
@@ -34,6 +36,13 @@ const Results: NextPage<ResultsPageProps> = ({
     cuisine: new Set<string>(),
     setting: new Set<string>()
   });
+
+  // ✅ Log debug info in the browser console
+  useEffect(() => {
+    if (debugLog) {
+      console.log(debugLog);
+    }
+  }, [debugLog]);
 
   if (error) {
     return <div className="error">Error: {error}</div>;
@@ -109,46 +118,6 @@ const Results: NextPage<ResultsPageProps> = ({
             />
           )}
         </div>
-
-        {selectedPlace && viewMode === 'map' && (
-          <div className="place-toaster show">
-            <div className="place-content">
-              <h3 className="place-name">{selectedPlace.place_name}</h3>
-              <div className="place-info">
-                <span>{selectedPlace.neighborhood}</span>
-                <span>·</span>
-                {'cuisine' in selectedPlace ? (
-                  <span>{selectedPlace.cuisine}</span>
-                ) : (
-                  <span>
-                    {Object.entries(selectedPlace)
-                      .filter(([key, value]) => 
-                        ['cocktail', 'dive', 'jazz', 'wine', 'rooftop', 'speakeasy', 'beer', 'pub'].includes(key) && value
-                      )
-                      .map(([key]) => key.charAt(0).toUpperCase() + key.slice(1))
-                      .join(', ')}
-                  </span>
-                )}
-                <span>·</span>
-                <span>{selectedPlace.budget}</span>
-              </div>
-              <img 
-                src={selectedPlace.image_url} 
-                alt={selectedPlace.place_name}
-                className="place-image"
-              />
-              <div className="description-container">
-                <p className="place-description">{selectedPlace.description}</p>
-              </div>
-              <button 
-                className="place-toaster-close"
-                onClick={() => setSelectedPlace(null)}
-              >
-                ×
-              </button>
-            </div>
-          </div>
-        )}
       </div>
     </>
   );
@@ -158,40 +127,34 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { category = 'food', neighborhoods = '' } = context.query;
   const neighborhoodList = typeof neighborhoods === 'string' ? neighborhoods.split(',') : [];
 
-  // Important: Use environment variable for base URL
-  // const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
   const baseUrl = 'https://newyorkcurated.onrender.com/';
-  const endpoint = 'food';
-  console.log("Fetching from:", `${baseUrl}/api/${endpoint}?neighborhoods=${neighborhoods}`);
+  const endpoint = category === 'food' ? 'restaurants' : 'bars';
+  const fetchUrl = `${baseUrl}/api/${endpoint}?neighborhoods=${neighborhoods}`;
+
+  let debugLog = `Fetching from: ${fetchUrl}`;
+  let initialPlaces: Place[] = [];
 
   try {
-    const endpoint = category === 'food' ? 'restaurants' : 'bars';
-    const response = await fetch(`${baseUrl}/api/${endpoint}?neighborhoods=${neighborhoods}`);
+    const response = await fetch(fetchUrl);
     
     if (!response.ok) {
       throw new Error(`Failed to fetch ${endpoint}: ${response.statusText}`);
     }
 
-    const initialPlaces = await response.json();
-
-    return {
-      props: {
-        initialPlaces,
-        category: category as string,
-        neighborhoods: neighborhoodList
-      }
-    };
+    initialPlaces = await response.json();
   } catch (error) {
+    debugLog += ` | Error: ${error instanceof Error ? error.message : 'Unknown error'}`;
     console.error('Server-side fetch error:', error);
-    return {
-      props: {
-        initialPlaces: [],
-        category: category as string,
-        neighborhoods: neighborhoodList,
-        error: error instanceof Error ? error.message : 'An unknown error occurred'
-      }
-    };
   }
+
+  return {
+    props: {
+      initialPlaces,
+      category: category as string,
+      neighborhoods: neighborhoodList,
+      debugLog, // ✅ Pass debug log to the client
+    }
+  };
 };
 
 export default Results;
