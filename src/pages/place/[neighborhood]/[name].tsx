@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { GetServerSideProps } from 'next';
 import dynamic from 'next/dynamic';
 import SEO from '../../../components/SEO';
 import type { Restaurant } from '../../../types/restaurant';
@@ -11,43 +10,12 @@ const Map = dynamic(() => import('../../../components/Map/MapClient'), {
 
 type Place = Restaurant | Bar;
 
-export default function PlacePage() {
-  const router = useRouter();
-  const { neighborhood, name } = router.query;
-  const [place, setPlace] = useState<Place | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+interface PlacePageProps {
+  place: Place | null;
+  error: string | null;
+}
 
-  useEffect(() => {
-    const fetchPlace = async () => {
-      if (!neighborhood || !name) return;
-      
-      try {
-        let response = await fetch(`/api/places?neighborhood=${neighborhood}&name=${name}`);
-        if (!response.ok) {
-          throw new Error('Place not found');
-        }
-        
-        const data = await response.json();
-        setPlace(data);
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError('An unknown error occurred');
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPlace();
-  }, [neighborhood, name]);
-
-  if (loading) {
-    return <div className="loading">Loading...</div>;
-  }
-
+export default function PlacePage({ place, error }: PlacePageProps) {
   if (error || !place) {
     return <div className="error">Error: {error || 'Place not found'}</div>;
   }
@@ -98,7 +66,6 @@ export default function PlacePage() {
           <div className="place-map">
             <Map 
               places={[place]}
-              // onMarkerClick={() => {}}
             />
           </div>
         </div>
@@ -106,3 +73,41 @@ export default function PlacePage() {
     </>
   );
 }
+
+// Fetch data server-side
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { neighborhood, name } = context.query;
+
+  if (!neighborhood || !name) {
+    return {
+      props: {
+        place: null,
+        error: 'Invalid parameters'
+      }
+    };
+  }
+
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/places?neighborhood=${neighborhood}&name=${name}`);
+    
+    if (!response.ok) {
+      throw new Error('Place not found');
+    }
+
+    const data = await response.json();
+
+    return {
+      props: {
+        place: data,
+        error: null
+      }
+    };
+  } catch (error: unknown) {
+    return {
+      props: {
+        place: null,
+        error: error instanceof Error ? error.message : 'An unknown error occurred'
+      }
+    };
+  }
+};

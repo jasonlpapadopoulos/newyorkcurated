@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/router';  // Import the Next.js router
 import L from 'leaflet';
+import Link from 'next/link';  // Import Next.js Link for routing
 import 'leaflet/dist/leaflet.css';
 import type { Restaurant } from '../../types/restaurant';
 import type { Bar } from '../../types/bar';
@@ -15,10 +17,8 @@ export default function MapClient({ places = [] }: MapProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const markersRef = useRef<L.Marker[]>([]);
 
-  // State for selected place (to show in toaster)
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
 
-  // Initialize map
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
 
@@ -47,11 +47,9 @@ export default function MapClient({ places = [] }: MapProps) {
     };
   }, []);
 
-  // Update markers when places change
   useEffect(() => {
     if (!mapRef.current) return;
 
-    // Clear existing markers
     markersRef.current.forEach(marker => marker.remove());
     markersRef.current = [];
 
@@ -80,7 +78,7 @@ export default function MapClient({ places = [] }: MapProps) {
         className: 'place-label'
       });
 
-      // On marker click, show toaster
+      // Show toaster on marker click
       marker.on('click', () => {
         setSelectedPlace(place);
       });
@@ -95,21 +93,29 @@ export default function MapClient({ places = [] }: MapProps) {
   // Close toaster when clicking on the map
   useEffect(() => {
     if (!mapRef.current) return;
-  
-    // Close toaster when clicking on the map
+
     const handleMapClick = () => {
       setSelectedPlace(null);
     };
-  
+
     mapRef.current.on('click', handleMapClick);
-  
+
     return () => {
       if (mapRef.current) {
         mapRef.current.off('click', handleMapClick);
       }
     };
   }, []);
-  
+
+  // Create URL slug for the place
+  const createSlug = (place: Place) => {
+    const nameSlug = place.place_name
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')  // Remove special characters
+      .replace(/\s+/g, '-');          // Replace spaces with dashes
+
+    return `/place/${place.neighborhood_clean}/${nameSlug}`;
+  };
 
   return (
     <div id="map-view" style={{ width: '100%', height: '100%', position: 'relative' }}>
@@ -119,17 +125,21 @@ export default function MapClient({ places = [] }: MapProps) {
       {selectedPlace && (
         <div className="place-toaster show">
           <button className="place-toaster-close" onClick={() => setSelectedPlace(null)}>&times;</button>
-          <div className="place-content">
-            <h3 className="place-name">{selectedPlace.place_name}</h3>
-            {selectedPlace.image_url && (
-              <img src={selectedPlace.image_url} alt={selectedPlace.place_name} className="place-image" />
-            )}
-            <div className="description-container">
-              <p className="place-description">
-                {selectedPlace.description || 'No description available'}
-              </p>
+          
+          {/* Wrap the toaster content in a Link */}
+          <Link href={createSlug(selectedPlace)}>
+            <div className="place-content" style={{ cursor: 'pointer' }}>
+              <h3 className="place-name">{selectedPlace.place_name}</h3>
+              {selectedPlace.image_url && (
+                <img src={selectedPlace.image_url} alt={selectedPlace.place_name} className="place-image" />
+              )}
+              <div className="description-container">
+                <p className="place-description">
+                  {selectedPlace.description || 'No description available'}
+                </p>
+              </div>
             </div>
-          </div>
+          </Link>
         </div>
       )}
     </div>
