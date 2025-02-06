@@ -191,14 +191,14 @@
 
 .place-toaster-close {
   position: absolute;
-  top: -8px;
-  right: -8px;
+  top: 4px;  /* Move it closer down */
+  right: 4px; /* Move it closer in */
   background: none;
   border: none;
   color: rgba(255, 255, 255, 0.8);
-  font-size: 24px;
+  font-size: 20px; /* Slightly smaller */
   line-height: 1;
-  padding: 8px;
+  padding: 4px; /* Reduce padding */
   cursor: pointer;
   z-index: 2;
 }
@@ -206,6 +206,7 @@
 .place-toaster-close:hover {
   color: #fff;
 }
+
 
 /* Filter Modal */
 .filters-container {
