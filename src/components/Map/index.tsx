@@ -6,16 +6,15 @@ type Place = Restaurant | Bar;
 
 interface MapProps {
   places: Place[];
-  onMarkerClick: (place: Place) => void;
 }
 
-// This is a placeholder component that will be rendered during SSR
+// Placeholder for SSR rendering
 const MapPlaceholder = () => (
   <div style={{ width: '100%', height: '100%', background: '#f0f0f0' }} />
 );
 
 // The actual Map component will be loaded dynamically on the client side
-const Map = ({ places, onMarkerClick }: MapProps) => {
+const Map = ({ places }: MapProps) => {
   return <MapPlaceholder />;
 };
 

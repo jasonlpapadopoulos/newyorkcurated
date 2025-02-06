@@ -127,7 +127,7 @@ const Results: NextPage<ResultsPageProps> = ({
           ) : (
             <Map 
               places={filteredPlaces} 
-              onMarkerClick={handleMarkerClick}
+              // onMarkerClick={handleMarkerClick}
             />
           )}
         </div>
