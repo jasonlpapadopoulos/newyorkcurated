@@ -34,6 +34,7 @@ const Neighborhoods: NextPage = () => {
   const router = useRouter();
   const { to: category } = router.query;
   const [selectedNeighborhoods, setSelectedNeighborhoods] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const title = category === 'eat' ? 'Food' : 'Drinks';
   const data = category === 'eat' 
@@ -79,14 +80,19 @@ const Neighborhoods: NextPage = () => {
   };
 
   const handleSubmit = () => {
-    if (selectedNeighborhoods.length > 0) {
-      localStorage.setItem('selectedNeighborhoods', JSON.stringify(selectedNeighborhoods));
-      const encodedNeighborhoods = selectedNeighborhoods
-        .map(n => encodeURIComponent(n))
-        .join('%2C'); // URL-encoded comma
-      router.push(`/results?category=${category === 'eat' ? 'food' : 'drinks'}&neighborhoods=${encodedNeighborhoods}`);
-    }
+    if (selectedNeighborhoods.length === 0) return;
+  
+    setLoading(true); // ✅ Start loading
+  
+    localStorage.setItem('selectedNeighborhoods', JSON.stringify(selectedNeighborhoods));
+    const encodedNeighborhoods = selectedNeighborhoods
+      .map(n => encodeURIComponent(n))
+      .join('%2C'); // URL-encoded comma
+  
+    router.push(`/results?category=${category === 'eat' ? 'food' : 'drinks'}&neighborhoods=${encodedNeighborhoods}`)
+      .finally(() => setLoading(false)); // ✅ Stop loading after navigation completes
   };
+  
 
   const renderManhattanAreas = (areas: ManhattanArea) => {
     return Object.entries(areas).map(([areaName, neighborhoods]) => (
@@ -190,11 +196,12 @@ const Neighborhoods: NextPage = () => {
       </div>
       <button 
         className="submit-button" 
-        disabled={selectedNeighborhoods.length === 0}
+        disabled={loading || selectedNeighborhoods.length === 0}
         onClick={handleSubmit}
       >
-        {category === 'eat' ? "Let's Eat!" : "Let's Drink!"}
+        {loading ? "Loading..." : category === 'eat' ? "Let's Eat!" : "Let's Drink!"}
       </button>
+
     </>
   );
 };

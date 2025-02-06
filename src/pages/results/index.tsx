@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import Map from '../../components/Map';
@@ -16,7 +16,7 @@ interface ResultsPageProps {
   category: string;
   neighborhoods: string[];
   error?: string;
-  debugLog?: string; // ✅ Added debug log
+  loading: boolean;
 }
 
 const Results: NextPage<ResultsPageProps> = ({ 
@@ -24,12 +24,11 @@ const Results: NextPage<ResultsPageProps> = ({
   category, 
   neighborhoods, 
   error, 
-  debugLog 
+  loading
 }) => {
   const router = useRouter();
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
-  const [places, setPlaces] = useState<Place[]>(initialPlaces);
   const [selectedFilters, setSelectedFilters] = useState({
     meals: new Set<string>(),
     price: new Set<string>(),
@@ -37,18 +36,20 @@ const Results: NextPage<ResultsPageProps> = ({
     setting: new Set<string>()
   });
 
-  // ✅ Log debug info in the browser console
-  useEffect(() => {
-    if (debugLog) {
-      console.log(debugLog);
-    }
-  }, [debugLog]);
+  // ✅ Display loading message before rendering content
+  if (loading) {
+    return (
+      <div className="loading-container">
+        🍽️ Finding the best {category === 'food' ? 'restaurants' : 'bars'} in {neighborhoods.join(', ')}...
+      </div>
+    );
+  }
 
   if (error) {
     return <div className="error">Error: {error}</div>;
   }
 
-  const filteredPlaces = places.filter(place => {
+  const filteredPlaces = initialPlaces.filter(place => {
     const priceMatch = selectedFilters.price.size === 0 || selectedFilters.price.has(place.budget);
     
     if (category === 'food') {
@@ -127,12 +128,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { category = 'food', neighborhoods = '' } = context.query;
   const neighborhoodList = typeof neighborhoods === 'string' ? neighborhoods.split(',') : [];
 
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://www.newyorkcurated.com';
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
   const endpoint = category === 'food' ? 'restaurants' : 'bars';
   const fetchUrl = `${baseUrl}/api/${endpoint}?neighborhoods=${neighborhoods}`;
 
-  let debugLog = `Fetching from: ${fetchUrl}`;
   let initialPlaces: Place[] = [];
+  let loading = true; // ✅ Start in loading state
 
   try {
     const response = await fetch(fetchUrl);
@@ -142,9 +143,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
 
     initialPlaces = await response.json();
+    loading = false; // ✅ Data is ready, remove loading state
   } catch (error) {
-    debugLog += ` | Error: ${error instanceof Error ? error.message : 'Unknown error'}`;
-    console.error('Server-side fetch error:', error);
+    console.error('❌ Server-side fetch error:', error);
   }
 
   return {
@@ -152,7 +153,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       initialPlaces,
       category: category as string,
       neighborhoods: neighborhoodList,
-      debugLog, // ✅ Pass debug log to the client
+      loading, // ✅ Correctly passing the loading state to the frontend
     }
   };
 };
