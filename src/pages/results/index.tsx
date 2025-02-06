@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import Map from '../../components/Map';
@@ -16,7 +16,7 @@ interface ResultsPageProps {
   category: string;
   neighborhoods: string[];
   error?: string;
-  loading: boolean;
+  debugLog?: string; // ✅ Debug log added
 }
 
 const Results: NextPage<ResultsPageProps> = ({ 
@@ -24,11 +24,12 @@ const Results: NextPage<ResultsPageProps> = ({
   category, 
   neighborhoods, 
   error, 
-  loading
+  debugLog 
 }) => {
   const router = useRouter();
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
+  const [places, setPlaces] = useState<Place[]>(initialPlaces);
   const [selectedFilters, setSelectedFilters] = useState({
     meals: new Set<string>(),
     price: new Set<string>(),
@@ -36,20 +37,31 @@ const Results: NextPage<ResultsPageProps> = ({
     setting: new Set<string>()
   });
 
-  // ✅ Display loading message before rendering content
+  // ✅ Log debug info (commented out for later use)
+  /*
+  useEffect(() => {
+    if (debugLog) {
+      console.log(debugLog);
+    }
+  }, [debugLog]);
+  */
+
+  // ✅ Show a loading message before rendering the results
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1000); // Simulate loading delay
+    return () => clearTimeout(timer);
+  }, []);
+
   if (loading) {
-    return (
-      <div className="loading-container">
-        🍽️ Finding the best {category === 'food' ? 'restaurants' : 'bars'} in {neighborhoods.join(', ')}...
-      </div>
-    );
+    return <div className="loading-message">Loading...</div>;
   }
 
   if (error) {
     return <div className="error">Error: {error}</div>;
   }
 
-  const filteredPlaces = initialPlaces.filter(place => {
+  const filteredPlaces = places.filter(place => {
     const priceMatch = selectedFilters.price.size === 0 || selectedFilters.price.has(place.budget);
     
     if (category === 'food') {
@@ -132,8 +144,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const endpoint = category === 'food' ? 'restaurants' : 'bars';
   const fetchUrl = `${baseUrl}/api/${endpoint}?neighborhoods=${neighborhoods}`;
 
+  let debugLog = `Fetching from: ${fetchUrl}`;
   let initialPlaces: Place[] = [];
-  let loading = true; // ✅ Start in loading state
 
   try {
     const response = await fetch(fetchUrl);
@@ -143,9 +155,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
 
     initialPlaces = await response.json();
-    loading = false; // ✅ Data is ready, remove loading state
   } catch (error) {
-    console.error('❌ Server-side fetch error:', error);
+    debugLog += ` | Error: ${error instanceof Error ? error.message : 'Unknown error'}`;
+    // console.error('Server-side fetch error:', error); // ✅ Commented out for debugging later
   }
 
   return {
@@ -153,7 +165,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       initialPlaces,
       category: category as string,
       neighborhoods: neighborhoodList,
-      loading, // ✅ Correctly passing the loading state to the frontend
+      debugLog,
     }
   };
 };
