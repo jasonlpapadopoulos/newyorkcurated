@@ -98,7 +98,7 @@ export default function PlacePage() {
           <div className="place-map">
             <Map 
               places={[place]}
-              onMarkerClick={() => {}}
+              // onMarkerClick={() => {}}
             />
           </div>
         </div>
