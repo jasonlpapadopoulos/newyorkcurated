@@ -127,7 +127,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { category = 'food', neighborhoods = '' } = context.query;
   const neighborhoodList = typeof neighborhoods === 'string' ? neighborhoods.split(',') : [];
 
-  const baseUrl = 'https://newyorkcurated.onrender.com/';
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://www.newyorkcurated.com';
   const endpoint = category === 'food' ? 'restaurants' : 'bars';
   const fetchUrl = `${baseUrl}/api/${endpoint}?neighborhoods=${neighborhoods}`;
 
