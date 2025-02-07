@@ -15,6 +15,7 @@ interface MapProps {
     restaurant: string;
     bar: string;
   };
+  onMarkerClick?: (place: Place) => void;
 }
 
 export default function MapClient({ 
@@ -23,7 +24,8 @@ export default function MapClient({
   markerColors = {
     restaurant: '#4A90E2', // Blue for restaurants
     bar: '#FF9F1C' // Orange for bars
-  }
+  },
+  onMarkerClick
 }: MapProps) {
   const mapRef = useRef<L.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
@@ -101,7 +103,11 @@ export default function MapClient({
         `);
       } else {
         marker.on('click', () => {
-          setSelectedPlace(place);
+          if (onMarkerClick) {
+            onMarkerClick(place);
+          } else {
+            setSelectedPlace(place);
+          }
         });
         
         marker.bindTooltip(place.place_name, {
@@ -134,7 +140,7 @@ export default function MapClient({
       });
     }
 
-  }, [places, singlePlace, markerColors]);
+  }, [places, singlePlace, markerColors, onMarkerClick]);
 
   // Close toaster when clicking on the map (only for results view)
   useEffect(() => {
@@ -153,39 +159,9 @@ export default function MapClient({
     };
   }, [singlePlace]);
 
-  // Create URL slug for the place
-  const createSlug = (place: Place) => {
-    const nameSlug = place.place_name
-      .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-');
-
-    return `/place/${place.neighborhood_clean}/${nameSlug}`;
-  };
-
   return (
     <div id="map-view" style={{ width: '100%', height: '100%', position: 'relative' }}>
       <div ref={mapContainerRef} style={{ width: '100%', height: '100%' }} />
-
-      {!singlePlace && selectedPlace && (
-        <div className="place-toaster show">
-          <button className="place-toaster-close" onClick={() => setSelectedPlace(null)}>&times;</button>
-          
-          <Link href={createSlug(selectedPlace)}>
-            <div className="place-content" style={{ cursor: 'pointer' }}>
-              <h3 className="place-name">{selectedPlace.place_name}</h3>
-              {selectedPlace.image_url && (
-                <img src={selectedPlace.image_url} alt={selectedPlace.place_name} className="place-image" />
-              )}
-              <div className="description-container">
-                <p className="place-description">
-                  {selectedPlace.description || 'No description available'}
-                </p>
-              </div>
-            </div>
-          </Link>
-        </div>
-      )}
     </div>
   );
 }

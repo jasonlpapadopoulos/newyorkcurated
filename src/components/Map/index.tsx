@@ -6,6 +6,11 @@ type Place = Restaurant | Bar;
 
 interface MapProps {
   places: Place[];
+  onMarkerClick?: (place: Place) => void;
+  markerColors?: {
+    restaurant: string;
+    bar: string;
+  };
 }
 
 // Placeholder for SSR rendering
