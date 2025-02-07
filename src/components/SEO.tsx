@@ -1,56 +1,75 @@
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 
 interface SEOProps {
   title: string;
   description: string;
   image?: string;
-  url?: string;
   type?: string;
-  slogan?: string;
+  structuredData?: Record<string, any>;
 }
 
-export default function SEO({ 
+function SEO({ 
   title, 
   description,
-  slogan = "The best things to do in New York. Handpicked, like upstate apples.", 
   image = 'https://images.unsplash.com/photo-1518563172008-e56c5dfbaef6?q=80&w=3087',
-  url = 'https://newyorkcurated.com',
-  type = 'website'
+  type = 'website',
+  structuredData
 }: SEOProps) {
-  // Create a shorter title for search results
-  const searchTitle = title.includes('-') ? title.split('-')[0].trim() : title;
+  const router = useRouter();
+  const canonicalUrl = `https://newyorkcurated.com${router.asPath}`;
   
-  // Combine description with slogan for homepage
-  const fullDescription = url === 'https://newyorkcurated.com' 
-    ? slogan 
+  const searchTitle = title.length > 60 ? `${title.substring(0, 57)}...` : title;
+  const metaDescription = description.length > 160 
+    ? `${description.substring(0, 157)}...`
     : description;
+
+  // If no specific structured data is provided, use default website data
+  const defaultStructuredData = {
+    "@context": "https://schema.org",
+    "@type": type === 'article' ? 'Article' : 'WebSite',
+    "url": canonicalUrl,
+    "name": searchTitle,
+    "description": metaDescription,
+    "image": image,
+    ...(type === 'article' && {
+      "datePublished": new Date().toISOString(),
+      "author": {
+        "@type": "Organization",
+        "name": "New York Curated"
+      }
+    })
+  };
 
   return (
     <Head>
-      <title>{title}</title>
-      <meta name="description" content={fullDescription} />
+      <title>{searchTitle}</title>
+      <meta name="description" content={metaDescription} />
       
-      {/* Search Engine Title Tag */}
-      <meta name="title" content={searchTitle} />
+      {/* Canonical URL */}
+      <link rel="canonical" href={canonicalUrl} />
       
       {/* Open Graph */}
-      <meta property="og:title" content={title} />
-      <meta property="og:description" content={fullDescription} />
+      <meta property="og:title" content={searchTitle} />
+      <meta property="og:description" content={metaDescription} />
       <meta property="og:image" content={image} />
-      <meta property="og:url" content={url} />
+      <meta property="og:url" content={canonicalUrl} />
       <meta property="og:type" content={type} />
-      <meta property="og:site_name" content="New York Curated" />
       
-      {/* Twitter Card */}
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={title} />
-      <meta name="twitter:description" content={fullDescription} />
+      {/* Twitter */}
+      <meta name="twitter:title" content={searchTitle} />
+      <meta name="twitter:description" content={metaDescription} />
       <meta name="twitter:image" content={image} />
       
-      {/* Additional SEO tags */}
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <meta name="robots" content="index, follow" />
-      <link rel="canonical" href={url} />
+      {/* Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredData || defaultStructuredData)
+        }}
+      />
     </Head>
   );
 }
+
+export default SEO;

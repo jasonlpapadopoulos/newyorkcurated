@@ -21,6 +21,48 @@ export default function PlacePage({ place, error }: PlacePageProps) {
   }
 
   const isRestaurant = 'cuisine' in place;
+  
+  // Generate structured data based on place type
+  const structuredData = isRestaurant ? {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    "name": place.place_name,
+    "description": place.description,
+    "image": place.image_url,
+    "servesCuisine": (place as Restaurant).cuisine,
+    "priceRange": place.budget,
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "New York",
+      "addressRegion": "NY",
+      "addressCountry": "US",
+      "streetAddress": place.neighborhood
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": place.lat,
+      "longitude": place.lon
+    }
+  } : {
+    "@context": "https://schema.org",
+    "@type": "BarOrPub",
+    "name": place.place_name,
+    "description": place.description,
+    "image": place.image_url,
+    "priceRange": place.budget,
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "New York",
+      "addressRegion": "NY",
+      "addressCountry": "US",
+      "streetAddress": place.neighborhood
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": place.lat,
+      "longitude": place.lon
+    }
+  };
 
   return (
     <>
@@ -28,6 +70,8 @@ export default function PlacePage({ place, error }: PlacePageProps) {
         title={`${place.place_name} - ${isRestaurant ? place.cuisine : 'Bar'} in ${place.neighborhood} | NYC Curated`}
         description={place.description}
         image={place.image_url}
+        type="business.business"
+        structuredData={structuredData}
       />
       
       <div className="place-page">
@@ -39,7 +83,7 @@ export default function PlacePage({ place, error }: PlacePageProps) {
           />
         </div>
 
-        <div className="place-content">
+        <div className="individual-place-content">
           <h1 className="place-title">{place.place_name}</h1>
           
           <div className="place-meta">
@@ -66,6 +110,7 @@ export default function PlacePage({ place, error }: PlacePageProps) {
           <div className="place-map">
             <Map 
               places={[place]}
+              singlePlace={true}
             />
           </div>
         </div>
@@ -74,7 +119,6 @@ export default function PlacePage({ place, error }: PlacePageProps) {
   );
 }
 
-// Fetch data server-side
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { neighborhood, name } = context.query;
 
@@ -88,7 +132,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/places?neighborhood=${neighborhood}&name=${name}`);
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+    const response = await fetch(
+      `${baseUrl}/api/places?neighborhood=${encodeURIComponent(neighborhood as string)}&name=${encodeURIComponent(name as string)}`
+    );
     
     if (!response.ok) {
       throw new Error('Place not found');

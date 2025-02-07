@@ -10,9 +10,15 @@ interface FiltersProps {
     setting: Set<string>;
   };
   onFilterChange: (filters: any) => void;
+  availableCuisines?: string[]; // Make it optional
 }
 
-export default function Filters({ category, selectedFilters, onFilterChange }: FiltersProps) {
+export default function Filters({ 
+  category, 
+  selectedFilters, 
+  onFilterChange, 
+  availableCuisines = [] // Provide default empty array
+}: FiltersProps) {
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
 
   const handleFilterChange = (type: string, value: string) => {
@@ -46,20 +52,20 @@ export default function Filters({ category, selectedFilters, onFilterChange }: F
         { value: '$$$', label: '$$$' },
         { value: '$$$$', label: '$$$$' }
       ],
-      cuisine: [
-        'American', 'Italian', 'Japanese', 'Chinese', 'Mexican',
-        'Thai', 'Indian', 'French', 'Mediterranean', 'Korean'
-      ].map(c => ({ value: c.toLowerCase(), label: c })),
+      cuisine: availableCuisines.map(cuisine => ({
+        value: cuisine.toLowerCase(),
+        label: cuisine
+      })),
       setting: settings.map(s => ({ value: s, label: s }))
     };
-
+  
     const titles = {
       meals: 'Meal',
       price: 'Price Range',
       cuisine: 'Cuisine',
       setting: 'Setting'
     };
-
+  
     return (
       <>
         <div 
