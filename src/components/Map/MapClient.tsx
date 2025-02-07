@@ -11,9 +11,20 @@ type Place = Restaurant | Bar;
 interface MapProps {
   places: Place[];
   singlePlace?: boolean;
+  markerColors?: {
+    restaurant: string;
+    bar: string;
+  };
 }
 
-export default function MapClient({ places = [], singlePlace = false }: MapProps) {
+export default function MapClient({ 
+  places = [], 
+  singlePlace = false,
+  markerColors = {
+    restaurant: '#4A90E2', // Blue for restaurants
+    bar: '#FF9F1C' // Orange for bars
+  }
+}: MapProps) {
   const mapRef = useRef<L.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const markersRef = useRef<L.Marker[]>([]);
@@ -59,20 +70,29 @@ export default function MapClient({ places = [], singlePlace = false }: MapProps
     const validPlaces = places.filter(place => place.lat && place.lon);
 
     validPlaces.forEach(place => {
-      const marker = L.marker([place.lat, place.lon], {
-        icon: L.icon({
-          iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-          shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-          iconSize: [25, 41],
-          iconAnchor: [12, 41],
-          popupAnchor: [1, -34],
-          shadowSize: [41, 41]
-        })
+      const isRestaurant = 'cuisine' in place;
+      const markerColor = isRestaurant ? markerColors.restaurant : markerColors.bar;
+
+      // Create a custom icon with the appropriate color
+      const icon = L.divIcon({
+        className: 'custom-marker',
+        html: `<div style="
+          width: 24px;
+          height: 24px;
+          background-color: ${markerColor};
+          border: 2px solid white;
+          border-radius: 50%;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        "></div>`,
+        iconSize: [24, 24],
+        iconAnchor: [12, 12],
+        popupAnchor: [0, -12],
       });
+
+      const marker = L.marker([place.lat, place.lon], { icon });
 
       // Different behavior for single place view vs results view
       if (singlePlace) {
-        // For single place view, use a simple popup with name and neighborhood
         marker.bindPopup(`
           <div style="text-align: center;">
             <strong>${place.place_name}</strong><br>
@@ -80,16 +100,14 @@ export default function MapClient({ places = [], singlePlace = false }: MapProps
           </div>
         `);
       } else {
-        // For results view, use the toaster
         marker.on('click', () => {
           setSelectedPlace(place);
         });
         
-        // Tooltip for name
         marker.bindTooltip(place.place_name, {
           permanent: validPlaces.length <= 5,
           direction: 'top',
-          offset: [0, -30],
+          offset: [0, -8],
           opacity: 0.9,
           className: 'place-label'
         });
@@ -116,7 +134,7 @@ export default function MapClient({ places = [], singlePlace = false }: MapProps
       });
     }
 
-  }, [places, singlePlace]);
+  }, [places, singlePlace, markerColors]);
 
   // Close toaster when clicking on the map (only for results view)
   useEffect(() => {
