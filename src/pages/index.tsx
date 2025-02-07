@@ -29,8 +29,7 @@ const Home: NextPage = () => {
     <>
       <SEO 
         title="New York Curated - The Best Things to Do in NYC"
-        description="Discover the best restaurants, bars, and experiences in New York City."
-        slogan="Hand-picked recommendations for the best of NYC, curated like upstate apples."
+        description="Discover the best restaurants, bars, and experiences in New York City. Hand-picked recommendations for the best of NYC, curated like upstate apples."
         url="https://newyorkcurated.com"
       />
       <div className="hero">

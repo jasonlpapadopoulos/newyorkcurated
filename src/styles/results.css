@@ -9,7 +9,6 @@
   flex-direction: column;
   overflow: hidden;
   background: #000;
-  /* text-align: center; */
 }
 
 /* View Toggle */
@@ -145,6 +144,11 @@
   width: 100%;
 }
 
+.place-toaster a {
+  text-decoration: none;
+  color: inherit;
+}
+
 .place-toaster .place-name {
   font-family: 'Roboto', sans-serif;
   font-size: 1.25rem;
@@ -152,6 +156,7 @@
   margin-bottom: 8px;
   color: #fff;
   text-align: center;
+  text-decoration: none;
 }
 
 .place-toaster .place-info {
@@ -187,18 +192,19 @@
   color: rgba(255, 255, 255, 0.9);
   text-align: center;
   margin: 0;
+  text-decoration: none;
 }
 
 .place-toaster-close {
   position: absolute;
-  top: 4px;  /* Move it closer down */
-  right: 4px; /* Move it closer in */
+  top: 4px;
+  right: 4px;
   background: none;
   border: none;
   color: rgba(255, 255, 255, 0.8);
-  font-size: 20px; /* Slightly smaller */
+  font-size: 20px;
   line-height: 1;
-  padding: 4px; /* Reduce padding */
+  padding: 4px;
   cursor: pointer;
   z-index: 2;
 }
@@ -206,7 +212,6 @@
 .place-toaster-close:hover {
   color: #fff;
 }
-
 
 /* Filter Modal */
 .filters-container {
@@ -217,6 +222,7 @@
   padding: 10px 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
+
 .filter-modal {
   position: fixed;
   top: 50%;

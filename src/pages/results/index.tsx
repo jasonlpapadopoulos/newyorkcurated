@@ -15,14 +15,16 @@ interface ResultsPageProps {
   initialPlaces: Place[];
   category: string;
   neighborhoods: string[];
+  uniqueCuisines: string[];
   error?: string;
-  debugLog?: string; // ✅ Debug log added
+  debugLog?: string;
 }
 
 const Results: NextPage<ResultsPageProps> = ({ 
   initialPlaces, 
   category, 
   neighborhoods, 
+  uniqueCuisines,
   error, 
   debugLog 
 }) => {
@@ -37,19 +39,9 @@ const Results: NextPage<ResultsPageProps> = ({
     setting: new Set<string>()
   });
 
-  // ✅ Log debug info (commented out for later use)
-  /*
-  useEffect(() => {
-    if (debugLog) {
-      console.log(debugLog);
-    }
-  }, [debugLog]);
-  */
-
-  // ✅ Show a loading message before rendering the results
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1000); // Simulate loading delay
+    const timer = setTimeout(() => setLoading(false), 1000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -116,6 +108,7 @@ const Results: NextPage<ResultsPageProps> = ({
           category={category}
           selectedFilters={selectedFilters}
           onFilterChange={setSelectedFilters}
+          availableCuisines={uniqueCuisines} // Make sure this is being passed correctly
         />
 
         <div className="view-container">
@@ -127,7 +120,6 @@ const Results: NextPage<ResultsPageProps> = ({
           ) : (
             <Map 
               places={filteredPlaces} 
-              // onMarkerClick={handleMarkerClick}
             />
           )}
         </div>
@@ -146,6 +138,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   let debugLog = `Fetching from: ${fetchUrl}`;
   let initialPlaces: Place[] = [];
+  let uniqueCuisines: string[] = [];
 
   try {
     const response = await fetch(fetchUrl);
@@ -155,9 +148,20 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
 
     initialPlaces = await response.json();
+
+    // Extract unique cuisines from the actual restaurant data
+    if (category === 'food') {
+      uniqueCuisines = Array.from(new Set(
+        initialPlaces
+          .filter((place): place is Restaurant => 'cuisine_clean' in place)
+          .map(place => place.cuisine)
+          .filter(Boolean)
+          .sort()
+      ));
+    }
+
   } catch (error) {
     debugLog += ` | Error: ${error instanceof Error ? error.message : 'Unknown error'}`;
-    // console.error('Server-side fetch error:', error); // ✅ Commented out for debugging later
   }
 
   return {
@@ -165,6 +169,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       initialPlaces,
       category: category as string,
       neighborhoods: neighborhoodList,
+      uniqueCuisines,
       debugLog,
     }
   };
