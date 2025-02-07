@@ -7,6 +7,7 @@ interface SEOProps {
   image?: string;
   type?: string;
   structuredData?: Record<string, any>;
+  url?: string;
 }
 
 function SEO({ 
@@ -14,10 +15,11 @@ function SEO({
   description,
   image = 'https://images.unsplash.com/photo-1518563172008-e56c5dfbaef6?q=80&w=3087',
   type = 'website',
-  structuredData
+  structuredData,
+  url
 }: SEOProps) {
   const router = useRouter();
-  const canonicalUrl = `https://newyorkcurated.com${router.asPath}`;
+  const canonicalUrl = url || `https://newyorkcurated.com${router.asPath}`;
   
   const searchTitle = title.length > 60 ? `${title.substring(0, 57)}...` : title;
   const metaDescription = description.length > 160 
