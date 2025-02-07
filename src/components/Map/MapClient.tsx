@@ -30,7 +30,6 @@ export default function MapClient({
   const mapRef = useRef<L.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const markersRef = useRef<L.Marker[]>([]);
-
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
 
   useEffect(() => {
@@ -75,7 +74,6 @@ export default function MapClient({
       const isRestaurant = 'cuisine' in place;
       const markerColor = isRestaurant ? markerColors.restaurant : markerColors.bar;
 
-      // Create a custom icon with the appropriate color
       const icon = L.divIcon({
         className: 'custom-marker',
         html: `<div style="
@@ -93,7 +91,6 @@ export default function MapClient({
 
       const marker = L.marker([place.lat, place.lon], { icon });
 
-      // Different behavior for single place view vs results view
       if (singlePlace) {
         marker.bindPopup(`
           <div style="text-align: center;">
@@ -124,7 +121,6 @@ export default function MapClient({
       bounds.extend([place.lat, place.lon]);
     });
 
-    // Center map based on whether it's a single place or multiple
     if (singlePlace && validPlaces.length === 1) {
       const place = validPlaces[0];
       mapRef.current.setView([place.lat, place.lon], 15, {
@@ -142,7 +138,6 @@ export default function MapClient({
 
   }, [places, singlePlace, markerColors, onMarkerClick]);
 
-  // Close toaster when clicking on the map (only for results view)
   useEffect(() => {
     if (!mapRef.current || singlePlace) return;
 
@@ -159,9 +154,39 @@ export default function MapClient({
     };
   }, [singlePlace]);
 
+  // Create URL slug for the place
+  const createSlug = (place: Place) => {
+    const nameSlug = place.place_name
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-');
+
+    return `/place/${place.neighborhood_clean}/${nameSlug}`;
+  };
+
   return (
     <div id="map-view" style={{ width: '100%', height: '100%', position: 'relative' }}>
       <div ref={mapContainerRef} style={{ width: '100%', height: '100%' }} />
+
+      {!singlePlace && !onMarkerClick && selectedPlace && (
+        <div className="place-toaster show">
+          <button className="place-toaster-close" onClick={() => setSelectedPlace(null)}>&times;</button>
+          
+          <Link href={createSlug(selectedPlace)}>
+            <div className="place-content" style={{ cursor: 'pointer' }}>
+              <h3 className="place-name">{selectedPlace.place_name}</h3>
+              {selectedPlace.image_url && (
+                <img src={selectedPlace.image_url} alt={selectedPlace.place_name} className="place-image" />
+              )}
+              <div className="description-container">
+                <p className="place-description">
+                  {selectedPlace.description || 'No description available'}
+                </p>
+              </div>
+            </div>
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
