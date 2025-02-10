@@ -16,13 +16,17 @@ interface PlacePageProps {
 }
 
 export default function PlacePage({ place, error }: PlacePageProps) {
+  // Add debugging logs
+  console.log('Place data:', place);
+  console.log('Reservation URL:', place?.reservation_url);
+  console.log('Address:', place?.address);
+
   if (error || !place) {
     return <div className="error">Error: {error || 'Place not found'}</div>;
   }
 
   const isRestaurant = 'cuisine' in place;
   
-  // Generate structured data based on place type
   const structuredData = isRestaurant ? {
     "@context": "https://schema.org",
     "@type": "Restaurant",
@@ -36,7 +40,7 @@ export default function PlacePage({ place, error }: PlacePageProps) {
       "addressLocality": "New York",
       "addressRegion": "NY",
       "addressCountry": "US",
-      "streetAddress": place.neighborhood
+      "streetAddress": place.address
     },
     "geo": {
       "@type": "GeoCoordinates",
@@ -55,7 +59,7 @@ export default function PlacePage({ place, error }: PlacePageProps) {
       "addressLocality": "New York",
       "addressRegion": "NY",
       "addressCountry": "US",
-      "streetAddress": place.neighborhood
+      "streetAddress": place.address
     },
     "geo": {
       "@type": "GeoCoordinates",
@@ -90,7 +94,7 @@ export default function PlacePage({ place, error }: PlacePageProps) {
             <span>{place.neighborhood}</span>
             <span className="separator">·</span>
             {isRestaurant ? (
-              <span>{place.cuisine}</span>
+              <span>{(place as Restaurant).cuisine}</span>
             ) : (
               <span>
                 {Object.entries(place)
@@ -103,9 +107,26 @@ export default function PlacePage({ place, error }: PlacePageProps) {
             )}
             <span className="separator">·</span>
             <span>{place.budget}</span>
+            {place.address && (
+              <>
+                <span className="separator">·</span>
+                <span>{place.address}</span>
+              </>
+            )}
           </div>
 
           <p className="place-description">{place.description}</p>
+
+          {isRestaurant && (place as Restaurant).reservation_url && (
+            <a 
+              href={(place as Restaurant).reservation_url!}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="reservation-button"
+            >
+              Make a Reservation
+            </a>
+          )}
 
           <div className="place-map">
             <Map 
@@ -142,6 +163,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
 
     const data = await response.json();
+    
+    // Add debugging log
+    console.log('Server-side data:', data);
 
     return {
       props: {

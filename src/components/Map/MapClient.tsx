@@ -95,7 +95,7 @@ export default function MapClient({
         marker.bindPopup(`
           <div style="text-align: center;">
             <strong>${place.place_name}</strong><br>
-            ${place.neighborhood}
+            ${place.address}
           </div>
         `);
       } else {

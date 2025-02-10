@@ -51,13 +51,13 @@ const NeighborhoodPage: NextPage<NeighborhoodPageProps> = ({
       
       <div className="neighborhood-page">
         {/* Hero Section */}
-        <div className="place-hero">
+        {/* <div className="place-hero">
           <img 
             src={neighborhood.image} 
             alt={neighborhood.name}
             className="place-hero-image"
           />
-        </div>
+        </div> */}
 
         <div className="individual-place-content">
           <h1 className="place-title">{neighborhood.name}</h1>
@@ -71,7 +71,7 @@ const NeighborhoodPage: NextPage<NeighborhoodPageProps> = ({
 
           {/* Restaurants Section */}
           <section className="neighborhood-section">
-            <h2 className="section-title">Restaurants</h2>
+            <h2 className="section-title">Where to Eat</h2>
             <div className="scroll-container">
               {restaurants.map(restaurant => (
                 <div key={restaurant.id} className="place-card">
@@ -94,7 +94,7 @@ const NeighborhoodPage: NextPage<NeighborhoodPageProps> = ({
 
           {/* Bars Section */}
           <section className="neighborhood-section">
-            <h2 className="section-title">Bars</h2>
+            <h2 className="section-title">Where to Drink</h2>
             <div className="scroll-container">
               {bars.map(bar => (
                 <div key={bar.id} className="place-card">
@@ -124,7 +124,8 @@ const NeighborhoodPage: NextPage<NeighborhoodPageProps> = ({
 
           {/* Map Section */}
           <section className="neighborhood-section">
-            <h2 className="section-title">Explore {neighborhood.name}</h2>
+            {/* <h2 className="section-title">Everything in {neighborhood.name}</h2> */}
+            <h2 className="section-title">All together</h2>
             <div className="neighborhood-map">
               <Map 
                 places={[...restaurants, ...bars]}

@@ -164,3 +164,25 @@
     text-align: center;
   }
 }
+
+.reservation-button {
+  display: inline-block;
+  background: linear-gradient(45deg, #4A90E2, #357ABD);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 500;
+  margin: 2rem 0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.reservation-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+}
+
+.reservation-button:active {
+  transform: translateY(0);
+}

@@ -15,4 +15,6 @@ export interface Restaurant {
   lat: number;
   lon: number;
   image_url: string;
+  reservation_url?: string;
+  address?: string;
 }

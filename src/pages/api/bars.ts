@@ -31,7 +31,7 @@ export default async function handler(
         budget,
         lat,
         lon,
-        image_url,
+        
         cocktail,
         dive,
         jazz,
@@ -39,7 +39,8 @@ export default async function handler(
         rooftop,
         speakeasy,
         beer,
-        pub
+        pub,
+        address
       FROM drinks
       WHERE neighborhood_clean IN (?)
     `;
@@ -63,7 +64,8 @@ export default async function handler(
       rooftop: Boolean(row.rooftop),
       speakeasy: Boolean(row.speakeasy),
       beer: Boolean(row.beer),
-      pub: Boolean(row.pub)
+      pub: Boolean(row.pub),
+      address: row.address
     }));
 
     res.status(200).json(bars);

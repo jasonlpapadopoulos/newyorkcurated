@@ -10,7 +10,6 @@ export default async function handler(
   try {
     const { neighborhood, name } = req.query;
     
-    // Debug log the incoming parameters
     console.log('API Request params:', { neighborhood, name });
 
     if (!neighborhood || !name) {
@@ -18,7 +17,6 @@ export default async function handler(
       return res.status(400).json({ error: 'Missing required parameters' });
     }
 
-    // Clean and normalize the parameters
     const cleanNeighborhood = String(neighborhood).trim().toLowerCase();
     const cleanName = String(name).trim().toLowerCase();
 
@@ -40,20 +38,22 @@ export default async function handler(
         dinner,
         lat,
         lon,
-        image_url
+        
+        reservation_url,
+        address
       FROM food
       WHERE neighborhood_clean = ? 
       AND LOWER(REPLACE(REPLACE(place_name, ' ', '-'), '''', '')) = ?
       LIMIT 1
     `;
 
-    // Debug log the query and parameters
-    console.log('Restaurant query params:', [cleanNeighborhood, cleanName]);
+    console.log('Restaurant query:', restaurantQuery);
+    console.log('Query parameters:', [cleanNeighborhood, cleanName]);
     
     let results;
     try {
       results = await query(restaurantQuery, [cleanNeighborhood, cleanName]);
-      console.log('Restaurant query results:', results);
+      console.log('Raw restaurant query results:', results);
     } catch (dbError) {
       console.error('Restaurant query error:', dbError);
       throw dbError;
@@ -61,6 +61,7 @@ export default async function handler(
     
     if (Array.isArray(results) && results.length > 0) {
       const row = results[0] as any;
+      console.log('Processing restaurant row:', row);
       const restaurant: Restaurant = {
         id: row.id,
         place_name: row.place_name,
@@ -77,8 +78,11 @@ export default async function handler(
         },
         lat: row.lat,
         lon: row.lon,
-        image_url: row.image_url
+        // image_url: row.image_url,
+        reservation_url: row.reservation_url || '',
+        address: row.address || ''
       };
+      console.log('Returning restaurant:', restaurant);
       return res.status(200).json(restaurant);
     }
 
@@ -93,7 +97,7 @@ export default async function handler(
         budget,
         lat,
         lon,
-        image_url,
+        
         cocktail,
         dive,
         jazz,
@@ -101,19 +105,20 @@ export default async function handler(
         rooftop,
         speakeasy,
         beer,
-        pub
+        pub,
+        address
       FROM drinks
       WHERE neighborhood_clean = ?
       AND LOWER(REPLACE(REPLACE(place_name, ' ', '-'), '''', '')) = ?
       LIMIT 1
     `;
 
-    // Debug log the bar query attempt
-    console.log('Bar query params:', [cleanNeighborhood, cleanName]);
+    console.log('Bar query:', barQuery);
+    console.log('Query parameters:', [cleanNeighborhood, cleanName]);
     
     try {
       results = await query(barQuery, [cleanNeighborhood, cleanName]);
-      console.log('Bar query results:', results);
+      console.log('Raw bar query results:', results);
     } catch (dbError) {
       console.error('Bar query error:', dbError);
       throw dbError;
@@ -121,6 +126,7 @@ export default async function handler(
     
     if (Array.isArray(results) && results.length > 0) {
       const row = results[0] as any;
+      console.log('Processing bar row:', row);
       const bar: Bar = {
         id: row.id,
         place_name: row.place_name,
@@ -130,7 +136,7 @@ export default async function handler(
         budget: row.budget,
         lat: row.lat,
         lon: row.lon,
-        image_url: row.image_url,
+        // image_url: row.image_url,
         cocktail: Boolean(row.cocktail),
         dive: Boolean(row.dive),
         jazz: Boolean(row.jazz),
@@ -138,8 +144,10 @@ export default async function handler(
         rooftop: Boolean(row.rooftop),
         speakeasy: Boolean(row.speakeasy),
         beer: Boolean(row.beer),
-        pub: Boolean(row.pub)
+        pub: Boolean(row.pub),
+        address: row.address || ''
       };
+      console.log('Returning bar:', bar);
       return res.status(200).json(bar);
     }
 
