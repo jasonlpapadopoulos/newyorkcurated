@@ -61,7 +61,7 @@ export default async function handler(
       },
       lat: row.lat,
       lon: row.lon,
-      // image_url: row.image_url,
+      image_url: row.image_url,
       reservation_url: row.reservation_url,
       address: row.address
     }));
