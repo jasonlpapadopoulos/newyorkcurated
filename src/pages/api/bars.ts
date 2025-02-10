@@ -24,7 +24,7 @@ export default async function handler(
     const barQuery = `
       SELECT 
         id,
-        place_name,
+        'this is wrong' as place_name,
         description,
         neighborhood,
         neighborhood_clean,

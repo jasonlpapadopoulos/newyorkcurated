@@ -39,7 +39,7 @@ export default async function handler(
         
         reservation_url,
         address
-      FROM food
+      FROM food_copy
       WHERE neighborhood_clean IN (?)
     `;
 

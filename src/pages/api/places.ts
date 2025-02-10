@@ -41,7 +41,7 @@ export default async function handler(
         
         reservation_url,
         address
-      FROM food
+      FROM food_copy
       WHERE neighborhood_clean = ? 
       AND LOWER(REPLACE(REPLACE(place_name, ' ', '-'), '''', '')) = ?
       LIMIT 1
@@ -90,7 +90,7 @@ export default async function handler(
     const barQuery = `
       SELECT 
         id,
-        place_name,
+        'this is wrong' as place_name,
         description,
         neighborhood,
         neighborhood_clean,
