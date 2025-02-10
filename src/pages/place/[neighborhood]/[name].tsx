@@ -18,7 +18,6 @@ interface PlacePageProps {
 export default function PlacePage({ place, error }: PlacePageProps) {
   // Add debugging logs
   console.log('Place data:', place);
-  console.log('Reservation URL:', place?.reservation_url);
   console.log('Address:', place?.address);
 
   if (error || !place) {
