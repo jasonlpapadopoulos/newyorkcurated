@@ -24,7 +24,7 @@ export default async function handler(
     const restaurantQuery = `
       SELECT 
         id,
-        place_name,
+        'this is wrong' as place_name,
         description,
         cuisine,
         cuisine_clean,
