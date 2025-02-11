@@ -116,7 +116,8 @@ export default function PlacePage({ place, error }: PlacePageProps) {
 
           <p className="place-description">{place.description}</p>
 
-          {isRestaurant && (place as Restaurant).reservation_url && (
+          {isRestaurant &&
+          (place as Restaurant).reservation_url.startsWith('http') && (
             <a 
               href={(place as Restaurant).reservation_url!}
               target="_blank"

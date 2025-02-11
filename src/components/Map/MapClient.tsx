@@ -31,10 +31,12 @@ export default function MapClient({
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const markersRef = useRef<L.Marker[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
+  const [userInteracted, setUserInteracted] = useState(false);
+
 
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
-
+  
     mapRef.current = L.map(mapContainerRef.current, {
       center: [40.7128, -74.0060],
       zoom: singlePlace ? 15 : 11,
@@ -42,16 +44,18 @@ export default function MapClient({
       attributionControl: false,
       minZoom: singlePlace ? 13 : 11,
     });
-
-    L.control.zoom({
-      position: 'bottomright'
-    }).addTo(mapRef.current);
-
+  
+    L.control.zoom({ position: 'bottomright' }).addTo(mapRef.current);
+  
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
       subdomains: 'abcd',
       maxZoom: 19
     }).addTo(mapRef.current);
-
+  
+    // Detect user interaction
+    mapRef.current.on('zoomstart', () => setUserInteracted(true));
+    mapRef.current.on('dragstart', () => setUserInteracted(true));
+  
     return () => {
       if (mapRef.current) {
         mapRef.current.remove();
@@ -59,6 +63,7 @@ export default function MapClient({
       }
     };
   }, [singlePlace]);
+  
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -127,7 +132,7 @@ export default function MapClient({
         animate: true,
         duration: 1
       });
-    } else if (validPlaces.length > 0) {
+    } else if (validPlaces.length > 0 && !userInteracted) {
       mapRef.current.fitBounds(bounds, {
         padding: [50, 50],
         maxZoom: 15,
@@ -154,6 +159,11 @@ export default function MapClient({
     };
   }, [singlePlace]);
 
+  useEffect(() => {
+    setUserInteracted(false);
+  }, [places]);
+  
+
   // Create URL slug for the place
   const createSlug = (place: Place) => {
     const nameSlug = place.place_name
@@ -175,6 +185,11 @@ export default function MapClient({
           <Link href={createSlug(selectedPlace)}>
             <div className="place-content" style={{ cursor: 'pointer' }}>
               <h3 className="place-name">{selectedPlace.place_name}</h3>
+              <h2 className="place-info">
+                {selectedPlace.cuisine}
+                <span>·</span>
+                {selectedPlace.budget}
+              </h2>
               {selectedPlace.image_url && (
                 <img src={selectedPlace.image_url} alt={selectedPlace.place_name} className="place-image" />
               )}

@@ -48,7 +48,7 @@ const NeighborhoodPage: NextPage<NeighborhoodPageProps> = ({
         <div className="individual-place-content">
           <h1 className="place-title">{neighborhood.name}</h1>
           
-          <p className="place-description">
+          <p className="neighborhood-description">
             {neighborhood.description || `Discover the vibrant spirit of ${neighborhood.name}, 
             where classic New York charm meets contemporary culture. From hidden culinary gems 
             to trendy nightlife spots, this neighborhood offers a unique blend of experiences 
@@ -153,7 +153,7 @@ const NeighborhoodPage: NextPage<NeighborhoodPageProps> = ({
                   className="place-image"
                 />
                 <div className="description-container">
-                  <p className="place-description">{selectedPlace.description}</p>
+                  <p className="neighborhood-description">{selectedPlace.description}</p>
                 </div>
               </div>
             </a>

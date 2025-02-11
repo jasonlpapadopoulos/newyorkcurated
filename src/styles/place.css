@@ -167,7 +167,7 @@
 
 .reservation-button {
   display: inline-block;
-  background: linear-gradient(45deg, #4A90E2, #357ABD);
+  background: black;
   color: white;
   padding: 12px 24px;
   border-radius: 25px;
@@ -175,7 +175,7 @@
   font-weight: 500;
   margin: 1rem 0;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.5);
 }
 
 .reservation-button:hover {
@@ -186,3 +186,4 @@
 .reservation-button:active {
   transform: translateY(0);
 }
+
