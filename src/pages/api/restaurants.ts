@@ -36,11 +36,12 @@ export default async function handler(
         dinner,
         lat,
         lon,
-        image_url
+        image_url,
+        reservation_url,
+        address
       FROM food
       WHERE neighborhood_clean IN (?)
     `;
-
     const results = await query(restaurantQuery, [neighborhoodList]);
     
     const restaurants: Restaurant[] = (results as any[]).map(row => ({
@@ -59,7 +60,9 @@ export default async function handler(
       },
       lat: row.lat,
       lon: row.lon,
-      image_url: row.image_url
+      image_url: row.image_url,
+      reservation_url: row.reservation_url,
+      address: row.address
     }));
 
     res.status(200).json(restaurants);

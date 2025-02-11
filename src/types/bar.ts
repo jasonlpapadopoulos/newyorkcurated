@@ -16,4 +16,5 @@ export interface Bar {
   speakeasy: boolean;
   beer: boolean;
   pub: boolean;
+  address: string;
 }

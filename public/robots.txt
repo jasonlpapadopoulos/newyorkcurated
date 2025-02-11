@@ -1,4 +1,18 @@
 User-agent: *
 Allow: /
 
+# Prevent crawling of search result pages with filters
+Disallow: /results?*
+
+# Prevent crawling of non-existent neighborhoods
+Disallow: /place/*/not-found
+
+# Allow crawling of valid place pages
+Allow: /place/*/
+
+# Prevent duplicate content
+Disallow: /*?utm_*
+Disallow: /*?source=*
+
+# Sitemap
 Sitemap: https://newyorkcurated.com/sitemap.xml

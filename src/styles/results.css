@@ -234,7 +234,7 @@
   padding: 20px;
   min-width: 280px;
   max-width: 90%;
-  max-height: 90vh;
+  max-height: 75vh;
   overflow-y: auto;
   visibility: hidden;
   opacity: 0;

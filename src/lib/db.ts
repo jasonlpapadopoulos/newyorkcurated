@@ -17,15 +17,15 @@ const db = mysql({
 export async function query(q: string, values: any[] = []) {
   try {
     // Verify connection before query
-    console.log('Attempting database connection...');
+    // console.log('Attempting database connection...');
     await db.connect();
-    console.log('Database connected successfully');
+    // console.log('Database connected successfully');
 
     // Execute query
-    console.log('Executing query:', q);
-    console.log('Query parameters:', values);
+    // console.log('Executing query:', q);
+    // console.log('Query parameters:', values);
     const results = await db.query(q, values);
-    console.log('Query executed successfully');
+    // console.log('Query executed successfully');
 
     // Clean up
     await db.end();

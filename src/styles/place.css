@@ -73,7 +73,7 @@
 .place-description {
   font-size: 1.25rem;
   line-height: 1.8;
-  margin-bottom: 3rem;
+  margin-bottom: 1rem;
   color: rgba(255, 255, 255, 0.9);
   font-weight: 300;
   letter-spacing: 0.3px;
@@ -164,3 +164,26 @@
     text-align: center;
   }
 }
+
+.reservation-button {
+  display: inline-block;
+  background: black;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 500;
+  margin: 1rem 0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.reservation-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+}
+
+.reservation-button:active {
+  transform: translateY(0);
+}
+

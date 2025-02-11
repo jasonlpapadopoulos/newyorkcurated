@@ -1,3 +1,4 @@
+import { GetStaticProps } from 'next';
 import { useState } from 'react';
 import Link from 'next/link';
 import type { NextPage } from 'next';
@@ -28,9 +29,19 @@ const Home: NextPage = () => {
   return (
     <>
       <SEO 
-        title="New York Curated - The Best Things to Do in NYC"
-        description="Discover the best restaurants, bars, and experiences in New York City. Hand-picked recommendations for the best of NYC, curated like upstate apples."
-        url="https://newyorkcurated.com"
+        title="New York Curated - Hand-Picked NYC Restaurant & Bar Recommendations"
+        description="Discover the best restaurants, bars, and experiences in New York City. Expert-curated recommendations for authentic NYC dining and nightlife experiences."
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": "New York Curated",
+          "url": "https://newyorkcurated.com",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://newyorkcurated.com/results?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        }}
       />
       <div className="hero">
         <div className="hero-content">
@@ -64,6 +75,14 @@ const Home: NextPage = () => {
       </section>
     </>
   );
+};
+
+export const getStaticProps: GetStaticProps = async () => {
+  return {
+    props: {},
+    // Revalidate every 24 hours
+    revalidate: 86400
+  };
 };
 
 export default Home;
