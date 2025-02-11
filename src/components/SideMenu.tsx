@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { X, ChevronDown, ChevronUp } from 'lucide-react';
-import type { Neighborhood } from '../../types/neighborhood';
+import type { Neighborhood } from '../types/neighborhood';
 
 interface SideMenuProps {
   isOpen: boolean;
