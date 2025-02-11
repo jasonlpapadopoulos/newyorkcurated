@@ -4,4 +4,3 @@ export interface Neighborhood {
     description: string;
     image: string;
   }
-  
