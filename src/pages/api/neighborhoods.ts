@@ -4,7 +4,7 @@ import type { Neighborhood } from '../../types/neighborhood';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const result = await query('SELECT neighborhood_name, neighborhood_name_clean, description, borough FROM neighborhoods');
+    const result = await query('SELECT neighborhood_name, neighborhood_name_clean, description, borough FROM neighborhoods where neighborhood_name is not null');
 
     const neighborhoods: Neighborhood[] = (result as any[]).map(neighborhood => ({
       name: neighborhood.neighborhood_name,
