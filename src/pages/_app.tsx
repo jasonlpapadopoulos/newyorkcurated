@@ -4,6 +4,7 @@ import Head from 'next/head';
 import Header from '../components/Header';
 import '../styles/globals.css';
 import '../styles/place.css';
+import '../styles/about.css';
 import '../styles/Header.css';
 import '../styles/SideMenu.css';
 import '../styles/neighborhood.css'; // Add this line

@@ -1,0 +1,40 @@
+/* Add this to your existing globals.css */
+.about-container {
+    min-height: 100vh;
+    width: 90%;
+    background-color: black;
+    color: white;
+    padding: 2rem;
+  }
+  
+  .about-content {
+    max-width: 40rem;
+    margin: 6rem auto 0;
+  }
+  
+  .about-title {
+    font-size: 2.5rem;
+    font-weight: 300;
+    margin-bottom: 3rem;
+  }
+  
+  .about-paragraph {
+    font-size: 1.25rem;
+    line-height: 1.7;
+    font-weight: 300;
+    margin-bottom: 1rem;
+  }
+  
+  @media (max-width: 768px) {
+    .about-container {
+      padding: 1rem;
+    }
+    
+    .about-content {
+      margin-top: 4rem;
+    }
+    
+    .about-title {
+      font-size: 1.75rem;
+    }
+  }
