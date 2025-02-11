@@ -186,8 +186,8 @@ export default function MapClient({
             <div className="place-content" style={{ cursor: 'pointer' }}>
               <h3 className="place-name">{selectedPlace.place_name}</h3>
               <h2 className="place-info">
-                {selectedPlace.cuisine}
-                <span>·</span>
+                {/* {selectedPlace.cuisine}
+                <span>·</span> */}
                 {selectedPlace.budget}
               </h2>
               {selectedPlace.image_url && (
