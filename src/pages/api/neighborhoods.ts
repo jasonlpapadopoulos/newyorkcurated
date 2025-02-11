@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { query } from '../../lib/db';
-import type { Neighborhood } from '../../types/neighborhood';
+import type { Neighborhood } from '../types/neighborhood';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
