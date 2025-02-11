@@ -3,4 +3,5 @@ export interface Neighborhood {
     value: string;
     description: string;
     image: string;
+    borough: string;
   }

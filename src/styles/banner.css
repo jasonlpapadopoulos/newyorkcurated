@@ -41,3 +41,10 @@
   height: 1px;
   background-color: white;
 }
+
+.menu-button {
+  background: none;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
