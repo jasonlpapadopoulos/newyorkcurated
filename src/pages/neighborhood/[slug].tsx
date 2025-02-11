@@ -3,10 +3,10 @@ import { NextPage } from 'next';
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import SEO from '../../components/SEO';
-import neighborhoodsData from '../../data/neighborhoods.json';
 import type { Restaurant } from '../../types/restaurant';
 import type { Bar } from '../../types/bar';
 import { generatePlaceUrl } from '../../utils/url';
+import type { Neighborhood } from '../../types/neighborhood';
 
 // Dynamic import for Map to avoid SSR issues
 const Map = dynamic(() => import('../../components/Map'), {
@@ -16,14 +16,9 @@ const Map = dynamic(() => import('../../components/Map'), {
 type Place = Restaurant | Bar;
 
 interface NeighborhoodPageProps {
-  neighborhood: {
-    name: string;
-    value: string;
-    description: string;
-    image: string;
-  };
-  restaurants: Restaurant[];
-  bars: Bar[];
+    neighborhood: Neighborhood;
+    restaurants: Restaurant[];
+    bars: Bar[];
 }
 
 const NeighborhoodPage: NextPage<NeighborhoodPageProps> = ({ 
@@ -50,15 +45,6 @@ const NeighborhoodPage: NextPage<NeighborhoodPageProps> = ({
       />
       
       <div className="neighborhood-page">
-        {/* Hero Section */}
-        {/* <div className="place-hero">
-          <img 
-            src={neighborhood.image} 
-            alt={neighborhood.name}
-            className="place-hero-image"
-          />
-        </div> */}
-
         <div className="individual-place-content">
           <h1 className="place-title">{neighborhood.name}</h1>
           
@@ -124,7 +110,6 @@ const NeighborhoodPage: NextPage<NeighborhoodPageProps> = ({
 
           {/* Map Section */}
           <section className="neighborhood-section">
-            {/* <h2 className="section-title">Everything in {neighborhood.name}</h2> */}
             <h2 className="section-title">All together</h2>
             <div className="neighborhood-map">
               <Map 
@@ -180,42 +165,27 @@ const NeighborhoodPage: NextPage<NeighborhoodPageProps> = ({
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  // Collect all unique neighborhood values
-  const neighborhoods = new Set<string>();
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+    const res = await fetch(`${baseUrl}/api/neighborhoods`);
+    const neighborhoods = await res.json();
   
-  Object.values(neighborhoodsData).forEach(category => {
-    Object.values(category).forEach(area => {
-      if (Array.isArray(area)) {
-        area.forEach(n => neighborhoods.add(n.value));
-      } else {
-        Object.values(area).forEach(subArea => {
-          subArea.forEach((n: any) => neighborhoods.add(n.value));
-        });
-      }
-    });
-  });
-
-  return {
-    paths: Array.from(neighborhoods).map(slug => ({
-      params: { slug }
-    })),
-    fallback: false
+    return {
+      paths: neighborhoods.map((neighborhood: any) => ({
+        params: { slug: neighborhood.value }
+      })),
+      fallback: false
+    };
   };
-};
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const slug = params?.slug as string;
-  
-  // This would be replaced with your actual data fetching
-  const neighborhood = {
-    name: slug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
-    value: slug,
-    description: `Discover the vibrant spirit of ${slug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}, where classic New York charm meets contemporary culture. From hidden culinary gems to trendy nightlife spots, this neighborhood offers a unique blend of experiences that capture the essence of NYC.`,
-    image: `https://source.unsplash.com/1600x900/?nyc,${slug}`
-  };
 
-  // Fetch places for this neighborhood
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+  const res = await fetch(`${baseUrl}/api/neighborhoods`);
+  const neighborhoods = await res.json();
+
+  const neighborhood = neighborhoods.find((n: any) => n.value === slug);
+
   const [restaurants, bars] = await Promise.all([
     fetch(`${baseUrl}/api/restaurants?neighborhoods=${slug}`).then(res => res.json()),
     fetch(`${baseUrl}/api/bars?neighborhoods=${slug}`).then(res => res.json())

@@ -17,8 +17,8 @@ interface PlacePageProps {
 
 export default function PlacePage({ place, error }: PlacePageProps) {
   // Add debugging logs
-  console.log('Place data:', place);
-  console.log('Address:', place?.address);
+  // console.log('Place data:', place);
+  // console.log('Address:', place?.address);
 
   if (error || !place) {
     return <div className="error">Error: {error || 'Place not found'}</div>;
@@ -106,12 +106,12 @@ export default function PlacePage({ place, error }: PlacePageProps) {
             )}
             <span className="separator">·</span>
             <span>{place.budget}</span>
-            {place.address && (
+            {/* {place.address && (
               <>
                 <span className="separator">·</span>
                 <span>{place.address}</span>
               </>
-            )}
+            )} */}
           </div>
 
           <p className="place-description">{place.description}</p>
@@ -164,7 +164,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const data = await response.json();
     
     // Add debugging log
-    console.log('Server-side data:', data);
+    // console.log('Server-side data:', data);
+    // console.log('Request URL:', `${baseUrl}/api/places?neighborhood=${encodeURIComponent(neighborhood as string)}&name=${encodeURIComponent(name as string)}`);
 
     return {
       props: {

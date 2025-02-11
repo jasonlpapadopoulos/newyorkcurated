@@ -24,14 +24,14 @@ export default async function handler(
     const barQuery = `
       SELECT 
         id,
-        'this is wrong' as place_name,
+        place_name,
         description,
         neighborhood,
         neighborhood_clean,
         budget,
         lat,
         lon,
-        
+        image_url,
         cocktail,
         dive,
         jazz,
