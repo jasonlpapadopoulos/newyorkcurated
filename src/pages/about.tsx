@@ -7,7 +7,8 @@ const AboutPage = () => {
     "But also, out of our frustration with going through articles, saved social media posts, map searches, and buried notes.",
     "In an era of platforms competing relentlessly for our attention, our black background is an invitation to pause.",
     "To breathe.",
-    "Then, we ask you one simple question: what are you looking for?"
+    "Our one question is simple:",
+    "What are you looking for?"
   ];
 
   const [displayText, setDisplayText] = useState(paragraphs.map(() => ""));
