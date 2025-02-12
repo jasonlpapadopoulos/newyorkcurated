@@ -1,40 +1,54 @@
-/* Add this to your existing globals.css */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+
 .about-container {
     min-height: 100vh;
-    width: 90%;
+    width: 100%;
     background-color: black;
     color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 2rem;
-  }
-  
-  .about-content {
-    max-width: 40rem;
-    margin: 6rem auto 0;
-  }
-  
-  .about-title {
+}
+
+.about-content {
+    max-width: 1000px;
+    width: 100%;
+    padding: 2rem;
+}
+
+.about-title {
+    font-family: 'Playfair Display', serif;
     font-size: 2.5rem;
-    font-weight: 300;
-    margin-bottom: 3rem;
-  }
-  
-  .about-paragraph {
-    font-size: 1.25rem;
-    line-height: 1.7;
-    font-weight: 300;
-    margin-bottom: 1rem;
-  }
-  
-  @media (max-width: 768px) {
-    .about-container {
-      padding: 1rem;
-    }
-    
-    .about-content {
-      margin-top: 4rem;
-    }
-    
+    font-weight: normal;
+    text-align: center;
+    margin-bottom: 4rem;  /* Space between title and paragraphs */
+}
+
+.paragraphs-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;  /* Space between paragraphs */
+}
+
+.about-paragraph {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.125rem;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
     .about-title {
-      font-size: 1.75rem;
+    font-size: 2rem;
+    margin-bottom: 3rem;
     }
-  }
+
+    .about-paragraph {
+    font-size: 1rem;
+    }
+
+    .paragraphs-container {
+    gap: 1.5rem;
+    }
+}
