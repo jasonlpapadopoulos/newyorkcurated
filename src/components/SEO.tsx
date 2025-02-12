@@ -29,18 +29,11 @@ function SEO({
   // If no specific structured data is provided, use default website data
   const defaultStructuredData = {
     "@context": "https://schema.org",
-    "@type": type === 'article' ? 'Article' : 'WebSite',
-    "url": canonicalUrl,
-    "name": searchTitle,
-    "description": metaDescription,
-    "image": image,
-    ...(type === 'article' && {
-      "datePublished": new Date().toISOString(),
-      "author": {
-        "@type": "Organization",
-        "name": "New York Curated"
-      }
-    })
+    "@type": "WebSite",
+    "url": "https://newyorkcurated.com",
+    "name": "New York Curated",
+    "description": "The best things to do in New York. Handpicked, like upstate apples.",
+    "image": "https://images.unsplash.com/photo-1518563172008-e56c5dfbaef6?q=80&w=3087"
   };
 
   return (

@@ -78,7 +78,7 @@ export default function MapClient({
     validPlaces.forEach(place => {
       const isRestaurant = 'cuisine' in place;
       const markerColor = isRestaurant ? markerColors.restaurant : markerColors.bar;
-
+    
       const icon = L.divIcon({
         className: 'custom-marker',
         html: `<div style="
@@ -93,16 +93,21 @@ export default function MapClient({
         iconAnchor: [12, 12],
         popupAnchor: [0, -12],
       });
-
+    
       const marker = L.marker([place.lat, place.lon], { icon });
-
+    
       if (singlePlace) {
         marker.bindPopup(`
           <div style="text-align: center;">
             <strong>${place.place_name}</strong><br>
             ${place.address}
           </div>
-        `);
+        `)
+        mapRef.current?.whenReady(() => {
+          setTimeout(() => {
+            marker.openPopup();
+          }, 100);  // Small delay (100ms)
+        });
       } else {
         marker.on('click', () => {
           if (onMarkerClick) {
@@ -111,7 +116,7 @@ export default function MapClient({
             setSelectedPlace(place);
           }
         });
-        
+    
         marker.bindTooltip(place.place_name, {
           permanent: validPlaces.length <= 5,
           direction: 'top',
@@ -120,18 +125,21 @@ export default function MapClient({
           className: 'place-label'
         });
       }
-
+    
       marker.addTo(mapRef.current!);
       markersRef.current.push(marker);
       bounds.extend([place.lat, place.lon]);
     });
+    
 
     if (singlePlace && validPlaces.length === 1) {
       const place = validPlaces[0];
-      mapRef.current.setView([place.lat, place.lon], 15, {
-        animate: true,
-        duration: 1
-      });
+      setTimeout(() => {
+        mapRef.current?.setView([place.lat, place.lon], 15, {
+          animate: true,
+          duration: 1
+        });
+      }, 100);
     } else if (validPlaces.length > 0 && !userInteracted) {
       mapRef.current.fitBounds(bounds, {
         padding: [50, 50],
