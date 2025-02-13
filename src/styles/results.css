@@ -150,7 +150,6 @@
 }
 
 .place-toaster .place-name {
-  font-family: 'Roboto', sans-serif;
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 8px;
@@ -165,7 +164,6 @@
   justify-content: center;
   gap: 8px;
   margin-bottom: 16px;
-  font-family: 'Roboto', sans-serif;
   font-size: 1rem;
   color: rgba(255, 255, 255, 0.9);
   font-style: italic;
@@ -186,7 +184,6 @@
 }
 
 .place-toaster .place-description {
-  font-family: 'Roboto', sans-serif;
   font-size: 1rem;
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.9);

@@ -44,7 +44,7 @@
   font-size: 3.5rem;
   font-weight: 500;
   margin-bottom: 1rem;
-  font-family: 'Playfair Display', serif;
+  /* font-family: 'Playfair Display', serif; */
   line-height: 1.2;
   background: linear-gradient(45deg, #fff, rgba(255, 255, 255, 0.8));
   -webkit-background-clip: text;

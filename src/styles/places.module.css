@@ -41,7 +41,7 @@
 
 /* Place Name */
 .placeName {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Playfair Display', serif;
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 8px;
@@ -51,7 +51,6 @@
 
 /* Meta Information */
 .placeMeta {
-  font-family: 'Roboto', sans-serif;
   font-size: 1rem;
   color: rgba(255, 255, 255, 0.9);
   margin-bottom: 16px;
@@ -68,7 +67,6 @@
 }
 
 .placeNeighborhood, .placeCuisine {
-  font-family: 'Roboto', sans-serif;
   font-size: 1rem;
   color: rgba(255, 255, 255, 0.9);
   font-style: italic;
@@ -92,7 +90,7 @@
 
 /* Description */
 .placeDescription {
-  font-family: 'Roboto', sans-serif;
+
   font-size: 1rem;
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.9);
