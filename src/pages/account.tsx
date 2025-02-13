@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { auth } from '../lib/firebase';
 import { useRouter } from 'next/router';
 import type { UserData } from '../types/user';
+import Link from 'next/link';
 
 export default function AccountPage() {
   const [userData, setUserData] = useState<UserData | null>(null);
@@ -27,7 +28,16 @@ export default function AccountPage() {
 
   if (!userData) return <p>Loading...</p>;
 
-  const currentTime = new Date().toLocaleTimeString('en-US', { timeZone: 'America/New_York' });
+  const currentTime = new Date().toLocaleString('en-US', {
+    // timeZone: 'America/New_York',
+    // weekday: 'long',
+    // year: 'numeric',
+    // month: 'long',
+    // day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  });
 
   const handleLogout = async () => {
     try {
@@ -41,7 +51,13 @@ export default function AccountPage() {
   return (
     <div className="account-container">
       <h1>Hey {userData.first_name}!</h1>
-      <div className="account-p">The time is currently {currentTime} in New York City.</div>
+      <div className="account-p">It's {currentTime} in New York City.</div>
+      <div className="account-p">What are you up to?</div>
+      <div className="button-container">
+        <Link href="/what-are-you-looking-for" className="explore-button">
+          Explore
+        </Link>
+      </div>
       <div className="account-button" onClick={handleLogout}>Logout</div>
     </div>
   );

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { auth } from '../lib/firebase';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 import { useRouter } from 'next/router';
 
 export default function AuthPage() {
@@ -72,6 +72,20 @@ export default function AuthPage() {
     }
   };
 
+  const handlePasswordReset = async () => {
+    if (!email) {
+      alert('Please enter your email to reset your password.');
+      return;
+    }
+    try {
+      await sendPasswordResetEmail(auth, email);
+      alert('Password reset email sent! Check your inbox.');
+    } catch (error) {
+      console.error('Password reset error:', error);
+      alert('Error sending password reset email.');
+    }
+  };
+
   return (
     <div className="auth-container">
       <h1>{isSignUp ? 'Sign Up' : 'Welcome Back!'}</h1>
@@ -87,6 +101,9 @@ export default function AuthPage() {
       <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
 
       {errorMessage && <p className="error-message">{errorMessage}</p>}
+      <div className="auth-p" onClick={handlePasswordReset}>
+        Forgot Password?
+      </div>
 
       <div className="auth-button" onClick={handleAuth}>
         {isSignUp ? 'Sign Up' : 'Login'}
