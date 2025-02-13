@@ -1,19 +1,40 @@
+.center-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 80vh;
+  width: 100%;
+  padding: 2rem 0;
+  gap: 1rem;
+  position: relative;
+  top: -5rem; /* Moves everything slightly higher */
+}
+
+
+
 .categories-container {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2.5rem;  /* Increased gap */
-  width: min(90%, 800px);  /* Increased from 600px to 800px */
-  margin: 2rem auto;
-  padding: 0 1rem;
+  grid-template-columns: repeat(2, minmax(150px, 1fr));
+  gap: 2rem;
+  width: min(90%, 800px);
+  align-items: center;
+  justify-content: center;
+  /* margin: auto; */
+  padding: 1rem;
   opacity: 0;
   animation: fadeIn 1s ease-in forwards;
   animation-delay: 0.5s;
-  height: 25vh;
+  height: auto;
 }
 
+
 .category-option {
-  aspect-ratio: 1/1;
   width: 100%;
+  min-width: 150px; /* Prevents Safari from shrinking */
+  min-height: 150px; /* Ensures reasonable button size */
+  aspect-ratio: 1/1;
   border-radius: 15px;
   border: 2px solid white;
   position: relative;
@@ -23,6 +44,7 @@
   background-position: center;
   transition: transform 0.3s ease, border-color 0.3s ease;
 }
+
 
 .category-overlay {
   position: absolute;
@@ -60,22 +82,17 @@
 /* Mobile-specific adjustments */
 @media screen and (max-width: 768px) {
   .categories-container {
-    gap: 1.5rem;  /* Increased mobile gap */
-    padding: 0 1rem;
-    width: 95%;
+    grid-template-columns: repeat(2, minmax(120px, 1fr)); /* Ensures buttons stay reasonable */
+    gap: 1rem;
+    width: 100%;
   }
-  .category-text {
-    font-size: clamp(1.75rem, 5vw, 1.75rem);  /* Slightly larger text */
-  }
-}
 
-/* Add a larger screen breakpoint for even bigger displays */
-@media screen and (min-width: 1200px) {
-  .categories-container {
-    width: min(90%, 1000px);  /* Allow even larger on big screens */
-    gap: 3rem;  /* Larger gap for bigger screens */
+  .category-option {
+    min-width: 150px; /* Prevents Safari from making them tiny */
+    min-height: 150px;
   }
+
   .category-text {
-    font-size: clamp(1.5rem, 2.5vw, 2.75rem);
+    font-size: clamp(1.5rem, 4vw, 2rem);
   }
 }

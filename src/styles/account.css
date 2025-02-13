@@ -31,6 +31,7 @@ h1 {
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
+  margin-top: 2rem;
 }
 
 .account-button:hover {
