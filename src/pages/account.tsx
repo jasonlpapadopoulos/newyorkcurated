@@ -3,10 +3,19 @@ import { auth } from '../lib/firebase';
 import { useRouter } from 'next/router';
 import type { UserData } from '../types/user';
 import Link from 'next/link';
+import { useBookmarks } from '../hooks/useBookmarks';
+
+const generatePlaceUrl = (place: any) => {
+  // Replace spaces and special characters with hyphens, convert to lowercase
+  const nameSlug = place.place_name_clean;
+  const neighborhoodSlug = place.neighborhood_clean;
+  return `/places/${neighborhoodSlug}/${nameSlug}`;
+};
 
 export default function AccountPage() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const router = useRouter();
+  const { bookmarks, isLoading } = useBookmarks();
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
@@ -58,6 +67,42 @@ export default function AccountPage() {
           Explore
         </Link>
       </div>
+
+      <section className="saved-places-section">
+        <h2>Saved Places</h2>
+        {isLoading ? (
+          <p>Loading your saved places...</p>
+        ) : bookmarks.length === 0 ? (
+          <div className="empty-state">
+            <p>You haven't saved any places yet.</p>
+            <Link href="/what-are-you-looking-for" className="explore-button">
+              Start Exploring
+            </Link>
+          </div>
+        ) : (
+          <div className="bookmarks-container">
+            {bookmarks.map((place) => (
+              <div key={`${place.place_type}-${place.place_id}`} className="place-card">
+                <Link href={generatePlaceUrl(place)}>
+                  <img 
+                    src={place.image_url} 
+                    alt={place.place_name}
+                    className="place-card-image"
+                  />
+                  <div className="place-card-content">
+                    <h3 className="place-card-title">{place.place_name}</h3>
+                    {place.cuisine && (
+                      <p className="place-card-cuisine">{place.cuisine}</p>
+                    )}
+                    <p className="place-card-budget">{place.budget}</p>
+                  </div>
+                </Link>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
       <div className="account-button" onClick={handleLogout}>Logout</div>
     </div>
   );

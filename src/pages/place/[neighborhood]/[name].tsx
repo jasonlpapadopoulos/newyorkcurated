@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import dynamic from 'next/dynamic';
 import SEO from '../../../components/SEO';
+import { useBookmarks } from '../../../hooks/useBookmarks';
 import type { Restaurant } from '../../../types/restaurant';
 import type { Bar } from '../../../types/bar';
 
@@ -20,11 +22,25 @@ export default function PlacePage({ place, error }: PlacePageProps) {
   // console.log('Place data:', place);
   // console.log('Address:', place?.address);
 
+  const { isPlaceBookmarked, toggleBookmark } = useBookmarks();
+  const [isSaving, setIsSaving] = useState(false);
+
   if (error || !place) {
     return <div className="error">Error: {error || 'Place not found'}</div>;
   }
 
   const isRestaurant = 'cuisine' in place;
+
+  const handleSave = async () => {
+    if (isSaving) return;
+    
+    setIsSaving(true);
+    await toggleBookmark(
+      place.id,
+      isRestaurant ? 'food' : 'drink'
+    );
+    setIsSaving(false);
+  };
   
   const structuredData = isRestaurant ? {
     "@context": "https://schema.org",
@@ -112,6 +128,13 @@ export default function PlacePage({ place, error }: PlacePageProps) {
                 <span>{place.address}</span>
               </>
             )} */}
+                        <button 
+              onClick={handleSave}
+              disabled={isSaving}
+              className={`save-button ${isPlaceBookmarked(place.id) ? 'saved' : ''}`}
+            >
+              {isPlaceBookmarked(place.id) ? 'Saved!' : 'Save'}
+            </button>
           </div>
 
           <p className="place-description">{place.description}</p>
