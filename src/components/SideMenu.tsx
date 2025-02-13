@@ -61,6 +61,7 @@ const SideMenu: React.FC<SideMenuProps> = ({ isOpen, toggleMenu }) => {
 
       <nav className="side-menu-links">
         <Link className="menu-item" href="/" onClick={toggleMenu}>Home</Link>
+        <Link className="menu-item" href="/account" onClick={toggleMenu}>My Profile</Link>
         <Link className="menu-item" href="/about" onClick={toggleMenu}>About</Link>
         <Link className="menu-item" href="/what-are-you-looking-for" onClick={toggleMenu}>Explore</Link>
 
