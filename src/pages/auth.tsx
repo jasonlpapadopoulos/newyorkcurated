@@ -101,6 +101,9 @@ export default function AuthPage() {
       <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
 
       {errorMessage && <p className="error-message">{errorMessage}</p>}
+      <div className="auth-p" onClick={handlePasswordReset}>
+        Forgot Password?
+      </div>
 
       <div className="auth-button" onClick={handleAuth}>
         {isSignUp ? 'Sign Up' : 'Login'}
@@ -108,9 +111,6 @@ export default function AuthPage() {
 
       <div className="auth-p" onClick={() => setIsSignUp(!isSignUp)}>
         {isSignUp ? 'Already have an account? Login' : "Don't have an account? Sign Up"}
-      </div>
-      <div className="auth-p" onClick={handlePasswordReset}>
-        Forgot Password?
       </div>
     </div>
   );
