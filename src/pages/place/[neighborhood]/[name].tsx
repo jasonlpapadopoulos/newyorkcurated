@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import SEO from '../../../components/SEO';
 import { useBookmarks } from '../../../hooks/useBookmarks';
+import { auth } from '../../../lib/firebase';
 import type { Restaurant } from '../../../types/restaurant';
 import type { Bar } from '../../../types/bar';
 
@@ -18,12 +20,9 @@ interface PlacePageProps {
 }
 
 export default function PlacePage({ place, error }: PlacePageProps) {
-  // Add debugging logs
-  // console.log('Place data:', place);
-  // console.log('Address:', place?.address);
-
   const { isPlaceBookmarked, toggleBookmark } = useBookmarks();
   const [isSaving, setIsSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState<React.ReactNode | null>(null);
 
   if (error || !place) {
     return <div className="error">Error: {error || 'Place not found'}</div>;
@@ -35,10 +34,40 @@ export default function PlacePage({ place, error }: PlacePageProps) {
     if (isSaving) return;
     
     setIsSaving(true);
+
+    if (!auth.currentUser) {
+      setSaveMessage(
+        <span>
+          You need an account to save a place.{' '}
+          <Link href="/auth" className="custom-link">
+            Sign up or log in.
+          </Link>
+        </span>
+      );
+      setIsSaving(false);
+      return;
+    }
+
+    const wasBookmarked = isPlaceBookmarked(place.id);
+    
     await toggleBookmark(
       place.id,
       isRestaurant ? 'food' : 'drink'
     );
+
+    if (wasBookmarked) {
+      setSaveMessage(null);
+    } else {
+      setSaveMessage(
+        <span>
+          You can see your saved places in your{' '}
+          <Link href="/account" className="custom-link">
+            account.
+          </Link>
+        </span>
+      );
+    }
+    
     setIsSaving(false);
   };
   
@@ -128,13 +157,6 @@ export default function PlacePage({ place, error }: PlacePageProps) {
                 <span>{place.address}</span>
               </>
             )} */}
-                        <button 
-              onClick={handleSave}
-              disabled={isSaving}
-              className={`save-button ${isPlaceBookmarked(place.id) ? 'saved' : ''}`}
-            >
-              {isPlaceBookmarked(place.id) ? 'Saved!' : 'Save'}
-            </button>
           </div>
 
           <p className="place-description">{place.description}</p>
@@ -151,7 +173,19 @@ export default function PlacePage({ place, error }: PlacePageProps) {
               Make a Reservation
             </a>
           )}
+      <button 
+        onClick={handleSave}
+        disabled={isSaving}
+        className={`reservation-button ${isPlaceBookmarked(place.id) ? 'saved' : ''}`}
+      >
+        {isPlaceBookmarked(place.id) ? 'Saved!' : 'Save'}
+      </button>
 
+      {saveMessage && (
+        <div className="place-meta">
+          {saveMessage}
+        </div>
+      )}
           <div className="place-map">
             <Map 
               places={[place]}

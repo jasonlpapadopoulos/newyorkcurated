@@ -98,8 +98,17 @@ h2 {
   flex-shrink: 0; /* Prevents buttons from shrinking */
 }
 
-.saved-places-filter-button:hover,
-.saved-places-filter-button.active {
-  background-color: rgba(78, 205, 196, 0.9);
+.saved-places-filter-button.all.active {
+  background-color: #fff;
   color: #000;
+}
+
+.saved-places-filter-button.food.active {
+  background-color: #007BFF; /* Blue */
+  color: #fff;
+}
+
+.saved-places-filter-button.drink.active {
+  background-color: #FF8C00; /* Orange */
+  color: #fff;
 }

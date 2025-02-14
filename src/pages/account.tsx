@@ -72,11 +72,9 @@ export default function AccountPage() {
       </div>
       <h2>Saved Places</h2>
       <div className="saved-places-filter-container">
-      <div className="filter-buttons">
-        <button className={`saved-places-filter-button ${filter === 'all' ? 'active' : ''}`} onClick={() => setFilter('all')}>All</button>
-        <button className={`saved-places-filter-button ${filter === 'food' ? 'active' : ''}`} onClick={() => setFilter('food')}>Food</button>
-        <button className={`saved-places-filter-button ${filter === 'drink' ? 'active' : ''}`} onClick={() => setFilter('drink')}>Drinks</button>
-      </div>
+      <button className={`saved-places-filter-button all ${filter === 'all' ? 'active' : ''}`} onClick={() => setFilter('all')}>All</button>
+  <button className={`saved-places-filter-button food ${filter === 'food' ? 'active' : ''}`} onClick={() => setFilter('food')}>Food</button>
+  <button className={`saved-places-filter-button drink ${filter === 'drink' ? 'active' : ''}`} onClick={() => setFilter('drink')}>Drinks</button>
       </div>
       <div className="saved-places-section">
         {isBookmarksLoading ? (
@@ -84,9 +82,9 @@ export default function AccountPage() {
         ) : filteredBookmarks.length === 0 ? (
           <div className="empty-state">
             <p>You haven't saved any places yet.</p>
-            <Link href="/what-are-you-looking-for" className="explore-button">
+            {/* <Link href="/what-are-you-looking-for" className="explore-button">
               Start Exploring
-            </Link>
+            </Link> */}
           </div>
         ) : (
           <div className="bookmarks-container">

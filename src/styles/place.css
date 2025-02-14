@@ -183,7 +183,32 @@
   box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
 }
 
-.reservation-button:active {
-  transform: translateY(0);
+.reservation-button.saved {
+  background-color: white;
+  color: black;
+  border-color: black;
 }
 
+.save-message {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.save-message.success {
+  color: #4CAF50; /* Green for success */
+}
+
+.save-message.error {
+  color: #FF5733; /* Red for error */
+}
+
+.custom-link {
+  color: #007BFF; /* Change to your preferred color */
+  text-decoration: none; /* Removes underline */
+  font-weight: bold;
+}
+
+.custom-link:hover {
+  text-decoration: underline; /* Add underline on hover */
+  color: #0056b3; /* Darker shade for hover effect */
+}
