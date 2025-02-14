@@ -15,6 +15,8 @@ interface Bookmark {
   cuisine: string | null;
   budget: string;
   image_url: string;
+  place_name_clean: string;
+  neighborhood_clean: string;
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -27,7 +29,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
       const results = await mysql.query<Bookmark[]>(`
-        SELECT b.*, 
+SELECT b.*, 
+               CASE 
+                 WHEN b.place_type = 'food' THEN f.place_name_clean
+                 ELSE d.place_name_clean 
+               END as place_name_clean,
+			CASE 
+                 WHEN b.place_type = 'food' THEN f.neighborhood_clean
+                 ELSE d.neighborhood_clean 
+               END as neighborhood_clean,
                CASE 
                  WHEN b.place_type = 'food' THEN f.place_name 
                  ELSE d.place_name 

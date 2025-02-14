@@ -7,12 +7,34 @@
   max-width: 1200px;
 }
 
+.saved-places-section {
+  margin-top: 2rem;
+  min-height: 25vh;
+  border-radius: 20px;
+  border-color: white;
+  border: 1px solid white;
+  background-color: #000;
+  color: #fff;
+  padding: 2rem;
+  max-width: 1200px;
+  align-items: center;
+}
+
 h1 {
   font-family: 'Playfair Display', serif;
   font-size: 3rem;
   font-weight: 700;
   margin-bottom: 2rem;
   letter-spacing: -0.02em;
+}
+
+h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-top: 2rem;
+  letter-spacing: -0.02em;
+  text-decoration: underline;
 }
 
 .account-p {
@@ -47,4 +69,37 @@ h1 {
   text-align: center;
   transition: color 0.2s ease;
   margin-bottom: 5rem;
+}
+
+.saved-places-filter-container {
+  margin-top: 1rem;
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+  gap: 1rem;
+  padding-bottom: 0.5rem;
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+  -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
+}
+
+.saved-places-filter-container::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome/Safari */
+}
+
+.saved-places-filter-button {
+  background-color: transparent;
+  border: 2px solid #fff;
+  color: #fff;
+  padding: 0.5rem 1.5rem;
+  border-radius: 50px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  flex-shrink: 0; /* Prevents buttons from shrinking */
+}
+
+.saved-places-filter-button:hover,
+.saved-places-filter-button.active {
+  background-color: rgba(78, 205, 196, 0.9);
+  color: #000;
 }

@@ -5,17 +5,12 @@ import type { UserData } from '../types/user';
 import Link from 'next/link';
 import { useBookmarks } from '../hooks/useBookmarks';
 
-const generatePlaceUrl = (place: any) => {
-  // Replace spaces and special characters with hyphens, convert to lowercase
-  const nameSlug = place.place_name_clean;
-  const neighborhoodSlug = place.neighborhood_clean;
-  return `/places/${neighborhoodSlug}/${nameSlug}`;
-};
-
 export default function AccountPage() {
   const [userData, setUserData] = useState<UserData | null>(null);
+  const [isUserLoading, setIsUserLoading] = useState(true);
+  const [filter, setFilter] = useState<'all' | 'food' | 'drink'>('all');
   const router = useRouter();
-  const { bookmarks, isLoading } = useBookmarks();
+  const { bookmarks, isLoading: isBookmarksLoading } = useBookmarks();
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
@@ -28,34 +23,42 @@ export default function AccountPage() {
           console.error("Error fetching user data:", error);
         }
       } else {
-        router.push('/auth'); // Redirect to login if no session found
+        router.push('/auth');
       }
+      setIsUserLoading(false);
     });
 
-    return () => unsubscribe(); // Cleanup listener on unmount
+    return () => unsubscribe();
   }, [router]);
 
-  if (!userData) return <p>Loading...</p>;
+  if (isUserLoading || isBookmarksLoading) {
+    return <p>Loading...</p>;
+  }
+
+  if (!userData) {
+    return null;
+  }
 
   const currentTime = new Date().toLocaleString('en-US', {
-    // timeZone: 'America/New_York',
-    // weekday: 'long',
-    // year: 'numeric',
-    // month: 'long',
-    // day: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true,
+    // hour: 'numeric',
+    // minute: '2-digit',
+    // hour12: true,
+    weekday: 'long'
   });
 
   const handleLogout = async () => {
     try {
       await auth.signOut();
-      router.push('/auth'); // Redirect to login after logout
+      router.push('/auth');
     } catch (error) {
       console.error('Logout error:', error);
     }
   };
+
+  const filteredBookmarks = bookmarks.filter((place) => {
+    if (filter === 'all') return true;
+    return place.place_type === filter;
+  });
 
   return (
     <div className="account-container">
@@ -67,12 +70,18 @@ export default function AccountPage() {
           Explore
         </Link>
       </div>
-
-      <section className="saved-places-section">
-        <h2>Saved Places</h2>
-        {isLoading ? (
+      <h2>Saved Places</h2>
+      <div className="saved-places-filter-container">
+      <div className="filter-buttons">
+        <button className={`saved-places-filter-button ${filter === 'all' ? 'active' : ''}`} onClick={() => setFilter('all')}>All</button>
+        <button className={`saved-places-filter-button ${filter === 'food' ? 'active' : ''}`} onClick={() => setFilter('food')}>Food</button>
+        <button className={`saved-places-filter-button ${filter === 'drink' ? 'active' : ''}`} onClick={() => setFilter('drink')}>Drinks</button>
+      </div>
+      </div>
+      <div className="saved-places-section">
+        {isBookmarksLoading ? (
           <p>Loading your saved places...</p>
-        ) : bookmarks.length === 0 ? (
+        ) : filteredBookmarks.length === 0 ? (
           <div className="empty-state">
             <p>You haven't saved any places yet.</p>
             <Link href="/what-are-you-looking-for" className="explore-button">
@@ -81,9 +90,9 @@ export default function AccountPage() {
           </div>
         ) : (
           <div className="bookmarks-container">
-            {bookmarks.map((place) => (
+            {filteredBookmarks.map((place) => (
               <div key={`${place.place_type}-${place.place_id}`} className="place-card">
-                <Link href={generatePlaceUrl(place)}>
+                <Link href={`/place/${place.neighborhood_clean}/${place.place_name_clean}`}>
                   <img 
                     src={place.image_url} 
                     alt={place.place_name}
@@ -101,8 +110,7 @@ export default function AccountPage() {
             ))}
           </div>
         )}
-      </section>
-
+      </div>
       <div className="account-button" onClick={handleLogout}>Logout</div>
     </div>
   );
