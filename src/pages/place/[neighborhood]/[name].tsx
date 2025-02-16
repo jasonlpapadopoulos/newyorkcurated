@@ -224,7 +224,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     
     // Add debugging log
     // console.log('Server-side data:', data);
-    // console.log('Request URL:', `${baseUrl}/api/places?neighborhood=${encodeURIComponent(neighborhood as string)}&name=${encodeURIComponent(name as string)}`);
+    console.log('Request URL:', `${baseUrl}/api/places?neighborhood=${encodeURIComponent(neighborhood as string)}&name=${encodeURIComponent(name as string)}`);
 
     return {
       props: {

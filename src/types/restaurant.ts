@@ -1,6 +1,7 @@
 export interface Restaurant {
   id: string;
   place_name: string;
+  place_name_clean : string;
   description: string;
   cuisine: string;
   cuisine_clean: string;

@@ -25,7 +25,8 @@ export default async function handler(
       SELECT 
         id,
         place_name,
-        description,
+        place_name_clean,
+        short_description as description,
         neighborhood,
         neighborhood_clean,
         budget,
@@ -41,7 +42,7 @@ export default async function handler(
         beer,
         pub,
         address
-      FROM drinks
+      FROM drinks_staging
       WHERE neighborhood_clean IN (?)
     `;
 
@@ -50,6 +51,7 @@ export default async function handler(
     const bars: Bar[] = (results as any[]).map(row => ({
       id: row.id,
       place_name: row.place_name,
+      place_name_clean: row.place_name_clean,
       description: row.description,
       neighborhood: row.neighborhood,
       neighborhood_clean: row.neighborhood_clean,
