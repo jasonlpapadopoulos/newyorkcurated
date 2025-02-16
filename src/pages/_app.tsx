@@ -7,7 +7,8 @@ import '../styles/place.css';
 import '../styles/about.css';
 import '../styles/Header.css';
 import '../styles/SideMenu.css';
-import '../styles/neighborhood.css'; // Add this line
+import '../styles/neighborhood.css';
+import { Analytics } from '@vercel/analytics/next';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -56,6 +57,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       </Head>
       <Header />
       <Component {...pageProps} />
+      <Analytics />
     </HelmetProvider>
   );
 }
