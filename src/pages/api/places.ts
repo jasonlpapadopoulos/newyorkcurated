@@ -27,7 +27,8 @@ export default async function handler(
       SELECT 
         id,
         place_name,
-        description,
+        place_name_clean,
+        short_description as description,
         cuisine,
         cuisine_clean,
         neighborhood,
@@ -41,9 +42,9 @@ export default async function handler(
         image_url,
         reservation_url,
         address
-      FROM food
+      FROM food_staging
       WHERE neighborhood_clean = ? 
-      AND LOWER(REPLACE(REPLACE(place_name, ' ', '-'), '''', '')) = ?
+      AND place_name_clean = ?
       LIMIT 1
     `;
 
@@ -65,6 +66,7 @@ export default async function handler(
       const restaurant: Restaurant = {
         id: row.id,
         place_name: row.place_name,
+        place_name_clean: row.place_name_clean,
         description: row.description,
         cuisine: row.cuisine,
         cuisine_clean: row.cuisine_clean,
@@ -91,7 +93,8 @@ export default async function handler(
       SELECT 
         id,
         place_name,
-        description,
+        place_name_clean,
+        short_description as description,
         neighborhood,
         neighborhood_clean,
         budget,
@@ -107,9 +110,9 @@ export default async function handler(
         beer,
         pub,
         address
-      FROM drinks
+      FROM drinks_staging
       WHERE neighborhood_clean = ?
-      AND LOWER(REPLACE(REPLACE(place_name, ' ', '-'), '''', '')) = ?
+      AND place_name_clean = ?
       LIMIT 1
     `;
 
@@ -130,6 +133,7 @@ export default async function handler(
       const bar: Bar = {
         id: row.id,
         place_name: row.place_name,
+        place_name_clean: row.place_name_clean,
         description: row.description,
         neighborhood: row.neighborhood,
         neighborhood_clean: row.neighborhood_clean,

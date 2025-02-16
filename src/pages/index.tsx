@@ -22,7 +22,7 @@ const Home: NextPage = () => {
     },
     {
       question: 'Why should I trust your recommendations?',
-      answer: 'Of course, no matter how much we try to convince you, it is ultimtately up to you to decide. Do this test: if you know an area well, check out our recommendations in it. See if you agree or disagree.',
+      answer: 'Halston, the legendary New Yorker and one of America\'s most influential designers, once said: "You are only as good as the people you dress." Well, in our business, we are only as good as the places we recommend. \n  No matter how much we try to convince you, trusting us will always be up to you. Do this test: if you know an area well, check out our recommendations in it. See if you agree or disagree.',
     },
   ];
 

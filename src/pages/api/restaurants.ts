@@ -25,7 +25,8 @@ export default async function handler(
       SELECT 
         id,
         place_name,
-        description,
+        place_name_clean,
+        short_description as description,
         cuisine,
         cuisine_clean,
         neighborhood,
@@ -39,7 +40,7 @@ export default async function handler(
         image_url,
         reservation_url,
         address
-      FROM food
+      FROM food_staging
       WHERE neighborhood_clean IN (?)
     `;
     const results = await query(restaurantQuery, [neighborhoodList]);
@@ -47,6 +48,7 @@ export default async function handler(
     const restaurants: Restaurant[] = (results as any[]).map(row => ({
       id: row.id,
       place_name: row.place_name,
+      place_name_clean: row.place_name_clean,
       description: row.description,
       cuisine: row.cuisine,
       cuisine_clean: row.cuisine_clean,
