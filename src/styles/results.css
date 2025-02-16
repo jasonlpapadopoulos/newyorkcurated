@@ -269,7 +269,7 @@
   line-height: 1;
 }
 
-.filter-option {
+/* .filter-option {
   display: flex;
   align-items: center;
   padding: 12px;
@@ -285,7 +285,7 @@
 
 .filter-option input[type="checkbox"] {
   margin-right: 12px;
-}
+} */
 
 /* Modal Backdrop */
 .modal-backdrop {

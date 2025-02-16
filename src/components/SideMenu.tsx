@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { X, ChevronDown, ChevronUp } from 'lucide-react';
 import type { Neighborhood } from '../types/neighborhood';
+import Loader from '../components/Loader';
+
 
 interface SideMenuProps {
   isOpen: boolean;
@@ -22,6 +24,13 @@ const SideMenu: React.FC<SideMenuProps> = ({ isOpen, toggleMenu }) => {
       fetchNeighborhoods();
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    if (loading) {
+      setTimeout(() => setLoading(false), 1000);
+    }
+  }, [loading]);
+  
 
   const fetchNeighborhoods = async () => {
     setLoading(true);
@@ -60,6 +69,7 @@ const SideMenu: React.FC<SideMenuProps> = ({ isOpen, toggleMenu }) => {
       </div>
 
       <nav className="side-menu-links">
+      {loading && <div className="loader">Loading...</div>}
         <Link className="menu-item" href="/" onClick={toggleMenu}>Home</Link>
         <Link className="menu-item" href="/account" onClick={toggleMenu}>My Profile</Link>
         <Link className="menu-item" href="/about" onClick={toggleMenu}>About</Link>
@@ -88,7 +98,7 @@ const SideMenu: React.FC<SideMenuProps> = ({ isOpen, toggleMenu }) => {
                       <Link 
                         key={neighborhood.value} 
                         href={`/neighborhood/${neighborhood.value}`} 
-                        onClick={toggleMenu}
+                        onClick={() => { setLoading(true); toggleMenu(); }}
                       >
                         {neighborhood.name}
                       </Link>
@@ -99,6 +109,7 @@ const SideMenu: React.FC<SideMenuProps> = ({ isOpen, toggleMenu }) => {
             ))}
           </div>
         )}
+        <Link className="menu-item" href="/terms" onClick={toggleMenu}>Terms of Use</Link>
         
       </nav>
     </div>
