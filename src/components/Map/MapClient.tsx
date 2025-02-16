@@ -193,11 +193,11 @@ export default function MapClient({
           <Link href={createSlug(selectedPlace)}>
             <div className="place-content" style={{ cursor: 'pointer' }}>
               <h3 className="place-name">{selectedPlace.place_name}</h3>
-              <h2 className="place-info">
+              <h3 className="place-info">
                 {/* {selectedPlace.cuisine}
                 <span>·</span> */}
                 {selectedPlace.budget}
-              </h2>
+              </h3>
               {selectedPlace.image_url && (
                 <img src={selectedPlace.image_url} alt={selectedPlace.place_name} className="place-image" />
               )}

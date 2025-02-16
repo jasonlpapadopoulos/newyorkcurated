@@ -4,7 +4,7 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswor
 import { useRouter } from 'next/router';
 
 export default function AuthPage() {
-  const [isSignUp, setIsSignUp] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -91,14 +91,15 @@ export default function AuthPage() {
       <h1>{isSignUp ? 'Sign Up' : 'Welcome Back!'}</h1>
       {isSignUp && (
         <input
+        className="auth-input"
           type="text"
           placeholder="First Name"
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
         />
       )}
-      <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-      <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+      <input className="auth-input" type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+      <input className="auth-input" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
 
       {errorMessage && <p className="error-message">{errorMessage}</p>}
       <div className="auth-p" onClick={handlePasswordReset}>
@@ -109,7 +110,10 @@ export default function AuthPage() {
         {isSignUp ? 'Sign Up' : 'Login'}
       </div>
 
-      <div className="auth-p" onClick={() => setIsSignUp(!isSignUp)}>
+      <div className="auth-p" onClick={() => {
+          setIsSignUp(!isSignUp);
+          setErrorMessage('');
+        }}>
         {isSignUp ? 'Already have an account? Login' : "Don't have an account? Sign Up"}
       </div>
     </div>

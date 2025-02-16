@@ -36,6 +36,8 @@ const NeighborhoodPage: NextPage<NeighborhoodPageProps> = ({
     setSelectedPlace(null);
   };
 
+  if (!neighborhood) return <p>Loading...</p>;
+
   return (
     <>
       <SEO
