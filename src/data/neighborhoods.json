@@ -112,6 +112,7 @@
     ],
     "queens": [
       { "name": "Astoria", "value": "astoria" },
+      { "name": "Long Island City", "value": "long-island-city" },
       { "name": "Jackson Heights", "value": "jackson-heights" }
     ]
   }

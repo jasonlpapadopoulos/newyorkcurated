@@ -1,6 +1,6 @@
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import { useState, useEffect } from 'react';
 import type { NextPage } from 'next';
 import type { Neighborhood } from '../types/neighborhood';
 
@@ -16,67 +16,31 @@ interface OrganizedNeighborhoods {
   queens: Neighborhood[];
 }
 
-interface CategoryData {
-  food: OrganizedNeighborhoods;
-  drinks: OrganizedNeighborhoods;
-}
-
 const Neighborhoods: NextPage = () => {
   const router = useRouter();
   const { to: category } = router.query;
   const [selectedNeighborhoods, setSelectedNeighborhoods] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-  const [neighborhoodsData, setNeighborhoodsData] = useState<CategoryData | null>(null);
+  const [neighborhoodsData, setNeighborhoodsData] = useState<Neighborhood[]>([]);
   const [dataLoading, setDataLoading] = useState(true);
 
   // Fetch neighborhoods from API
   useEffect(() => {
     const fetchNeighborhoods = async () => {
+      if (!category) return; // Wait for router query to be available
+      
       try {
         setDataLoading(true);
-        const response = await fetch('/api/neighborhoods');
+        // Pass the category parameter to the API
+        const apiCategory = category === 'eat' ? 'food' : 'drinks';
+        const response = await fetch(`/api/where?category=${apiCategory}`);
+        
         if (!response.ok) {
           throw new Error('Failed to fetch neighborhoods');
         }
-        const data: Neighborhood[] = await response.json();
         
-        // Organize neighborhoods by category, borough, and area
-        const organizedData: CategoryData = {
-          food: {
-            manhattan: {},
-            brooklyn: [],
-            queens: []
-          },
-          drinks: {
-            manhattan: {},
-            brooklyn: [],
-            queens: []
-          }
-        };
-
-        // Organize neighborhoods by borough and area
-        data.forEach(neighborhood => {
-          if (neighborhood.borough.toLowerCase() === 'manhattan') {
-            const area = neighborhood.broader_area?.toLowerCase() || 'other';
-            
-            // Initialize the area array if it doesn't exist
-            if (!organizedData.food.manhattan[area]) {
-              organizedData.food.manhattan[area] = [];
-              organizedData.drinks.manhattan[area] = [];
-            }
-            
-            organizedData.food.manhattan[area].push(neighborhood);
-            organizedData.drinks.manhattan[area].push(neighborhood);
-          } else if (neighborhood.borough.toLowerCase() === 'brooklyn') {
-            organizedData.food.brooklyn.push(neighborhood);
-            organizedData.drinks.brooklyn.push(neighborhood);
-          } else if (neighborhood.borough.toLowerCase() === 'queens') {
-            organizedData.food.queens.push(neighborhood);
-            organizedData.drinks.queens.push(neighborhood);
-          }
-        });
-
-        setNeighborhoodsData(organizedData);
+        const data: Neighborhood[] = await response.json();
+        setNeighborhoodsData(data);
       } catch (error) {
         console.error('Error fetching neighborhoods:', error);
       } finally {
@@ -84,13 +48,51 @@ const Neighborhoods: NextPage = () => {
       }
     };
 
-    fetchNeighborhoods();
-  }, []);
+    if (category) {
+      fetchNeighborhoods();
+    }
+  }, [category]);
 
   const title = category === 'eat' ? 'Food' : 'Drinks';
-  const data = neighborhoodsData ? 
-    (category === 'eat' ? neighborhoodsData.food : neighborhoodsData.drinks) : 
-    { manhattan: {}, brooklyn: [], queens: [] };
+  
+  // Organize neighborhoods by borough and area
+  const organizedData = React.useMemo(() => {
+    const result: OrganizedNeighborhoods = {
+      manhattan: {},
+      brooklyn: [],
+      queens: []
+    };
+  
+    neighborhoodsData.forEach(neighborhood => {
+      if (neighborhood.borough.toLowerCase() === 'manhattan') {
+        const area = neighborhood.broader_area?.toLowerCase() || 'other';
+  
+        if (!result.manhattan[area]) {
+          result.manhattan[area] = [];
+        }
+  
+        result.manhattan[area].push(neighborhood);
+      } else if (neighborhood.borough.toLowerCase() === 'brooklyn') {
+        result.brooklyn.push(neighborhood);
+      } else if (neighborhood.borough.toLowerCase() === 'queens') {
+        result.queens.push(neighborhood);
+      }
+    });
+  
+    // Define the desired order
+    const orderedManhattanAreas = ['uptown', 'midtown', 'downtown', 'other'];
+  
+    // Reconstruct result.manhattan with the desired order
+    const sortedManhattan = orderedManhattanAreas.reduce((acc, area) => {
+      if (result.manhattan[area]) {
+        acc[area] = result.manhattan[area];
+      }
+      return acc;
+    }, {} as Record<string, typeof result.manhattan[keyof typeof result.manhattan]>);
+  
+    return { ...result, manhattan: sortedManhattan };
+  }, [neighborhoodsData]);
+  
 
   const toggleSection = (event: React.MouseEvent<HTMLDivElement>) => {
     const header = event.currentTarget;
@@ -229,24 +231,24 @@ const Neighborhoods: NextPage = () => {
   return (
     <>
       <Head>
-        <title>NYC {title} Where?</title>
+        <title>NYC {title} Neighborhoods</title>
         <meta name="description" content={`Discover the best neighborhoods for ${title.toLowerCase()} in New York City.`} />
       </Head>
-      <h2 className="title">Neighborhood</h2>
+      <h2 className="title">Where?</h2>
       <div className="sections-container">
-        {Object.keys(data.manhattan).length > 0 && (
+        {Object.keys(organizedData.manhattan).length > 0 && (
           <div className="section borough">
             <div className="section-header" onClick={toggleSection}>
               <span>Manhattan</span>
               <span className="arrow">▼</span>
             </div>
             <div className="section-content">
-              {renderManhattanAreas(data.manhattan)}
+              {renderManhattanAreas(organizedData.manhattan)}
             </div>
           </div>
         )}
-        {renderBoroughSection('Brooklyn', data.brooklyn)}
-        {renderBoroughSection('Queens', data.queens)}
+        {renderBoroughSection('Brooklyn', organizedData.brooklyn)}
+        {renderBoroughSection('Queens', organizedData.queens)}
       </div>
       <button 
         className="submit-button" 

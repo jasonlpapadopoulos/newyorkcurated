@@ -23,7 +23,7 @@ const WhatAreYouLookingFor: NextPage = () => {
   const router = useRouter();
   
   const setCategory = (category: string): void => {
-    router.push(`/neighborhoods?to=${category}`);
+    router.push(`/where?to=${category}`);
   };
 
   return (
