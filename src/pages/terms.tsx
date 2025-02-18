@@ -23,11 +23,12 @@ const TermsAndConditions: React.FC = () => {
       </ul>
       
       <h2>4. Third-Party Links & Services</h2>
-      <p>This Website may contain links to third-party websites, including affiliates (e.g., restaurants, ticket providers, travel services). We do not control or take responsibility for third-party content or policies.</p>
+      <p>This Website may contain links to third-party websites, such as, for example, websites that faciliate reservations. We do not control or take responsibility for third-party content or policies.</p>
       <p>Any transactions or interactions with third-party sites are at your own risk.</p>
       
       <h2>5. Disclaimers & Limitation of Liability</h2>
       <p>The content on this Website is provided for informational purposes only. While we strive for accuracy, we do not guarantee that all information is up to date or error-free.</p>
+      <p>Addresses and locations listed on the Website were collected from publicly available information, and despite our best efforts, may be inaccurate.</p>
       <p>We are not responsible for any losses, damages, or inconveniences resulting from reliance on the Website’s content.</p>
       <p>Listings, recommendations, and reviews are subjective opinions and should not be considered professional advice.</p>
       

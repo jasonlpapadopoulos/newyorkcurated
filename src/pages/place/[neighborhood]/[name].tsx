@@ -28,6 +28,19 @@ export default function PlacePage({ place, error }: PlacePageProps) {
     return <div className="error">Error: {error || 'Place not found'}</div>;
   }
 
+  // useEffect(() => {
+  //   if (isRestaurant && place.place_name === "Bad Roman") {
+  //     // Check if script already exists
+  //     if (!document.getElementById("opentable-script")) {
+  //       const script = document.createElement("script");
+  //       script.src = "https://www.opentable.com/widget/reservation/loader?rid=1268701&domain=com&type=standard&theme=standard&lang=en-US&overlay=false&iframe=true";
+  //       script.async = true;
+  //       script.id = "opentable-script"; // Assign an ID to prevent duplicates
+  //       document.body.appendChild(script);
+  //     }
+  //   }
+  // }, [place]);
+
   const isRestaurant = 'cuisine' in place;
 
   const handleSave = async () => {
@@ -173,19 +186,19 @@ export default function PlacePage({ place, error }: PlacePageProps) {
               Make a Reservation
             </a>
           )}
-      <button 
-        onClick={handleSave}
-        disabled={isSaving}
-        className={`reservation-button ${isPlaceBookmarked(place.id) ? 'saved' : ''}`}
-      >
-        {isPlaceBookmarked(place.id) ? 'Saved!' : 'Save'}
-      </button>
+          <button 
+            onClick={handleSave}
+            disabled={isSaving}
+            className={`reservation-button ${isPlaceBookmarked(place.id) ? 'saved' : ''}`}
+          >
+            {isPlaceBookmarked(place.id) ? 'Saved!' : 'Save'}
+          </button>
 
-      {saveMessage && (
-        <div className="place-meta">
-          {saveMessage}
-        </div>
-      )}
+          {saveMessage && (
+            <div className="place-meta">
+              {saveMessage}
+            </div>
+          )}
           <div className="place-map">
             <Map 
               places={[place]}
@@ -194,6 +207,11 @@ export default function PlacePage({ place, error }: PlacePageProps) {
           </div>
         </div>
       </div>
+{/* 
+      {isRestaurant && place.place_name === "Bad Roman" && (
+  <div id="ot-widget-container"></div>
+)} */}
+
     </>
   );
 }

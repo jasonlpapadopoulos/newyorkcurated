@@ -42,6 +42,7 @@ export default async function handler(
         address
       FROM food_staging
       WHERE neighborhood_clean IN (?)
+      order by rand()
     `;
     const results = await query(restaurantQuery, [neighborhoodList]);
     

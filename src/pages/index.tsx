@@ -14,11 +14,11 @@ const Home: NextPage = () => {
   const faqs = [
     {
       question: 'Are you just another city guide?',
-      answer: 'We like to believe that we are different, as other guides focus on exploration, not curation. We help you find very narrowly what you are looking for, while at the same time giving you relevant recommendations.',
+      answer: 'We like to believe that we are different in mainly the following aspect: other guides focus on exploration, not curation. We help you find very narrowly what you are looking for. Instead of endless lists and ratings and things you don\'t really care about, we simply ask you: What are you looking for?',
     },
     {
       question: 'Why are your options so limited?',
-      answer: 'We focus on places that are worth going, according to a few standards. All of our recommendations are hand-picked, and we never receive compensation for including (or excluding, for that matter) a place.',
+      answer: 'We focus on places that are... worth going to. All of our recommendations are hand-picked, and we never receive compensation for including (or excluding, for that matter) a place.',
     },
     {
       question: 'Why should I trust your recommendations?',

@@ -1,16 +1,38 @@
 import type { AppProps } from 'next/app';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { HelmetProvider } from 'react-helmet-async';
 import Head from 'next/head';
 import Header from '../components/Header';
+import Loader from '@/components/Loader';
+import { Analytics } from '@vercel/analytics/next';
+
 import '../styles/globals.css';
 import '../styles/place.css';
 import '../styles/about.css';
 import '../styles/Header.css';
 import '../styles/SideMenu.css';
 import '../styles/neighborhood.css';
-import { Analytics } from '@vercel/analytics/next';
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const handleStart = () => setLoading(true);
+    const handleComplete = () => setLoading(false);
+
+    router.events.on('routeChangeStart', handleStart);
+    router.events.on('routeChangeComplete', handleComplete);
+    router.events.on('routeChangeError', handleComplete);
+
+    return () => {
+      router.events.off('routeChangeStart', handleStart);
+      router.events.off('routeChangeComplete', handleComplete);
+      router.events.off('routeChangeError', handleComplete);
+    };
+  }, [router]);
+
   return (
     <HelmetProvider>
       <Head>
@@ -55,6 +77,8 @@ function MyApp({ Component, pageProps }: AppProps) {
           })}
         </script>
       </Head>
+
+      {loading && <Loader />} {/* Show the loader while loading */}
       <Header />
       <Component {...pageProps} />
       <Analytics />

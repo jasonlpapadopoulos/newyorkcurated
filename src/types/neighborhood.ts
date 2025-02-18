@@ -4,4 +4,5 @@ export interface Neighborhood {
     description: string;
     image: string;
     borough: string;
+    broader_area: string;
   }

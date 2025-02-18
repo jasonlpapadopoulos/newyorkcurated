@@ -44,6 +44,7 @@ export default async function handler(
         address
       FROM drinks_staging
       WHERE neighborhood_clean IN (?)
+      order by rand()
     `;
 
     const results = await query(barQuery, [neighborhoodList]);
