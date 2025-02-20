@@ -20,6 +20,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         FROM neighborhoods 
         WHERE neighborhood_name_clean IN (SELECT DISTINCT neighborhood_clean FROM drinks_staging)
       `;
+    } else if (category === 'coffee') {
+      sqlQuery = `
+        SELECT neighborhood_name, neighborhood_name_clean, description, borough, broader_area 
+        FROM neighborhoods 
+        WHERE neighborhood_name_clean IN (SELECT DISTINCT neighborhood_clean FROM coffee_staging)
+      `;
+    } else if (category === 'party') {
+      sqlQuery = `
+        SELECT neighborhood_name, neighborhood_name_clean, description, borough, broader_area 
+        FROM neighborhoods 
+        WHERE neighborhood_name_clean IN (SELECT DISTINCT neighborhood_clean FROM party_staging)
+      `;
     } else if (!category) {
       // If no category specified, return neighborhoods present in both food and drinks
       sqlQuery = `

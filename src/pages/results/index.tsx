@@ -7,8 +7,10 @@ import Filters from '../../components/Filters';
 import SEO from '../../components/SEO';
 import type { Restaurant } from '../../types/restaurant';
 import type { Bar } from '../../types/bar';
+import type { Cafe } from '../../types/cafe';
+import type { PartySpot } from '../../types/partySpot';
 
-type Place = Restaurant | Bar;
+type Place = Restaurant | Bar | Cafe | PartySpot;
 type ViewMode = 'list' | 'map';
 
 interface ResultsPageProps {
@@ -54,8 +56,9 @@ const Results: NextPage<ResultsPageProps> = ({
   }
 
   const filteredPlaces = places.filter(place => {
-    const priceMatch = selectedFilters.price.size === 0 || selectedFilters.price.has(place.budget);
-    
+    const hasBudget = (place: Place): place is Restaurant | Bar | PartySpot => 'budget' in place;
+    const priceMatch = selectedFilters.price.size === 0 || (hasBudget(place) && selectedFilters.price.has(place.budget));
+  
     if (category === 'food') {
       const restaurant = place as Restaurant;
       const mealMatch = selectedFilters.meals.size === 0 || 
@@ -65,22 +68,39 @@ const Results: NextPage<ResultsPageProps> = ({
       const cuisineMatch = selectedFilters.cuisine.size === 0 || 
         selectedFilters.cuisine.has(restaurant.cuisine_clean);
       return priceMatch && mealMatch && cuisineMatch;
-    } else {
+    } else if (category === 'drinks') {
       const bar = place as Bar;
       const settingMatch = selectedFilters.setting.size === 0 || 
         Array.from(selectedFilters.setting).some(setting => 
           bar[setting.toLowerCase() as keyof Bar]
         );
       return priceMatch && settingMatch;
+    } else if (category === 'coffee') {
+      const cafe = place as Cafe;
+      return priceMatch; // You can add more filters later if needed
+    } else if (category === 'party') {
+      const partySpot = place as PartySpot;
+      return priceMatch; // Add relevant party venue filters if needed
     }
+  
+    return false;
   });
+  
 
   const handleMarkerClick = (place: Place) => {
     setSelectedPlace(place);
   };
 
-  const title = `Best ${category === 'food' ? 'Restaurants' : 'Bars'} in ${neighborhoods.join(', ')} | NYC Curated`;
-  const description = `Discover the best ${category === 'food' ? 'places to eat' : 'bars'} in ${neighborhoods.join(', ')}. Hand-picked recommendations for ${category === 'food' ? 'restaurants' : 'bars'} in New York City.`;
+  const categoryTitleMap: Record<string, string> = {
+    food: "Restaurants",
+    drinks: "Bars",
+    coffee: "Cafés",
+    party: "Party Spots"
+  };
+  
+  const title = `Best ${categoryTitleMap[category as string] || "Places"} in ${neighborhoods.join(', ')} | NYC Curated`;
+  const description = `Discover the best ${categoryTitleMap[category as string] || "places"} in ${neighborhoods.join(', ')}. Hand-picked recommendations in New York City.`;
+  
 
   return (
     <>
@@ -133,8 +153,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const neighborhoodList = typeof neighborhoods === 'string' ? neighborhoods.split(',') : [];
 
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
-  const endpoint = category === 'food' ? 'restaurants' : 'bars';
+  const endpointMap: Record<string, string> = {
+    food: 'restaurants',
+    drinks: 'bars',
+    coffee: 'cafes',
+    party: 'partySpots',
+  };
+  
+  const endpoint = endpointMap[category as string] || 'restaurants'; // Default to restaurants if category is invalid
   const fetchUrl = `${baseUrl}/api/${endpoint}?neighborhoods=${neighborhoods}`;
+  
 
   let debugLog = `Fetching from: ${fetchUrl}`;
   let initialPlaces: Place[] = [];

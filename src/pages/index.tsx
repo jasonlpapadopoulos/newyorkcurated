@@ -49,6 +49,7 @@ const Home: NextPage = () => {
           <p className="subtitle">The best things to do in New York.</p>
           <p className="comment">Handpicked, like upstate apples.</p>
           <div className="button-container">
+            {/* <Link href="/categories" className="explore-button"> */}
             <Link href="/what-are-you-looking-for" className="explore-button">
               Explore
             </Link>

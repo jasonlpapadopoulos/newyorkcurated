@@ -5,8 +5,10 @@ import Link from 'next/link';
 import 'leaflet/dist/leaflet.css';
 import type { Restaurant } from '../../types/restaurant';
 import type { Bar } from '../../types/bar';
+import type { Cafe } from '../../types/cafe';
+import type { PartySpot } from '../../types/partySpot';
 
-type Place = Restaurant | Bar;
+type Place = Restaurant | Bar | Cafe | PartySpot;
 
 interface MapProps {
   places: Place[];

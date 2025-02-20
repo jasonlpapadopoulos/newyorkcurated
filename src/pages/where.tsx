@@ -32,8 +32,9 @@ const Neighborhoods: NextPage = () => {
       try {
         setDataLoading(true);
         // Pass the category parameter to the API
-        const apiCategory = category === 'eat' ? 'food' : 'drinks';
-        const response = await fetch(`/api/where?category=${apiCategory}`);
+        // const apiCategory = category === 'eat' ? 'food' : 'drinks';
+        // const response = await fetch(`/api/where?category=${apiCategory}`);
+        const response = await fetch(`/api/where?category=${category}`);
         
         if (!response.ok) {
           throw new Error('Failed to fetch neighborhoods');
@@ -53,7 +54,24 @@ const Neighborhoods: NextPage = () => {
     }
   }, [category]);
 
-  const title = category === 'eat' ? 'Food' : 'Drinks';
+  const titleMap: Record<string, string> = {
+    food: "Food",
+    drinks: "Drinks",
+    coffee: "Coffee",
+    party: "Party",
+  };
+  
+  const title = titleMap[category as string] || "Places";
+
+  const buttonLabelMap: Record<string, string> = {
+    food: "Let's Eat!",
+    drinks: "Let's Drink!",
+    coffee: "Let's Have Coffee!",
+    party: "Let's Party!",
+  };
+  
+  const buttonLabel = buttonLabelMap[category as string] || "Places";
+  
   
   // Organize neighborhoods by borough and area
   const organizedData = React.useMemo(() => {
@@ -142,7 +160,7 @@ const Neighborhoods: NextPage = () => {
       .map(n => encodeURIComponent(n))
       .join('%2C'); // URL-encoded comma
   
-    router.push(`/results?category=${category === 'eat' ? 'food' : 'drinks'}&neighborhoods=${encodedNeighborhoods}`)
+    router.push(`/results?category=${category}&neighborhoods=${encodedNeighborhoods}`)
       .finally(() => setLoading(false));
   };
 
@@ -255,7 +273,7 @@ const Neighborhoods: NextPage = () => {
         disabled={loading || selectedNeighborhoods.length === 0}
         onClick={handleSubmit}
       >
-        {loading ? "Loading..." : category === 'eat' ? "Let's Eat!" : "Let's Drink!"}
+        {loading ? "Loading..." : buttonLabelMap[category as string] || "Let's Go!"}
       </button>
     </>
   );

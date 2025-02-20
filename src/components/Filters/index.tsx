@@ -13,11 +13,25 @@ interface FiltersProps {
   availableCuisines?: string[]; // Make it optional
 }
 
+const filterConfig: Record<string, string[]> = {
+  food: ["meals", "price", "cuisine"],
+  drinks: ["price", "setting"],
+  coffee: ["price"],  
+  party: ["price"], 
+};
+
+const titles: Record<string, string> = {
+  meals: "Meal",
+  price: "Price Range",
+  cuisine: "Cuisine",
+  setting: "Setting"
+};
+
 export default function Filters({ 
   category, 
   selectedFilters, 
   onFilterChange, 
-  availableCuisines = [] // Provide default empty array
+  availableCuisines = []
 }: FiltersProps) {
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
 
@@ -58,14 +72,7 @@ export default function Filters({
       })),
       setting: settings.map(s => ({ value: s, label: s }))
     };
-  
-    const titles = {
-      meals: 'Meal',
-      price: 'Price Range',
-      cuisine: 'Cuisine',
-      setting: 'Setting'
-    };
-  
+
     return (
       <>
         <div 
@@ -74,10 +81,10 @@ export default function Filters({
         />
         <div className={`filter-modal ${activeFilter === type ? 'show' : ''}`}>
           <div className="filter-modal-header">
-            <span className="filter-modal-title">{titles[type as keyof typeof titles]}</span>
+            <span className="filter-modal-title">{titles[type]}</span>
             <button className="filter-modal-close" onClick={closeModal}>×</button>
           </div>
-          {options[type as keyof typeof options].map(({ value, label }) => (
+          {options[type as keyof typeof options]?.map(({ value, label }) => (
             <label key={value} className="filter-option">
               <input
                 type="checkbox"
@@ -94,49 +101,19 @@ export default function Filters({
 
   return (
     <div className="filters-container">
-      <div className="filter-group">
-        <button
-          className={`filter-button ${activeFilter === 'price' ? 'active' : ''}`}
-          onClick={() => setActiveFilter(activeFilter === 'price' ? null : 'price')}
-        >
-          Price {selectedFilters.price.size > 0 && `(${selectedFilters.price.size})`}
-        </button>
-        {renderFilterModal('price')}
-      </div>
-
-      {category === 'food' ? (
-        <>
-          <div className="filter-group">
-            <button
-              className={`filter-button ${activeFilter === 'meals' ? 'active' : ''}`}
-              onClick={() => setActiveFilter(activeFilter === 'meals' ? null : 'meals')}
-            >
-              Meal {selectedFilters.meals.size > 0 && `(${selectedFilters.meals.size})`}
-            </button>
-            {renderFilterModal('meals')}
-          </div>
-
-          <div className="filter-group">
-            <button
-              className={`filter-button ${activeFilter === 'cuisine' ? 'active' : ''}`}
-              onClick={() => setActiveFilter(activeFilter === 'cuisine' ? null : 'cuisine')}
-            >
-              Cuisine {selectedFilters.cuisine.size > 0 && `(${selectedFilters.cuisine.size})`}
-            </button>
-            {renderFilterModal('cuisine')}
-          </div>
-        </>
-      ) : (
-        <div className="filter-group">
+      {filterConfig[category]?.map((filterType) => (
+        <div key={filterType} className="filter-group">
           <button
-            className={`filter-button ${activeFilter === 'setting' ? 'active' : ''}`}
-            onClick={() => setActiveFilter(activeFilter === 'setting' ? null : 'setting')}
+            className={`filter-button ${activeFilter === filterType ? 'active' : ''}`}
+            onClick={() => setActiveFilter(activeFilter === filterType ? null : filterType)}
           >
-            Setting {selectedFilters.setting.size > 0 && `(${selectedFilters.setting.size})`}
+            {titles[filterType]} 
+            {selectedFilters[filterType as keyof typeof selectedFilters].size > 0 && 
+              ` (${selectedFilters[filterType as keyof typeof selectedFilters].size})`}
           </button>
-          {renderFilterModal('setting')}
+          {renderFilterModal(filterType)}
         </div>
-      )}
+      ))}
     </div>
   );
 }

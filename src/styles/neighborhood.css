@@ -173,7 +173,7 @@
   
   /* Map Section */
   .neighborhood-map {
-    height: 500px; /* Increased from 400px */
+    height: 600px; /* Increased from 400px */
     border-radius: 12px;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -210,7 +210,7 @@
     }
   
     .neighborhood-map {
-      height: 400px;
+      height: 500px;
       margin: 0 1rem;
     }
   
@@ -249,7 +249,7 @@
     }
   
     .neighborhood-map {
-      height: 350px;
+      height: 500px;
       margin: 0 1rem;
     }
   }

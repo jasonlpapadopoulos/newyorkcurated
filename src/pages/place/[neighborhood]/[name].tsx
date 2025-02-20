@@ -7,12 +7,15 @@ import { useBookmarks } from '../../../hooks/useBookmarks';
 import { auth } from '../../../lib/firebase';
 import type { Restaurant } from '../../../types/restaurant';
 import type { Bar } from '../../../types/bar';
+import type { Cafe } from '../../../types/cafe';
+import type { PartySpot } from '../../../types/partySpot';
+import IndividualPlace from '../../../components/IndividualPlace';
 
 const Map = dynamic(() => import('../../../components/Map/MapClient'), {
   ssr: false
 });
 
-type Place = Restaurant | Bar;
+type Place = Restaurant | Bar | Cafe | PartySpot;
 
 interface PlacePageProps {
   place: Place | null;
@@ -52,8 +55,10 @@ export default function PlacePage({ place, error }: PlacePageProps) {
       setSaveMessage(
         <span>
           You need an account to save a place.{' '}
-          <Link href="/auth" className="custom-link">
-            Sign up or log in.
+          <Link href="/auth" passHref>
+            <a className="custom-link" target="_blank" rel="noopener noreferrer">
+              Sign up or log in.
+            </a>
           </Link>
         </span>
       );
@@ -74,8 +79,10 @@ export default function PlacePage({ place, error }: PlacePageProps) {
       setSaveMessage(
         <span>
           You can see your saved places in your{' '}
-          <Link href="/account" className="custom-link">
-            account.
+          <Link href="/account" passHref>
+            <a className="custom-link" target="_blank" rel="noopener noreferrer">
+              account.
+            </a>
           </Link>
         </span>
       );
@@ -124,6 +131,7 @@ export default function PlacePage({ place, error }: PlacePageProps) {
       "longitude": place.lon
     }
   };
+  console.log("IndividualPlace:", IndividualPlace);
 
   return (
     <>
@@ -147,30 +155,8 @@ export default function PlacePage({ place, error }: PlacePageProps) {
         <div className="individual-place-content">
           <h1 className="place-title">{place.place_name}</h1>
           
-          <div className="place-meta">
-            <span>{place.neighborhood}</span>
-            <span className="separator">·</span>
-            {isRestaurant ? (
-              <span>{(place as Restaurant).cuisine}</span>
-            ) : (
-              <span>
-                {Object.entries(place)
-                  .filter(([key, value]) => 
-                    ['cocktail', 'dive', 'jazz', 'wine', 'rooftop', 'speakeasy', 'beer', 'pub'].includes(key) && value
-                  )
-                  .map(([key]) => key.charAt(0).toUpperCase() + key.slice(1))
-                  .join(', ')}
-              </span>
-            )}
-            <span className="separator">·</span>
-            <span>{place.budget}</span>
-            {/* {place.address && (
-              <>
-                <span className="separator">·</span>
-                <span>{place.address}</span>
-              </>
-            )} */}
-          </div>
+          <IndividualPlace place={place} />
+
 
           <p className="place-description">{place.description}</p>
 
