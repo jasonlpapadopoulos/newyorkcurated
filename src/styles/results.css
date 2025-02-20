@@ -42,7 +42,7 @@
 }
 
 .view-toggle-option.active {
-  background: linear-gradient(45deg, rgba(255, 107, 107, 0.5), rgba(78, 205, 196, 0.5));
+  background: linear-gradient(45deg, rgba(252,142,172, 0.33), rgba(78, 205, 196, 0.33));
   color: white;
 }
 

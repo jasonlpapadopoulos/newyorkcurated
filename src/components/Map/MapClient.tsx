@@ -5,8 +5,10 @@ import Link from 'next/link';
 import 'leaflet/dist/leaflet.css';
 import type { Restaurant } from '../../types/restaurant';
 import type { Bar } from '../../types/bar';
+import type { Cafe } from '../../types/cafe';
+import type { PartySpot } from '../../types/partySpot';
 
-type Place = Restaurant | Bar;
+type Place = Restaurant | Bar | Cafe | PartySpot;
 
 interface MapProps {
   places: Place[];
@@ -196,7 +198,7 @@ export default function MapClient({
               <h3 className="place-info">
                 {/* {selectedPlace.cuisine}
                 <span>·</span> */}
-                {selectedPlace.budget}
+                {"budget" in selectedPlace && <span>{(selectedPlace as { budget: string }).budget}</span>}
               </h3>
               {selectedPlace.image_url && (
                 <img src={selectedPlace.image_url} alt={selectedPlace.place_name} className="place-image" />

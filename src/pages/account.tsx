@@ -70,24 +70,23 @@ export default function AccountPage() {
           Explore
         </Link>
       </div>
+  
       <h2>Saved Places</h2>
       <div className="saved-places-filter-container">
-      <button className={`saved-places-filter-button all ${filter === 'all' ? 'active' : ''}`} onClick={() => setFilter('all')}>All</button>
-  <button className={`saved-places-filter-button food ${filter === 'food' ? 'active' : ''}`} onClick={() => setFilter('food')}>Food</button>
-  <button className={`saved-places-filter-button drink ${filter === 'drink' ? 'active' : ''}`} onClick={() => setFilter('drink')}>Drinks</button>
+        <button className={`saved-places-filter-button all ${filter === 'all' ? 'active' : ''}`} onClick={() => setFilter('all')}>All</button>
+        <button className={`saved-places-filter-button food ${filter === 'food' ? 'active' : ''}`} onClick={() => setFilter('food')}>Food</button>
+        <button className={`saved-places-filter-button drink ${filter === 'drink' ? 'active' : ''}`} onClick={() => setFilter('drink')}>Drinks</button>
       </div>
+  
       <div className="saved-places-section">
         {isBookmarksLoading ? (
           <p>Loading your saved places...</p>
         ) : filteredBookmarks.length === 0 ? (
           <div className="empty-state">
             <p>You haven't saved any places yet.</p>
-            {/* <Link href="/what-are-you-looking-for" className="explore-button">
-              Start Exploring
-            </Link> */}
           </div>
         ) : (
-          <div className="bookmarks-container">
+          <div className="scroll-container">
             {filteredBookmarks.map((place) => (
               <div key={`${place.place_type}-${place.place_id}`} className="place-card">
                 <Link href={`/place/${place.neighborhood_clean}/${place.place_name_clean}`}>
@@ -109,7 +108,9 @@ export default function AccountPage() {
           </div>
         )}
       </div>
+  
       <div className="account-button" onClick={handleLogout}>Logout</div>
     </div>
   );
+  
 }

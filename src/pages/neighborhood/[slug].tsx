@@ -5,6 +5,8 @@ import dynamic from 'next/dynamic';
 import SEO from '../../components/SEO';
 import type { Restaurant } from '../../types/restaurant';
 import type { Bar } from '../../types/bar';
+import type { Cafe } from '../../types/cafe';
+import type { PartySpot } from '../../types/partySpot';
 import { generatePlaceUrl } from '../../utils/url';
 import type { Neighborhood } from '../../types/neighborhood';
 
@@ -13,7 +15,7 @@ const Map = dynamic(() => import('../../components/Map'), {
   ssr: false
 });
 
-type Place = Restaurant | Bar;
+type Place = Restaurant | Bar | Cafe | PartySpot;
 
 interface NeighborhoodPageProps {
     neighborhood: Neighborhood;
@@ -118,8 +120,8 @@ const NeighborhoodPage: NextPage<NeighborhoodPageProps> = ({
                 places={[...restaurants, ...bars]}
                 onMarkerClick={handleMarkerClick}
                 markerColors={{
-                  restaurant: '#4A90E2', // Blue for restaurants
-                  bar: '#FF9F1C' // Orange for bars
+                  restaurant: '#007BFF',
+                  bar: '#FC74A6' // Orange for bars
                 }}
               />
             </div>
@@ -147,7 +149,7 @@ const NeighborhoodPage: NextPage<NeighborhoodPageProps> = ({
                     </span>
                   )}
                   <span>·</span>
-                  <span>{selectedPlace.budget}</span>
+                  {"budget" in selectedPlace && <span>{(selectedPlace as { budget: string }).budget}</span>}
                 </div>
                 <img 
                   src={selectedPlace.image_url} 

@@ -2,9 +2,11 @@ import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Restaurant } from '../../types/restaurant';
 import { Bar } from '../../types/bar';
+import { Cafe } from '../../types/cafe';
+import { PartySpot } from '../../types/partySpot';
 import styles from '../../styles/places.module.css';
 
-type Place = Restaurant | Bar;
+type Place = Restaurant | Bar | Cafe | PartySpot;
 
 interface ListProps {
   places: Place[];
@@ -83,7 +85,7 @@ export default function List({ places, selectedPlaceId }: ListProps) {
                   ) : (
                     <span></span>
                   )}
-                  <span>{place.budget}</span>
+                  {"budget" in place && <span>{(place as { budget: string }).budget}</span>}
                 </div>
                 <img 
                   src={place.image_url} 

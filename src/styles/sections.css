@@ -32,7 +32,7 @@
 }
 
 .section-header:hover {
-  background: linear-gradient(45deg, rgba(255, 107, 107, 0.25), rgba(78, 205, 196, 0.25));
+  background: linear-gradient(45deg, rgba(252,142,172, 0.25), rgba(78, 205, 196, 0.25));
   opacity: 1;
   transition: background 0.3s ease;
 }
