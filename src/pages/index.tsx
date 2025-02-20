@@ -50,7 +50,7 @@ const Home: NextPage = () => {
           <p className="comment">Handpicked, like upstate apples.</p>
           <div className="button-container">
             {/* <Link href="/categories" className="explore-button"> */}
-            <Link href="/what-are-you-looking-for" className="explore-button">
+            <Link href="/categories" className="explore-button">
               Explore
             </Link>
           </div>
