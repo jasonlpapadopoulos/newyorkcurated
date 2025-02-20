@@ -33,7 +33,7 @@ export default async function handler(
         lon,
         image_url,
         address
-      FROM coffee_staging
+      FROM coffee_staging2
       WHERE neighborhood_clean IN (?)
       order by rand()
     `;

@@ -42,7 +42,7 @@ export default async function handler(
         beer,
         pub,
         address
-      FROM drinks_staging
+      FROM drinks_staging2
       WHERE neighborhood_clean IN (?)
       order by rand()
     `;

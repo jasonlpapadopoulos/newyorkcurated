@@ -40,7 +40,7 @@ export default async function handler(
         image_url,
         reservation_url,
         address
-      FROM food_staging
+      FROM food_staging2
       WHERE neighborhood_clean IN (?)
       order by rand()
     `;

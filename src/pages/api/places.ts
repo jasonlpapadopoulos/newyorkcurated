@@ -6,10 +6,10 @@ import type { Cafe } from '../../types/cafe';
 import type { PartySpot } from '../../types/partySpot';
 
 const tables = [
-  { name: "food_staging", type: "food" },
-  { name: "drinks_staging", type: "drinks" },
-  { name: "coffee_staging", type: "coffee" },
-  { name: "party_staging", type: "party" }
+  { name: "food_staging2", type: "food" },
+  { name: "drinks_staging2", type: "drinks" },
+  { name: "coffee_staging2", type: "coffee" },
+  { name: "party_staging2", type: "party" }
 ];
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
