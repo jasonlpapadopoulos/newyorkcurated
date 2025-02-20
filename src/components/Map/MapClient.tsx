@@ -198,7 +198,7 @@ export default function MapClient({
               <h3 className="place-info">
                 {/* {selectedPlace.cuisine}
                 <span>·</span> */}
-                {selectedPlace.budget}
+                {"budget" in selectedPlace && <span>{(selectedPlace as { budget: string }).budget}</span>}
               </h3>
               {selectedPlace.image_url && (
                 <img src={selectedPlace.image_url} alt={selectedPlace.place_name} className="place-image" />

@@ -149,7 +149,7 @@ const NeighborhoodPage: NextPage<NeighborhoodPageProps> = ({
                     </span>
                   )}
                   <span>·</span>
-                  <span>{selectedPlace.budget}</span>
+                  {"budget" in selectedPlace && <span>{(selectedPlace as { budget: string }).budget}</span>}
                 </div>
                 <img 
                   src={selectedPlace.image_url} 

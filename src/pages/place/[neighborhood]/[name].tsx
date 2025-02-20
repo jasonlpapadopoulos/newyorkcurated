@@ -117,7 +117,7 @@ export default function PlacePage({ place, error }: PlacePageProps) {
     "name": place.place_name,
     "description": place.description,
     "image": place.image_url,
-    "priceRange": place.budget,
+    // "priceRange": place.budget,
     "address": {
       "@type": "PostalAddress",
       "addressLocality": "New York",
