@@ -18,4 +18,5 @@ export interface Restaurant {
   image_url: string;
   reservation_url?: string;
   address?: string;
+  place_type: string;
 }

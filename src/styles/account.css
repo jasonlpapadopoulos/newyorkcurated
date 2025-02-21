@@ -127,3 +127,13 @@ h2 {
   color: #ffffff;
 }
 
+.saved-places-filter-button.coffee.active {
+  background-color: #A239CA;
+  color: #ffffff;
+}
+
+.saved-places-filter-button.party.active {
+  background-color: #FFC72C;
+  color: #ffffff;
+}
+

@@ -8,7 +8,7 @@ import { useBookmarks } from '../hooks/useBookmarks';
 export default function AccountPage() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [isUserLoading, setIsUserLoading] = useState(true);
-  const [filter, setFilter] = useState<'all' | 'food' | 'drink'>('all');
+  const [filter, setFilter] = useState<'all' | 'food' | 'drink' | 'coffee' | 'party'>('all');
   const router = useRouter();
   const { bookmarks, isLoading: isBookmarksLoading } = useBookmarks();
 
@@ -66,7 +66,7 @@ export default function AccountPage() {
       <div className="account-p">It's {currentTime} in New York City.</div>
       <div className="account-p">What are you up to?</div>
       <div className="button-container">
-        <Link href="/what-are-you-looking-for" className="explore-button">
+        <Link href="/categories" className="explore-button">
           Explore
         </Link>
       </div>
@@ -76,6 +76,8 @@ export default function AccountPage() {
         <button className={`saved-places-filter-button all ${filter === 'all' ? 'active' : ''}`} onClick={() => setFilter('all')}>All</button>
         <button className={`saved-places-filter-button food ${filter === 'food' ? 'active' : ''}`} onClick={() => setFilter('food')}>Food</button>
         <button className={`saved-places-filter-button drink ${filter === 'drink' ? 'active' : ''}`} onClick={() => setFilter('drink')}>Drinks</button>
+        <button className={`saved-places-filter-button coffee ${filter === 'coffee' ? 'active' : ''}`} onClick={() => setFilter('coffee')}>Coffee</button>
+        <button className={`saved-places-filter-button party ${filter === 'party' ? 'active' : ''}`} onClick={() => setFilter('party')}>Party</button>
       </div>
   
       <div className="saved-places-section">

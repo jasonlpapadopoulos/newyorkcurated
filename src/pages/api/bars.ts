@@ -41,7 +41,8 @@ export default async function handler(
         speakeasy,
         beer,
         pub,
-        address
+        address,
+        place_type
       FROM drinks_staging2
       WHERE neighborhood_clean IN (?)
       order by rand()

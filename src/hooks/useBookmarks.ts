@@ -41,7 +41,7 @@ export function useBookmarks() {
     return () => unsubscribe();
   }, []); // Empty dependency array since we're using auth.onAuthStateChanged
 
-  const toggleBookmark = async (placeId: string, placeType: 'food' | 'drink') => {
+  const toggleBookmark = async (placeId: string, placeType: string) => {
     const user = auth.currentUser;
     if (!user) {
       console.log('No user found when toggling bookmark');

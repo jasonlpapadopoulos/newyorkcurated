@@ -9,7 +9,7 @@ interface User {
 interface Bookmark {
   user_id: number;
   place_id: string;
-  place_type: 'food' | 'drink';
+  place_type: string;
   saved: number;
   place_name: string;
   cuisine: string | null;
@@ -29,36 +29,32 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
       const results = await mysql.query<Bookmark[]>(`
-SELECT b.*, 
-               CASE 
-                 WHEN b.place_type = 'food' THEN f.place_name_clean
-                 ELSE d.place_name_clean 
-               END as place_name_clean,
-			CASE 
-                 WHEN b.place_type = 'food' THEN f.neighborhood_clean
-                 ELSE d.neighborhood_clean 
-               END as neighborhood_clean,
-               CASE 
-                 WHEN b.place_type = 'food' THEN f.place_name 
-                 ELSE d.place_name 
-               END as place_name,
-               CASE 
-                 WHEN b.place_type = 'food' THEN f.cuisine 
-                 ELSE NULL 
-               END as cuisine,
-               CASE 
-                 WHEN b.place_type = 'food' THEN f.budget 
-                 ELSE d.budget 
-               END as budget,
-               CASE 
-                 WHEN b.place_type = 'food' THEN f.image_url 
-                 ELSE d.image_url 
-               END as image_url
-        FROM bookmarks b
-        LEFT JOIN food f ON b.place_id = f.id AND b.place_type = 'food'
-        LEFT JOIN drinks d ON b.place_id = d.id AND b.place_type = 'drink'
-        WHERE b.user_id = (SELECT id FROM users WHERE firebase_uid = ?)
-        AND b.saved = 1
+      SELECT
+          b.*,
+          coalesce(f.place_name_clean, d.place_name_clean, c.place_name_clean, p.place_name_clean) as place_name_clean,
+          coalesce(f.neighborhood_clean, d.neighborhood_clean, c.neighborhood_clean, d.neighborhood_clean) as neighborhood_clean,
+          coalesce(f.place_name, d.place_name, c.place_name, p.place_name) as place_name,
+          f.cuisine,
+          coalesce(f.budget, d.budget, p.budget) as budget,
+          coalesce(f.image_url, d.image_url, c.image_url, p.image_url) as image_url,
+          coalesce(f.place_type, d.place_type, c.place_type, p.place_type) as place_type
+      FROM
+          bookmarks b
+      LEFT JOIN
+          food_staging2 f
+              ON b.place_id = f.id
+      LEFT JOIN
+          drinks_staging2 d
+              ON b.place_id = d.id
+      LEFT JOIN
+          coffee_staging2 c
+              ON b.place_id = c.id
+      LEFT JOIN
+          party_staging2 p
+              ON b.place_id = p.id
+      WHERE
+          b.user_id = (SELECT id FROM users WHERE firebase_uid = ?)
+              AND b.saved = 1
       `, [firebase_uid]);
 
       await mysql.end();

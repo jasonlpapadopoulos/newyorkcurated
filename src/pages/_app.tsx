@@ -57,9 +57,11 @@ function MyApp({ Component, pageProps }: AppProps) {
         
         {/* Default Social Meta Tags */}
         <meta property="og:site_name" content="New York Curated" />
+        <meta property="og:title" content="New York Curated - The Best of NYC" />
+        <meta property="og:description" content="Hand-picked recommendations for the best restaurants, bars, and experiences in New York City." />
+        <meta property="og:image" content="https://newyorkcurated.com/apple-touch-icon.png" />
+        <meta property="og:url" content="https://newyorkcurated.com" />
         <meta property="og:type" content="website" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@newyorkcurated" />
         
         {/* Structured Data for Organization */}
         <script type="application/ld+json">
