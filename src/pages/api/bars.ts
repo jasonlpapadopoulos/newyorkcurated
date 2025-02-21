@@ -41,7 +41,8 @@ export default async function handler(
         speakeasy,
         beer,
         pub,
-        address
+        address,
+        place_type
       FROM drinks_staging2
       WHERE neighborhood_clean IN (?)
       order by rand()
@@ -68,7 +69,8 @@ export default async function handler(
       speakeasy: Boolean(row.speakeasy),
       beer: Boolean(row.beer),
       pub: Boolean(row.pub),
-      address: row.address
+      address: row.address,
+      place_type: row.place_type
     }));
 
     res.status(200).json(bars);

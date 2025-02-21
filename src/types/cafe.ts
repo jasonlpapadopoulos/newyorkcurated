@@ -9,4 +9,5 @@ export interface Cafe {
   lon: number;
   address: string;
   image_url: string;
+  place_type: string;
 }
