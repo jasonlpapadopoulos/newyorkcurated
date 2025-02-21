@@ -51,7 +51,7 @@ export default async function handler(
       lon: row.lon,
       image_url: row.image_url,
       address: row.address,
-      place_type: row.place_type,
+      place_type: row.place_type
     }));
 
     res.status(200).json(cafes);

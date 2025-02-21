@@ -55,10 +55,8 @@ export default function PlacePage({ place, error }: PlacePageProps) {
       setSaveMessage(
         <span>
           You need an account to save a place.{' '}
-          <Link href="/auth" passHref>
-            <a className="custom-link" target="_blank" rel="noopener noreferrer">
-              Sign up or log in.
-            </a>
+          <Link href="/auth" className="custom-link" target="_blank" rel="noopener noreferrer">
+            Sign up or log in.
           </Link>
         </span>
       );
@@ -68,10 +66,8 @@ export default function PlacePage({ place, error }: PlacePageProps) {
 
     const wasBookmarked = isPlaceBookmarked(place.id);
     
-    await toggleBookmark(
-      place.id,
-      isRestaurant ? 'food' : 'drink'
-    );
+    await toggleBookmark(place.id, place.place_type || 'unknown');
+
 
     if (wasBookmarked) {
       setSaveMessage(null);
@@ -79,10 +75,8 @@ export default function PlacePage({ place, error }: PlacePageProps) {
       setSaveMessage(
         <span>
           You can see your saved places in your{' '}
-          <Link href="/account" passHref>
-            <a className="custom-link" target="_blank" rel="noopener noreferrer">
-              account.
-            </a>
+          <Link href="/account" className="custom-link" target="_blank" rel="noopener noreferrer">
+            account.
           </Link>
         </span>
       );

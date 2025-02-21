@@ -66,7 +66,7 @@ const AboutPage = () => {
         {/* Button appears when typing is complete */}
         {typingComplete && (
           <div className="button-container">
-          <Link href="/what-are-you-looking-for" className="explore-button">
+          <Link href="/categories" className="explore-button">
             Explore
           </Link>
         </div>

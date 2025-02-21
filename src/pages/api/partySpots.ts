@@ -37,7 +37,7 @@ export default async function handler(
             difficulty_gettting_in,
             entrance,
             place_type
-        FROM party_staging
+        FROM party_staging2
         WHERE neighborhood_clean IN (?)
     `;
     const results = await query(partySpotQuery, [neighborhoodList]);
