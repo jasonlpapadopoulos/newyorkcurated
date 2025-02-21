@@ -35,7 +35,8 @@ export default async function handler(
             address,
             budget,
             difficulty_gettting_in,
-            entrance
+            entrance,
+            place_type
         FROM party_staging
         WHERE neighborhood_clean IN (?)
     `;
@@ -54,7 +55,8 @@ export default async function handler(
       address: row.address,
       budget: row.budget,
       difficulty_gettting_in: row.difficulty_gettting_in,
-      entrance: row.entrance
+      entrance: row.entrance,
+      place_type: row.place_type
     }));
 
     res.status(200).json(partySpots);

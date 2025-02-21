@@ -39,7 +39,8 @@ export default async function handler(
         lon,
         image_url,
         reservation_url,
-        address
+        address,
+        place_type
       FROM food_staging2
       WHERE neighborhood_clean IN (?)
       order by rand()
@@ -65,7 +66,8 @@ export default async function handler(
       lon: row.lon,
       image_url: row.image_url,
       reservation_url: row.reservation_url,
-      address: row.address
+      address: row.address,
+      place_type: row.place_type
     }));
 
     res.status(200).json(restaurants);
