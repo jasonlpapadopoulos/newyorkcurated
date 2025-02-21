@@ -18,4 +18,5 @@ export interface Bar {
   beer: boolean;
   pub: boolean;
   address: string;
+  place_type: string;
 }

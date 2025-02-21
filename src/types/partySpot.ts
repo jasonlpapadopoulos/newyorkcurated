@@ -12,4 +12,5 @@ export interface PartySpot {
     budget: string;
     difficulty_gettting_in: string;
     entrance: string;
+    place_type: string;
   }
