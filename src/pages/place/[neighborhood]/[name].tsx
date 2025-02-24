@@ -31,19 +31,6 @@ export default function PlacePage({ place, error }: PlacePageProps) {
     return <div className="error">Error: {error || 'Place not found'}</div>;
   }
 
-  // useEffect(() => {
-  //   if (isRestaurant && place.place_name === "Bad Roman") {
-  //     // Check if script already exists
-  //     if (!document.getElementById("opentable-script")) {
-  //       const script = document.createElement("script");
-  //       script.src = "https://www.opentable.com/widget/reservation/loader?rid=1268701&domain=com&type=standard&theme=standard&lang=en-US&overlay=false&iframe=true";
-  //       script.async = true;
-  //       script.id = "opentable-script"; // Assign an ID to prevent duplicates
-  //       document.body.appendChild(script);
-  //     }
-  //   }
-  // }, [place]);
-
   const isRestaurant = 'cuisine' in place;
 
   const handleSave = async () => {
@@ -66,8 +53,7 @@ export default function PlacePage({ place, error }: PlacePageProps) {
 
     const wasBookmarked = isPlaceBookmarked(place.id);
     
-    await toggleBookmark(place.id, place.place_type || 'unknown');
-
+    await toggleBookmark(place.id);
 
     if (wasBookmarked) {
       setSaveMessage(null);
@@ -125,7 +111,7 @@ export default function PlacePage({ place, error }: PlacePageProps) {
       "longitude": place.lon
     }
   };
-  console.log("IndividualPlace:", IndividualPlace);
+  // console.log("IndividualPlace:", IndividualPlace);
 
   return (
     <>
@@ -166,6 +152,11 @@ export default function PlacePage({ place, error }: PlacePageProps) {
               Make a Reservation
             </a>
           )}
+                    {saveMessage && (
+            <div className="place-meta">
+              {saveMessage}
+            </div>
+          )}
           <button 
             onClick={handleSave}
             disabled={isSaving}
@@ -174,11 +165,7 @@ export default function PlacePage({ place, error }: PlacePageProps) {
             {isPlaceBookmarked(place.id) ? 'Saved!' : 'Save'}
           </button>
 
-          {saveMessage && (
-            <div className="place-meta">
-              {saveMessage}
-            </div>
-          )}
+
           <div className="place-map">
             <Map 
               places={[place]}
@@ -187,11 +174,6 @@ export default function PlacePage({ place, error }: PlacePageProps) {
           </div>
         </div>
       </div>
-{/* 
-      {isRestaurant && place.place_name === "Bad Roman" && (
-  <div id="ot-widget-container"></div>
-)} */}
-
     </>
   );
 }
@@ -222,7 +204,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     
     // Add debugging log
     // console.log('Server-side data:', data);
-    console.log('Request URL:', `${baseUrl}/api/places?neighborhood=${encodeURIComponent(neighborhood as string)}&name=${encodeURIComponent(name as string)}`);
+    // console.log('Request URL:', `${baseUrl}/api/places?neighborhood=${encodeURIComponent(neighborhood as string)}&name=${encodeURIComponent(name as string)}`);
 
     return {
       props: {

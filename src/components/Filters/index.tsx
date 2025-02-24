@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { settings } from '../../data/sample-bars';
 
 interface FiltersProps {
   category: string;
@@ -7,15 +6,16 @@ interface FiltersProps {
     meals: Set<string>;
     price: Set<string>;
     cuisine: Set<string>;
-    setting: Set<string>;
+    bar_category: Set<string>;
   };
   onFilterChange: (filters: any) => void;
   availableCuisines?: string[]; // Make it optional
+  availableBarCategories?: string[]; // Add this prop
 }
 
 const filterConfig: Record<string, string[]> = {
   food: ["meals", "price", "cuisine"],
-  drinks: ["price", "setting"],
+  drinks: ["price", "bar_category"],
   coffee: ["price"],  
   party: ["price"], 
 };
@@ -24,14 +24,15 @@ const titles: Record<string, string> = {
   meals: "Meal",
   price: "Price Range",
   cuisine: "Cuisine",
-  setting: "Setting"
+  bar_category: "Setting"
 };
 
 export default function Filters({ 
   category, 
   selectedFilters, 
   onFilterChange, 
-  availableCuisines = []
+  availableCuisines = [],
+  availableBarCategories = []
 }: FiltersProps) {
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
 
@@ -70,7 +71,10 @@ export default function Filters({
         value: cuisine.toLowerCase(),
         label: cuisine
       })),
-      setting: settings.map(s => ({ value: s, label: s }))
+      bar_category: availableBarCategories.map(bar_category => ({
+        value: bar_category.toLowerCase(),
+        label: bar_category
+      }))
     };
 
     return (

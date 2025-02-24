@@ -18,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       sqlQuery = `
         SELECT neighborhood_name, neighborhood_name_clean, description, borough, broader_area 
         FROM neighborhoods 
-        WHERE neighborhood_name_clean IN (SELECT DISTINCT neighborhood_clean FROM drinks_staging2)
+        WHERE neighborhood_name_clean IN (SELECT DISTINCT neighborhood_clean FROM drinks_staging3)
       `;
     } else if (category === 'coffee') {
       sqlQuery = `
@@ -38,7 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         SELECT neighborhood_name, neighborhood_name_clean, description, borough, broader_area 
         FROM neighborhoods 
         WHERE neighborhood_name_clean IN (SELECT DISTINCT neighborhood_clean FROM food_staging2)
-        AND neighborhood_name_clean IN (SELECT DISTINCT neighborhood_clean FROM drinks_staging2)
+        AND neighborhood_name_clean IN (SELECT DISTINCT neighborhood_clean FROM drinks_staging3)
       `;
     } else {
       return res.status(400).json({ message: 'Invalid category parameter' });

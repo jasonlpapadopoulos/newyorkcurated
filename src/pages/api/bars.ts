@@ -30,20 +30,20 @@ export default async function handler(
         neighborhood,
         neighborhood_clean,
         budget,
+        category as bar_category,
         lat,
         lon,
         image_url,
-        cocktail,
-        dive,
-        jazz,
-        wine,
-        rooftop,
         speakeasy,
-        beer,
-        pub,
+        jazz,
+        live_music,
+        large_groups,
+        date_spot,
+        happy_hour,
+        tasty_bites,
         address,
         place_type
-      FROM drinks_staging2
+      FROM drinks_staging3
       WHERE neighborhood_clean IN (?)
       order by rand()
     `;
@@ -58,17 +58,17 @@ export default async function handler(
       neighborhood: row.neighborhood,
       neighborhood_clean: row.neighborhood_clean,
       budget: row.budget,
+      bar_category: row.bar_category,
       lat: row.lat,
       lon: row.lon,
       image_url: row.image_url,
-      cocktail: Boolean(row.cocktail),
-      dive: Boolean(row.dive),
-      jazz: Boolean(row.jazz),
-      wine: Boolean(row.wine),
-      rooftop: Boolean(row.rooftop),
       speakeasy: Boolean(row.speakeasy),
-      beer: Boolean(row.beer),
-      pub: Boolean(row.pub),
+      jazz: Boolean(row.jazz),
+      live_music: Boolean(row.live_music),
+      large_groups: Boolean(row.large_groups),
+      date_spot: Boolean(row.date_spot),
+      happy_hour: Boolean(row.happy_hour),
+      tasty_bites: Boolean(row.tasty_bites),
       address: row.address,
       place_type: row.place_type
     }));

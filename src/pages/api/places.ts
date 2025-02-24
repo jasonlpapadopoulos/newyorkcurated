@@ -7,7 +7,7 @@ import type { PartySpot } from '../../types/partySpot';
 
 const tables = [
   { name: "food_staging2", type: "food" },
-  { name: "drinks_staging2", type: "drinks" },
+  { name: "drinks_staging3", type: "drinks" },
   { name: "coffee_staging2", type: "coffee" },
   { name: "party_staging2", type: "party" }
 ];
@@ -60,6 +60,7 @@ function formatResponse(row: any, type: string) {
         cuisine: row.cuisine,
         neighborhood: row.neighborhood,
         budget: row.budget,
+        place_type: row.place_type,
         meals: {
           brunch: Boolean(row.brunch),
           lunch: Boolean(row.lunch),
@@ -75,21 +76,23 @@ function formatResponse(row: any, type: string) {
       return {
         id: row.id,
         place_name: row.place_name,
+        place_name_clean: row.place_name_clean,
         description: row.short_description,
         neighborhood: row.neighborhood,
+        neighborhood_clean: row.neighborhood_clean,
         budget: row.budget,
         lat: row.lat,
         lon: row.lon,
         image_url: row.image_url,
-        cocktail: Boolean(row.cocktail),
-        dive: Boolean(row.dive),
-        jazz: Boolean(row.jazz),
-        wine: Boolean(row.wine),
-        rooftop: Boolean(row.rooftop),
         speakeasy: Boolean(row.speakeasy),
-        beer: Boolean(row.beer),
-        pub: Boolean(row.pub),
-        address: row.address || ''
+        jazz: Boolean(row.jazz),
+        live_music: Boolean(row.live_music),
+        large_groups: Boolean(row.large_groups),
+        date_spot: Boolean(row.date_spot),
+        happy_hour: Boolean(row.happy_hour),
+        tasty_bites: Boolean(row.tasty_bites),
+        address: row.address,
+        place_type: row.place_type
       } as Bar;
     case "coffee":
       return {
@@ -97,6 +100,7 @@ function formatResponse(row: any, type: string) {
         place_name: row.place_name,
         description: row.short_description,
         neighborhood: row.neighborhood,
+        place_type: row.place_type,
         lat: row.lat,
         lon: row.lon,
         image_url: row.image_url,
@@ -109,6 +113,7 @@ function formatResponse(row: any, type: string) {
         description: row.short_description,
         neighborhood: row.neighborhood,
         budget: row.budget,
+        place_type: row.place_type,
         lat: row.lat,
         lon: row.lon,
         image_url: row.image_url,

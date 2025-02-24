@@ -6,7 +6,7 @@ export function useBookmarks() {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchBookmarks = async () => {
-    console.log('Fetching bookmarks...');
+    // console.log('Fetching bookmarks...');
     setIsLoading(true);
     const user = auth.currentUser;
     // console.log('Current user:', user?.uid);
@@ -18,10 +18,10 @@ export function useBookmarks() {
         // console.log('Fetched bookmarks:', data);
         setBookmarks(data);
       } catch (error) {
-        console.error('Error fetching bookmarks:', error);
+        // console.error('Error fetching bookmarks:', error);
       }
     } else {
-      console.log('No user found when fetching bookmarks');
+      // console.log('No user found when fetching bookmarks');
     }
     setIsLoading(false);
   };
@@ -29,7 +29,7 @@ export function useBookmarks() {
   useEffect(() => {
     // Wait for Firebase auth to initialize
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      console.log('Auth state changed. User:', user?.uid);
+      // console.log('Auth state changed. User:', user?.uid);
       if (user) {
         fetchBookmarks();
       } else {
@@ -41,10 +41,10 @@ export function useBookmarks() {
     return () => unsubscribe();
   }, []); // Empty dependency array since we're using auth.onAuthStateChanged
 
-  const toggleBookmark = async (placeId: string, placeType: string) => {
+  const toggleBookmark = async (placeId: string) => {
     const user = auth.currentUser;
     if (!user) {
-      console.log('No user found when toggling bookmark');
+      // console.log('No user found when toggling bookmark');
       return false;
     }
 
@@ -56,8 +56,7 @@ export function useBookmarks() {
         },
         body: JSON.stringify({
           firebase_uid: user.uid,
-          place_id: placeId,
-          place_type: placeType,
+          place_id: placeId
         }),
       });
 
@@ -74,8 +73,8 @@ export function useBookmarks() {
   };
 
   const isPlaceBookmarked = (placeId: string) => {
-    console.log('Checking if place is bookmarked:', placeId);
-    console.log('Current bookmarks:', bookmarks);
+    // console.log('Checking if place is bookmarked:', placeId);
+    // console.log('Current bookmarks:', bookmarks);
     return bookmarks.some(bookmark => bookmark.place_id === placeId && bookmark.saved === 1);
   };
 

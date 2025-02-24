@@ -12,6 +12,8 @@ interface MapProps {
   markerColors?: {
     restaurant: string;
     bar: string;
+    cafe?: string;
+    spot?: string;
   };
 }
 
