@@ -18,6 +18,7 @@ interface ResultsPageProps {
   category: string;
   neighborhoods: string[];
   uniqueCuisines: string[];
+  uniqueBarCategories: string[];
   error?: string;
   debugLog?: string;
 }
@@ -27,6 +28,7 @@ const Results: NextPage<ResultsPageProps> = ({
   category, 
   neighborhoods, 
   uniqueCuisines,
+  uniqueBarCategories,
   error, 
   debugLog 
 }) => {
@@ -38,7 +40,7 @@ const Results: NextPage<ResultsPageProps> = ({
     meals: new Set<string>(),
     price: new Set<string>(),
     cuisine: new Set<string>(),
-    setting: new Set<string>()
+    bar_category: new Set<string>()
   });
 
   const [loading, setLoading] = useState(true);
@@ -70,11 +72,11 @@ const Results: NextPage<ResultsPageProps> = ({
       return priceMatch && mealMatch && cuisineMatch;
     } else if (category === 'drinks') {
       const bar = place as Bar;
-      const settingMatch = selectedFilters.setting.size === 0 || 
-        Array.from(selectedFilters.setting).some(setting => 
-          bar[setting.toLowerCase() as keyof Bar]
-        );
-      return priceMatch && settingMatch;
+      const bar_categoryMatch = selectedFilters.bar_category.size === 0 || 
+      (bar.bar_category && Array.from(selectedFilters.bar_category).some(selectedCategory => 
+        bar.bar_category.toLowerCase() === selectedCategory.toLowerCase()
+      ));
+    return priceMatch && bar_categoryMatch;
     } else if (category === 'coffee') {
       const cafe = place as Cafe;
       return priceMatch; // You can add more filters later if needed
@@ -129,6 +131,7 @@ const Results: NextPage<ResultsPageProps> = ({
           selectedFilters={selectedFilters}
           onFilterChange={setSelectedFilters}
           availableCuisines={uniqueCuisines} // Make sure this is being passed correctly
+          availableBarCategories={uniqueBarCategories}
         />
 
         <div className="view-container">
@@ -167,6 +170,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   let debugLog = `Fetching from: ${fetchUrl}`;
   let initialPlaces: Place[] = [];
   let uniqueCuisines: string[] = [];
+  let uniqueBarCategories: string[] = [];
 
   try {
     const response = await fetch(fetchUrl);
@@ -187,6 +191,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
           .sort()
       ));
     }
+    if (category === 'drinks') {
+      uniqueBarCategories = Array.from(new Set(
+        initialPlaces
+          .filter((place): place is Bar => 'bar_category' in place) // Ensure you're filtering for Bar type
+          .map(place => place.bar_category) // Extract the category field
+          .filter(Boolean) // Remove any undefined/null values
+          .sort() // Sort categories for display
+      ));
+    }
 
   } catch (error) {
     debugLog += ` | Error: ${error instanceof Error ? error.message : 'Unknown error'}`;
@@ -198,6 +211,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       category: category as string,
       neighborhoods: neighborhoodList,
       uniqueCuisines,
+      uniqueBarCategories,
       debugLog,
     }
   };

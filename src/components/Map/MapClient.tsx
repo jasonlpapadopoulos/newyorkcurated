@@ -16,6 +16,8 @@ interface MapProps {
   markerColors?: {
     restaurant: string;
     bar: string;
+    cafe: string;
+    party: string;
   };
   onMarkerClick?: (place: Place) => void;
 }
@@ -24,8 +26,10 @@ export default function MapClient({
   places = [], 
   singlePlace = false,
   markerColors = {
-    restaurant: '#4A90E2', // Blue for restaurants
-    bar: '#FF9F1C' // Orange for bars
+    restaurant: '#007BFF',
+    bar: '#FC74A6',
+    cafe: '#A239CA',
+    party: '#FFC72C'
   },
   onMarkerClick
 }: MapProps) {
@@ -79,7 +83,13 @@ export default function MapClient({
 
     validPlaces.forEach(place => {
       const isRestaurant = 'cuisine' in place;
-      const markerColor = isRestaurant ? markerColors.restaurant : markerColors.bar;
+      const markerColor = 
+        isRestaurant ? markerColors.restaurant :
+        place.place_type == 'food' ? markerColors.restaurant : 
+        place.place_type == 'coffee' ? markerColors.cafe : 
+        place.place_type == 'party' ? markerColors.party : 
+        markerColors.bar;
+
     
       const icon = L.divIcon({
         className: 'custom-marker',

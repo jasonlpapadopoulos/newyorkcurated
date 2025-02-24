@@ -9,14 +9,14 @@ export interface Bar {
   lat: number;
   lon: number;
   image_url: string;
-  cocktail: boolean;
-  dive: boolean;
-  jazz: boolean;
-  wine: boolean;
-  rooftop: boolean;
+  bar_category: string;
   speakeasy: boolean;
-  beer: boolean;
-  pub: boolean;
+  jazz: boolean;
+  live_music: boolean;
+  large_groups: boolean;
+  date_spot: boolean;
+  happy_hour: boolean;
+  tasty_bites: boolean;
   address: string;
   place_type: string;
 }

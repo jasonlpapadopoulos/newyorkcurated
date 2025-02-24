@@ -9,11 +9,12 @@ import type { Cafe } from '../../types/cafe';
 import type { PartySpot } from '../../types/partySpot';
 import { generatePlaceUrl } from '../../utils/url';
 import type { Neighborhood } from '../../types/neighborhood';
+import Map from '../../components/Map';
 
 // Dynamic import for Map to avoid SSR issues
-const Map = dynamic(() => import('../../components/Map'), {
-  ssr: false
-});
+// const Map = dynamic(() => import('../../components/Map'), {
+//   ssr: false
+// });
 
 type Place = Restaurant | Bar | Cafe | PartySpot;
 
@@ -21,12 +22,16 @@ interface NeighborhoodPageProps {
     neighborhood: Neighborhood;
     restaurants: Restaurant[];
     bars: Bar[];
+    cafes?: Cafe[];
+    partySpots?: PartySpot[];
 }
 
 const NeighborhoodPage: NextPage<NeighborhoodPageProps> = ({ 
   neighborhood, 
   restaurants,
-  bars 
+  bars,
+  cafes = [],
+  partySpots = []
 }) => {
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
 
@@ -43,8 +48,8 @@ const NeighborhoodPage: NextPage<NeighborhoodPageProps> = ({
   return (
     <>
       <SEO
-        title={`Best Restaurants & Bars in ${neighborhood.name} NYC | New York Curated`}
-        description={`Discover hand-picked recommendations for the best restaurants and bars in ${neighborhood.name}, NYC. Local expert guides to ${neighborhood.name}'s dining and nightlife scene.`}
+        title={`Discover ${neighborhood.name} | New York Curated`}
+        description={`Discover hand-picked recommendations for the best things to do in ${neighborhood.name}, New York City.`}
         image={neighborhood.image}
       />
       
@@ -99,7 +104,7 @@ const NeighborhoodPage: NextPage<NeighborhoodPageProps> = ({
                       <p className="place-card-type">
                         {Object.entries(bar)
                           .filter(([key, value]) => 
-                            ['cocktail', 'dive', 'jazz', 'wine', 'rooftop', 'speakeasy', 'beer', 'pub'].includes(key) && value
+                            ['speakeasy', 'jazz', 'live_music', 'large_groups', 'date_spot', 'happy_hour', 'tasty_bites'].includes(key) && value
                           )
                           .map(([key]) => key.charAt(0).toUpperCase() + key.slice(1))
                           .join(', ')}
@@ -112,16 +117,64 @@ const NeighborhoodPage: NextPage<NeighborhoodPageProps> = ({
             </div>
           </section>
 
+          {cafes.length > 0 && (
+            <section className="neighborhood-section">
+              <h2 className="section-title">Coffee?</h2>
+              <div className="scroll-container">
+                {cafes.map(cafe => (
+                  <div key={cafe.id} className="place-card">
+                    <a href={generatePlaceUrl(cafe)}>
+                      <img 
+                        src={cafe.image_url} 
+                        alt={cafe.place_name}
+                        className="place-card-image"
+                      />
+                      <div className="place-card-content">
+                        <h3 className="place-card-title">{cafe.place_name}</h3>
+                      </div>
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {partySpots.length > 0 && (
+            <section className="neighborhood-section">
+              <h2 className="section-title">Party!</h2>
+              <div className="scroll-container">
+                {partySpots.map(spot => (
+                  <div key={spot.id} className="place-card">
+                    <a href={generatePlaceUrl(spot)}>
+                      <img 
+                        src={spot.image_url} 
+                        alt={spot.place_name}
+                        className="place-card-image"
+                      />
+                      <div className="place-card-content">
+                        <h3 className="place-card-title">{spot.place_name}</h3>
+                      </div>
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+
+
           {/* Map Section */}
           <section className="neighborhood-section">
             <h2 className="section-title">All together</h2>
             <div className="neighborhood-map">
               <Map 
-                places={[...restaurants, ...bars]}
-                onMarkerClick={handleMarkerClick}
+                places={[...restaurants, ...bars, ...cafes, ...partySpots]}
+                // onMarkerClick={handleMarkerClick} remove bc this zooms out when closing toaster
                 markerColors={{
                   restaurant: '#007BFF',
-                  bar: '#FC74A6' // Orange for bars
+                  bar: '#FC74A6',
+                  cafe: '#A239CA',
+                  party: '#FFC72C'
                 }}
               />
             </div>
@@ -190,16 +243,20 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   const neighborhood = neighborhoods.find((n: any) => n.value === slug);
 
-  const [restaurants, bars] = await Promise.all([
+  const [restaurants, bars, cafes, partySpots] = await Promise.all([
     fetch(`${baseUrl}/api/restaurants?neighborhoods=${slug}`).then(res => res.json()),
-    fetch(`${baseUrl}/api/bars?neighborhoods=${slug}`).then(res => res.json())
+    fetch(`${baseUrl}/api/bars?neighborhoods=${slug}`).then(res => res.json()),
+    fetch(`${baseUrl}/api/cafes?neighborhoods=${slug}`).then(res => res.json()),
+    fetch(`${baseUrl}/api/partySpots?neighborhoods=${slug}`).then(res => res.json())
   ]);
 
   return {
     props: {
       neighborhood,
       restaurants,
-      bars
+      bars,
+      cafes,
+      partySpots
     },
     revalidate: 86400 // Revalidate once per day
   };

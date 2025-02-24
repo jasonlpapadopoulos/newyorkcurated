@@ -66,9 +66,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   if (req.method === 'POST') {
-    const { firebase_uid, place_id, place_type } = req.body;
+    const { firebase_uid, place_id } = req.body;
 
-    if (!firebase_uid || !place_id || !place_type) {
+    if (!firebase_uid || !place_id) {
       return res.status(400).json({ error: 'Missing required parameters' });
     }
 
@@ -88,21 +88,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       // Check if bookmark exists
       const existing = await mysql.query<Bookmark[]>(
-        'SELECT * FROM bookmarks WHERE user_id = ? AND place_id = ? AND place_type = ?',
-        [user_id, place_id, place_type]
+        'SELECT * FROM bookmarks WHERE user_id = ? AND place_id = ?',
+        [user_id, place_id]
       );
 
       if (existing?.length) {
         // Toggle existing bookmark
         await mysql.query(
-          'UPDATE bookmarks SET saved = NOT saved WHERE user_id = ? AND place_id = ? AND place_type = ?',
-          [user_id, place_id, place_type]
+          'UPDATE bookmarks SET saved = NOT saved WHERE user_id = ? AND place_id = ?',
+          [user_id, place_id]
         );
       } else {
         // Create new bookmark
         await mysql.query(
-          'INSERT INTO bookmarks (user_id, place_id, place_type, saved) VALUES (?, ?, ?, 1)',
-          [user_id, place_id, place_type]
+          'INSERT INTO bookmarks (user_id, place_id, saved) VALUES (?, ?, 1)',
+          [user_id, place_id]
         );
       }
 

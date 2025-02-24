@@ -29,8 +29,8 @@ const Home: NextPage = () => {
   return (
     <>
       <SEO 
-        title="New York Curated - Hand-Picked NYC Restaurant & Bar Recommendations"
-        description="Discover the best restaurants, bars, and things to do in New York City. Expert-curated recommendations for making the most out of New York City."
+        title="New York Curated - The best things to do in NYC."
+        description="Discover the best restaurants, bars, and things to do in New York City. Curated recommendations for making the most out of New York City."
         structuredData={{
           "@context": "https://schema.org",
           "@type": "WebSite",
