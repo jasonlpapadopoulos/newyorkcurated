@@ -152,6 +152,11 @@ export default function PlacePage({ place, error }: PlacePageProps) {
               Make a Reservation
             </a>
           )}
+                    {saveMessage && (
+            <div className="place-meta">
+              {saveMessage}
+            </div>
+          )}
           <button 
             onClick={handleSave}
             disabled={isSaving}
@@ -160,11 +165,7 @@ export default function PlacePage({ place, error }: PlacePageProps) {
             {isPlaceBookmarked(place.id) ? 'Saved!' : 'Save'}
           </button>
 
-          {saveMessage && (
-            <div className="place-meta">
-              {saveMessage}
-            </div>
-          )}
+
           <div className="place-map">
             <Map 
               places={[place]}
