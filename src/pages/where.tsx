@@ -268,13 +268,15 @@ const Neighborhoods: NextPage = () => {
         {renderBoroughSection('Brooklyn', organizedData.brooklyn)}
         {renderBoroughSection('Queens', organizedData.queens)}
       </div>
-      <button 
-        className="submit-button" 
-        disabled={loading || selectedNeighborhoods.length === 0}
-        onClick={handleSubmit}
-      >
-        {loading ? "Loading..." : buttonLabelMap[category as string] || "Let's Go!"}
-      </button>
+      <div id="div_next">
+        <button 
+          className="submit-button" 
+          disabled={loading || selectedNeighborhoods.length === 0}
+          onClick={handleSubmit}
+        >
+          {loading ? "Loading..." : buttonLabelMap[category as string] || "Let's Go!"}
+        </button>
+      </div>
     </>
   );
 };

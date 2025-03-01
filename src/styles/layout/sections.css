@@ -79,3 +79,16 @@
   border: 1px solid var(--border-secondary);
   margin: 0 var(--spacing-4);
 }
+
+/* Add margin to the bottom of the div_next section */
+#div_next {
+  margin-bottom: var(--spacing-16);
+  padding-bottom: var(--spacing-8);
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  #div_next {
+    margin-bottom: var(--spacing-20);
+  }
+}
