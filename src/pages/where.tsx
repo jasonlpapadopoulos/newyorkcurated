@@ -252,7 +252,7 @@ const Neighborhoods: NextPage = () => {
         <title>NYC {title} Neighborhoods</title>
         <meta name="description" content={`Discover the best neighborhoods for ${title.toLowerCase()} in New York City.`} />
       </Head>
-      <h2 className="title">Where?</h2>
+      <h4 className="title">Where?</h4>
       <div className="sections-container">
         {Object.keys(organizedData.manhattan).length > 0 && (
           <div className="section borough">

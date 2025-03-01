@@ -1,0 +1,204 @@
+.explore-button {
+  display: inline-block;
+  font-size: var(--text-xl);
+  font-family: 'Space Grotesk', sans-serif;
+  color: var(--bg-primary);
+  background-color: var(--color-secondary);
+  padding: var(--spacing-3) var(--spacing-6);
+  border-radius: var(--radius-full);
+  text-decoration: none;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  animation: fadeIn 2s ease-in forwards;
+  margin: 0 var(--spacing-2);
+}
+
+.explore-button:hover {
+  background-color: gray;
+  transform: scale(1.05);
+}
+
+.auth-button {
+  display: inline-block;
+  font-size: var(--text-xl);
+  font-family: 'Space Grotesk', sans-serif;
+  color: var(--bg-primary);
+  background-color: var(--color-secondary);
+  padding: var(--spacing-3) var(--spacing-6);
+  border-radius: var(--radius-full);
+  text-decoration: none;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  animation: fadeIn 2s ease-in forwards;
+  margin: 0 var(--spacing-2);
+}
+
+.auth-button:hover {
+  background-color: gray;
+  transform: scale(1.05);
+}
+
+.guest-button {
+  display: inline-block;
+  font-size: var(--text-xl);
+  font-family: 'Space Grotesk', sans-serif;
+  color: var(--color-secondary);
+  background-color: transparent;
+  border: 2px solid var(--color-secondary);
+  padding: var(--spacing-3) var(--spacing-6);
+  border-radius: var(--radius-full);
+  text-decoration: none;
+  transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  animation: fadeIn 2s ease-in forwards;
+  margin: 0 var(--spacing-2);
+}
+
+.guest-button:hover {
+  background-color: var(--color-secondary);
+  color: var(--bg-primary);
+  transform: scale(1.05);
+}
+
+.account-link-button {
+  display: inline-block;
+  font-size: var(--text-xl);
+  font-family: 'Space Grotesk', sans-serif;
+  color: var(--color-secondary);
+  background-color: transparent;
+  border: 2px solid var(--color-secondary);
+  padding: var(--spacing-3) var(--spacing-6);
+  border-radius: var(--radius-full);
+  text-decoration: none;
+  transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  animation: fadeIn 2s ease-in forwards;
+  margin: 0 var(--spacing-2);
+}
+
+.account-link-button:hover {
+  background-color: var(--color-secondary);
+  color: var(--bg-primary);
+  transform: scale(1.05);
+}
+
+.city-button {
+  margin-bottom: clamp(1.5rem, 6vw, 1.5rem);
+  padding: clamp(8px, 2vw, 10px) clamp(20px, 4vw, 30px);
+  font-size: clamp(1rem, 3vw, 1.2rem);
+  background-color: var(--color-secondary);
+  color: var(--bg-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  opacity: 0;
+  animation: fadeIn 1s ease-in forwards;
+  animation-delay: 1s;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.city-button:hover {
+  background-color: #e0e0e0;
+}
+
+.submit-button {
+  margin-top: var(--spacing-6);
+  padding: var(--spacing-3) var(--spacing-8);
+  background-color: var(--color-secondary);
+  color: var(--bg-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: var(--text-2xl);
+  opacity: 0;
+  animation: fadeIn 1s ease-in forwards 0.6s;
+  transition: all 0.3s ease;
+}
+
+.submit-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.submit-button:disabled {
+  background-color: gray;
+  cursor: not-allowed;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.choice-button {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  border: 0.1rem solid var(--color-secondary);
+  padding: var(--spacing-1) var(--spacing-2);
+  margin: 0 var(--spacing-1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: var(--text-xl);
+  border-radius: var(--radius-sm);
+}
+
+.choice-button:hover {
+  background: var(--gradient-primary);
+}
+
+.reservation-button {
+  display: inline-block;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  padding: var(--spacing-3) var(--spacing-6);
+  border-radius: var(--radius-3xl);
+  text-decoration: none;
+  font-weight: var(--font-medium);
+  margin: var(--spacing-4) 0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.reservation-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+}
+
+.reservation-button.saved {
+  background-color: var(--color-secondary);
+  color: var(--bg-primary);
+  border-color: var(--bg-primary);
+}
+
+.account-button {
+  background-color: var(--bg-primary);
+  border: 2px solid var(--color-secondary);
+  color: var(--text-primary);
+  padding: var(--spacing-3) var(--spacing-6);
+  font-weight: var(--font-medium);
+  font-size: var(--text-base);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  margin-top: var(--spacing-8);
+  max-width: 30vw;
+}
+
+.account-button:hover {
+  background-color: var(--color-secondary);
+  color: var(--bg-primary);
+}
+
+.bottom-toggle-button {
+  position: fixed;
+  bottom: var(--spacing-5);
+  left: 75%;
+  transform: translateX(-50%);
+  z-index: var(--z-40);
+  padding: var(--spacing-2) var(--spacing-5);
+  background: var(--gradient-primary);
+  background-color: var(--bg-primary);
+  border: 2px solid var(--color-secondary);
+  color: var(--text-primary);
+  border-radius: var(--radius-3xl);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.bottom-toggle-button:hover {
+  background-color: #0056b3;
+  box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+}

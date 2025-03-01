@@ -1,0 +1,122 @@
+.categories-container {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(150px, 1fr));
+  gap: var(--spacing-8);
+  width: min(90%, 800px);
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-4);
+  opacity: 0;
+  animation: fadeIn 1s ease-in forwards;
+  animation-delay: 0.5s;
+  height: auto;
+}
+
+.category-option {
+  width: 100%;
+  min-width: 150px;
+  min-height: 150px;
+  aspect-ratio: 1/1;
+  border-radius: var(--radius-3xl);
+  border: 2px solid var(--color-secondary);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.category-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--overlay-light);
+  transition: background-color 0.3s ease;
+}
+
+.category-option:hover {
+  transform: translateY(-5px);
+  border-color: var(--border-primary);
+}
+
+.category-option:hover .category-overlay {
+  background: var(--overlay-light);
+}
+
+.category-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--text-primary);
+  font-size: clamp(1.75rem, 2vw, 2.5rem);
+  font-weight: var(--font-bold);
+  text-align: center;
+  z-index: 2;
+  width: 100%;
+  padding: var(--spacing-4);
+}
+
+.options-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-4);
+  opacity: 0;
+  animation: fadeIn 1s ease-in forwards;
+  animation-delay: 0.5s;
+}
+
+.option {
+  height: 40vw;
+  aspect-ratio: 1/1;
+  max-height: 200px;
+  border: 2px solid var(--color-secondary);
+  border-radius: var(--radius-3xl);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--text-primary);
+}
+
+.option:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.option:hover:before {
+  opacity: 0.2;
+}
+
+.option:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 20px rgba(255, 255, 255, 0.2);
+}
+
+.option-icon {
+  font-size: 5rem;
+  margin-bottom: var(--spacing-4);
+  z-index: 2;
+}
+
+.option-text {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  z-index: 2;
+}
