@@ -78,6 +78,7 @@ p {
   font-size: 3.5rem;
   font-weight: var(--font-medium);
   margin-bottom: var(--spacing-4);
+  margin-top: 4rem;
   line-height: 1.2;
   background: linear-gradient(45deg, #fff, rgba(255, 255, 255, 0.8));
   -webkit-background-clip: text;
