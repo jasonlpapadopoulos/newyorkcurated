@@ -66,7 +66,7 @@ const NeighborhoodPage: NextPage<NeighborhoodPageProps> = ({
 
           {/* Restaurants Section */}
           <section className="neighborhood-section">
-            <h2 className="section-title">Where to Eat</h2>
+            <h2 className="section-title">Eat</h2>
             <div className="scroll-container">
               {restaurants.map(restaurant => (
                 <div key={restaurant.id} className="place-card">
@@ -89,7 +89,7 @@ const NeighborhoodPage: NextPage<NeighborhoodPageProps> = ({
 
           {/* Bars Section */}
           <section className="neighborhood-section">
-            <h2 className="section-title">Where to Drink</h2>
+            <h2 className="section-title">Drink</h2>
             <div className="scroll-container">
               {bars.map(bar => (
                 <div key={bar.id} className="place-card">
