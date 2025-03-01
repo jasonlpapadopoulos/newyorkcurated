@@ -1,0 +1,35 @@
+.food-icon:after {
+  content: '🍽️';
+}
+
+.drink-icon:after {
+  content: '🍸';
+}
+
+.coffee-icon:after {
+  content: '☕';
+}
+
+.sweets-icon:after {
+  content: '🍰';
+}
+
+.party-icon:after {
+  content: '🪩';
+}
+
+.art-icon:after {
+  content: '🖼️';
+}
+
+.shop-icon:after {
+  content: '🛍️';
+}
+
+.produce-icon:after {
+  content: '🥕';
+}
+
+.nyc-icon:after {
+  content: '🗽 ';
+}

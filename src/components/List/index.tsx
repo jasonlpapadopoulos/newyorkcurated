@@ -4,7 +4,7 @@ import { Restaurant } from '../../types/restaurant';
 import { Bar } from '../../types/bar';
 import { Cafe } from '../../types/cafe';
 import { PartySpot } from '../../types/partySpot';
-import styles from '../../styles/places.module.css';
+import styles from './list.module.css';
 
 type Place = Restaurant | Bar | Cafe | PartySpot;
 
@@ -71,17 +71,17 @@ export default function List({ places, selectedPlaceId }: ListProps) {
         return (
           <div 
             key={place.id} 
-            className={`${styles.placeBox} ${selectedPlaceId === place.id ? styles.placeBoxSelected : ''}`}
+            className={`place-box ${selectedPlaceId === place.id ? 'place-box-selected' : ''}`}
             data-place-id={place.id}
           >
             <Link href={`/place/${place.neighborhood_clean}/${nameSlug}`}>
-              <div className={styles.placeContent}>
-                <h3 className={styles.placeName}>{place.place_name}</h3>
-                <div className={styles.placeInfo}>
-                  <span className={styles.placeNeighborhood}>{getNeighborhoodName(place.neighborhood)}</span>
+              <div className="place-content">
+                <h3 className="place-name">{place.place_name}</h3>
+                <div className="place-info">
+                  <span className="place-neighborhood">{getNeighborhoodName(place.neighborhood)}</span>
                   <span>·</span>
                   {'cuisine' in place ? (
-                    <span className={styles.placeCuisine}>{place.cuisine} ·</span>
+                    <span className="place-cuisine">{place.cuisine} ·</span>
                   ) : (
                     <span></span>
                   )}
@@ -90,10 +90,10 @@ export default function List({ places, selectedPlaceId }: ListProps) {
                 <img 
                   src={place.image_url} 
                   alt={place.place_name}
-                  className={styles.placeImage}
+                  className="place-image"
                 />
-                <div className={styles.descriptionContainer}>
-                  <p className={styles.placeDescription}>
+                <div className="description-container">
+                  <p className="place-description">
                     {place.description}
                   </p>
                 </div>

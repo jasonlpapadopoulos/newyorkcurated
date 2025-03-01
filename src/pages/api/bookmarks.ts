@@ -34,6 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           coalesce(f.place_name_clean, d.place_name_clean, c.place_name_clean, p.place_name_clean) as place_name_clean,
           coalesce(f.neighborhood_clean, d.neighborhood_clean, c.neighborhood_clean, p.neighborhood_clean) as neighborhood_clean,
           coalesce(f.place_name, d.place_name, c.place_name, p.place_name) as place_name,
+          coalesce(f.neighborhood, d.neighborhood, c.neighborhood, p.neighborhood) as neighborhood,
           f.cuisine,
           coalesce(f.budget, d.budget, p.budget) as budget,
           coalesce(f.image_url, d.image_url, c.image_url, p.image_url) as image_url,

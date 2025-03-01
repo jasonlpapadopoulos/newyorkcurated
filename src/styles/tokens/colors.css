@@ -1,0 +1,36 @@
+:root {
+  /* Primary Colors */
+  --color-primary: #000000;
+  --color-secondary: #ffffff;
+  
+  /* Gradient Colors */
+  --gradient-primary: linear-gradient(45deg, rgba(252,142,172, 0.33), rgba(78, 205, 196, 0.33));
+  --gradient-secondary: linear-gradient(45deg, rgba(255, 107, 107, 0.25), rgba(78, 205, 196, 0.25));
+  
+  /* Text Colors */
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.9);
+  --text-tertiary: rgba(255, 255, 255, 0.7);
+  --text-muted: rgba(255, 255, 255, 0.5);
+  
+  /* Border Colors */
+  --border-primary: rgba(255, 255, 255, 0.8);
+  --border-secondary: rgba(255, 255, 255, 0.2);
+  --border-light: rgba(255, 255, 255, 0.1);
+  
+  /* Background Colors */
+  --bg-primary: #000000;
+  --bg-secondary: rgba(255, 255, 255, 0.05);
+  --bg-tertiary: rgba(255, 255, 255, 0.1);
+  
+  /* Category Colors */
+  --color-food: #007BFF;
+  --color-drinks: #FC74A6;
+  --color-coffee: #A239CA;
+  --color-party: #FFC72C;
+  
+  /* Overlay Colors */
+  --overlay-dark: rgba(0, 0, 0, 0.7);
+  --overlay-light: rgba(0, 0, 0, 0.3);
+  --overlay-gradient: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.8));
+}

@@ -7,12 +7,8 @@ import Header from '../components/Header';
 import Loader from '@/components/Loader';
 import { Analytics } from '@vercel/analytics/next';
 
-import '../styles/globals.css';
-import '../styles/place.css';
-import '../styles/about.css';
-import '../styles/Header.css';
-import '../styles/SideMenu.css';
-import '../styles/neighborhood.css';
+// Import the main CSS file which now imports all other CSS files
+import '../styles/main.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -80,7 +76,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         </script>
       </Head>
 
-      {loading && <Loader />} {/* Show the loader while loading */}
+      {loading && <Loader />}
       <Header />
       <Component {...pageProps} />
       <Analytics />

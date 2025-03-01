@@ -1,0 +1,94 @@
+.sections-container {
+  width: 100%;
+  margin-top: var(--spacing-4);
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  opacity: 0;
+  animation: fadeIn 1s ease-in forwards 0.3s;
+}
+
+.section {
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-3xl);
+  overflow: hidden;
+}
+
+.section-header {
+  padding: var(--spacing-6);
+  font-size: var(--text-2xl);
+  border: 2px solid var(--color-secondary);
+  border-radius: var(--radius-3xl);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  opacity: 0;
+  animation: fadeIn 1s ease-in forwards;
+  transition: background-color 0.3s ease;
+}
+
+.section-header:hover {
+  background: var(--gradient-secondary);
+  opacity: 1;
+  transition: background 0.3s ease;
+}
+
+.section.area > .section-header {
+  background-color: var(--bg-primary);
+  border: 1px solid var(--color-secondary);
+  padding: var(--spacing-2);
+  margin: 5px 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.section-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.section-content.open {
+  max-height: 5000px;
+}
+
+.select-all-section {
+  padding: var(--spacing-3) var(--spacing-6);
+  border-bottom: 1px solid var(--border-light);
+  background: var(--bg-secondary);
+}
+
+.neighborhood-section {
+  margin-bottom: var(--spacing-12);
+  padding-top: 0;
+  width: 100%;
+  overflow: hidden;
+  border-top-style: solid;
+  border-right-style: hidden;
+  border-bottom-style: hidden;
+  border-left-style: hidden;
+  border-width: 1px;
+  border-color: var(--color-secondary);
+}
+
+.neighborhood-map {
+  height: 600px;
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  border: 1px solid var(--border-secondary);
+  margin: 0 var(--spacing-4);
+}
+
+/* Add margin to the bottom of the div_next section */
+#div_next {
+  margin-bottom: var(--spacing-16);
+  padding-bottom: var(--spacing-8);
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  #div_next {
+    margin-bottom: var(--spacing-20);
+  }
+}

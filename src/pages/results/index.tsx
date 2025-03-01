@@ -130,7 +130,7 @@ const Results: NextPage<ResultsPageProps> = ({
           category={category}
           selectedFilters={selectedFilters}
           onFilterChange={setSelectedFilters}
-          availableCuisines={uniqueCuisines} // Make sure this is being passed correctly
+          availableCuisines={uniqueCuisines}
           availableBarCategories={uniqueBarCategories}
         />
 

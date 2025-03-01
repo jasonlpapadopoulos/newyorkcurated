@@ -252,7 +252,7 @@ const Neighborhoods: NextPage = () => {
         <title>NYC {title} Neighborhoods</title>
         <meta name="description" content={`Discover the best neighborhoods for ${title.toLowerCase()} in New York City.`} />
       </Head>
-      <h2 className="title">Where?</h2>
+      <h4 className="title">Where?</h4>
       <div className="sections-container">
         {Object.keys(organizedData.manhattan).length > 0 && (
           <div className="section borough">
@@ -268,13 +268,15 @@ const Neighborhoods: NextPage = () => {
         {renderBoroughSection('Brooklyn', organizedData.brooklyn)}
         {renderBoroughSection('Queens', organizedData.queens)}
       </div>
-      <button 
-        className="submit-button" 
-        disabled={loading || selectedNeighborhoods.length === 0}
-        onClick={handleSubmit}
-      >
-        {loading ? "Loading..." : buttonLabelMap[category as string] || "Let's Go!"}
-      </button>
+      <div id="div_next">
+        <button 
+          className="submit-button" 
+          disabled={loading || selectedNeighborhoods.length === 0}
+          onClick={handleSubmit}
+        >
+          {loading ? "Loading..." : buttonLabelMap[category as string] || "Let's Go!"}
+        </button>
+      </div>
     </>
   );
 };
