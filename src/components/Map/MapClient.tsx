@@ -56,7 +56,7 @@ export default function MapClient({
       attributionControl: false
     });
   
-    L.control.zoom({ position: 'bottomright' }).addTo(mapRef.current);
+    L.control.zoom({ position: 'bottomleft' }).addTo(mapRef.current);
   
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
       subdomains: 'abcd',
