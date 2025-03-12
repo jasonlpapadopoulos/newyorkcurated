@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import L from 'leaflet';
 import Link from 'next/link';
+import { Locate } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
 import type { Restaurant } from '../../types/restaurant';
 import type { Bar } from '../../types/bar';
@@ -38,6 +39,9 @@ export default function MapClient({
   const markersRef = useRef<L.Marker[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [userInteracted, setUserInteracted] = useState(false);
+  const [userMarker, setUserMarker] = useState<L.Marker | null>(null);
+  const [isLocating, setIsLocating] = useState(false);
+  const [initialBounds, setInitialBounds] = useState<L.LatLngBounds | null>(null);
 
 
   useEffect(() => {
@@ -47,8 +51,8 @@ export default function MapClient({
       center: [40.7128, -74.0060],
       zoom: singlePlace ? 15 : 11,
       zoomControl: false,
-      attributionControl: false,
       minZoom: singlePlace ? 13 : 11,
+      attributionControl: false
     });
   
     L.control.zoom({ position: 'bottomright' }).addTo(mapRef.current);
@@ -70,6 +74,75 @@ export default function MapClient({
     };
   }, [singlePlace]);
   
+  const handleLocationClick = () => {
+    setIsLocating(true);
+    if (mapRef.current) {
+      mapRef.current.locate({ setView: true, maxZoom: 12 });
+    }
+  };
+
+  useEffect(() => {
+    if (!mapRef.current) return;
+
+    const map = mapRef.current;
+
+    const onLocationFound = (e: L.LocationEvent) => {
+      setIsLocating(false);
+      
+      // Remove existing user marker if any
+      if (userMarker) {
+        userMarker.remove();
+      }
+
+      // Create custom icon for user location
+      const userIcon = L.divIcon({
+        className: 'custom-marker',
+        html: `<div style="
+          width: 24px;
+          height: 24px;
+          background-color: #4A90E2;
+          border: 3px solid white;
+          border-radius: 50%;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+          position: relative;
+        ">
+          <div style="
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 6px;
+            height: 6px;
+            background-color: white;
+            border-radius: 50%;
+          "></div>
+        </div>`,
+        iconSize: [24, 24],
+        iconAnchor: [12, 12],
+      });
+
+      // Add new marker
+      const marker = L.marker(e.latlng, { icon: userIcon })
+        .addTo(map)
+        .bindPopup('You are here')
+        .openPopup();
+
+      setUserMarker(marker);
+    };
+
+    const onLocationError = () => {
+      setIsLocating(false);
+      alert('Unable to find your location. Please make sure location services are enabled.');
+    };
+
+    map.on('locationfound', onLocationFound);
+    map.on('locationerror', onLocationError);
+
+    return () => {
+      map.off('locationfound', onLocationFound);
+      map.off('locationerror', onLocationError);
+    };
+  }, [mapRef.current, userMarker]);
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -183,6 +256,16 @@ export default function MapClient({
     setUserInteracted(false);
   }, [places]);
   
+  const handleResetView = () => {
+    if (mapRef.current && initialBounds) {
+      mapRef.current.fitBounds(initialBounds, {
+        padding: [50, 50],
+        maxZoom: 15,
+        animate: true,
+        duration: 1
+      });
+    }
+  };
 
   // Create URL slug for the place
   const createSlug = (place: Place) => {
@@ -197,6 +280,26 @@ export default function MapClient({
   return (
     <div id="map-view" style={{ width: '100%', height: '100%', position: 'relative' }}>
       <div ref={mapContainerRef} style={{ width: '100%', height: '100%' }} />
+      <div className="map-controls">
+        {!singlePlace && (
+        <button 
+        className="map-button" 
+        onClick={handleLocationClick}
+        disabled={isLocating}
+      >
+        <Locate size={16} />
+        {isLocating ? 'Locating...' : 'My Location'}
+      </button>
+        )}
+        {singlePlace && (
+          <button 
+            className="map-button"
+            onClick={handleResetView}
+          >
+            Reset View
+          </button>
+        )}
+      </div>
 
       {!singlePlace && !onMarkerClick && selectedPlace && (
         <div className="place-toaster show">
@@ -205,11 +308,11 @@ export default function MapClient({
           <Link href={createSlug(selectedPlace)}>
             <div className="place-content" style={{ cursor: 'pointer' }}>
               <h3 className="place-name">{selectedPlace.place_name}</h3>
-              <div className="place-info">
+              <h3 className="place-info">
                 {/* {selectedPlace.cuisine}
                 <span>·</span> */}
                 {"budget" in selectedPlace && <span>{(selectedPlace as { budget: string }).budget}</span>}
-              </div>
+              </h3>
               {selectedPlace.image_url && (
                 <img src={selectedPlace.image_url} alt={selectedPlace.place_name} className="place-image" />
               )}

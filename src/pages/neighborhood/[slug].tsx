@@ -247,7 +247,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     fetch(`${baseUrl}/api/restaurants?neighborhoods=${slug}`).then(res => res.json()),
     fetch(`${baseUrl}/api/bars?neighborhoods=${slug}`).then(res => res.json()),
     fetch(`${baseUrl}/api/cafes?neighborhoods=${slug}`).then(res => res.json()),
-    fetch(`${baseUrl}/api/partySpots?neighborhoods=${slug}`).then(res => res.json())
+    fetch(`${baseUrl}/api/partySpots?neighborhoods=${slug}`).then(res => res.json()).then(data => data.spots || [])
   ]);
 
   return {
@@ -256,7 +256,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       restaurants,
       bars,
       cafes,
-      partySpots
+      partySpots: Array.isArray(partySpots) ? partySpots : []
     },
     revalidate: 86400 // Revalidate once per day
   };

@@ -2,6 +2,11 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { query } from '../../lib/db';
 import type { PartySpot } from '../../types/partySpot';
 
+interface PartyFilters {
+  entranceTypes: string[];
+  difficultyLevels: string[];
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -20,6 +25,22 @@ export default async function handler(
     if (neighborhoodList.length === 0) {
       return res.status(400).json({ error: 'Invalid neighborhoods parameter' });
     }
+
+    // Get unique entrance types and difficulty levels
+    const filtersQuery = `
+      SELECT 
+        DISTINCT entrance as value,
+        difficulty_gettting_in as difficulty_level
+      FROM party_staging2
+      WHERE entrance IS NOT NULL
+        AND difficulty_gettting_in IS NOT NULL
+    `;
+
+    const filterResults = await query(filtersQuery);
+    const filters: PartyFilters = {
+      entranceTypes: Array.from(new Set((filterResults as any[]).map(r => r.value))).sort(),
+      difficultyLevels: Array.from(new Set((filterResults as any[]).map(r => r.difficulty_level))).sort()
+    };
 
     const partySpotQuery = `
         SELECT 
@@ -59,7 +80,10 @@ export default async function handler(
       place_type: row.place_type
     }));
 
-    res.status(200).json(partySpots);
+    res.status(200).json({ 
+      spots: partySpots,
+      filters
+    });
   } catch (error) {
     console.error('Error fetching partySpots:', error);
     res.status(500).json({ error: 'Error fetching partySpots' });

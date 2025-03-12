@@ -63,18 +63,13 @@ export default function List({ places, selectedPlaceId }: ListProps) {
   return (
     <div id="restaurant-list" ref={listRef}>
       {places.map(place => {
-        const nameSlug = place.place_name
-          .toLowerCase()
-          .replace(/[^a-z0-9\s-]/g, '')
-          .replace(/\s+/g, '-');
-
         return (
           <div 
             key={place.id} 
             className={`place-box ${selectedPlaceId === place.id ? 'place-box-selected' : ''}`}
             data-place-id={place.id}
           >
-            <Link href={`/place/${place.neighborhood_clean}/${nameSlug}`}>
+            <Link href={`/place/${place.neighborhood_clean}/${place.place_name_clean}`}>
               <div className="place-content">
                 <h3 className="place-name">{place.place_name}</h3>
                 <div className="place-info">
