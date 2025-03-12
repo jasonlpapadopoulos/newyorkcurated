@@ -58,13 +58,14 @@
   width: 90%;
   max-width: 800px;
   padding: var(--spacing-4);
-  z-index: var(--z-50);
+  z-index: 10000 !important;
   transition: transform 0.3s ease;
   box-shadow: var(--shadow-xl);
 }
 
 .place-toaster.show {
   transform: translateX(-50%) translateY(0);
+  z-index: 1000;
 }
 
 .place-toaster-close {
