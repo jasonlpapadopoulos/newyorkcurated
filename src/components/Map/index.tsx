@@ -9,7 +9,7 @@ type Place = Restaurant | Bar | Cafe | PartySpot;
 interface MapProps {
   places: Place[];
   onMarkerClick?: (place: Place) => void;
-  markerColors?: {
+  markerEmojis?: {
     restaurant: string;
     bar: string;
     cafe?: string;

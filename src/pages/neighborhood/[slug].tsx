@@ -170,12 +170,12 @@ const NeighborhoodPage: NextPage<NeighborhoodPageProps> = ({
               <Map 
                 places={[...restaurants, ...bars, ...cafes, ...partySpots]}
                 // onMarkerClick={handleMarkerClick} remove bc this zooms out when closing toaster
-                markerColors={{
-                  restaurant: '#007BFF',
-                  bar: '#FC74A6',
-                  cafe: '#A239CA',
-                  party: '#FFC72C'
-                }}
+                // markerEmojis = {
+                //   restaurant: '🍽️',
+                //   bar: '🍸',
+                //   cafe: '☕',
+                //   party: '🪩'
+                // }
               />
             </div>
           </section>
