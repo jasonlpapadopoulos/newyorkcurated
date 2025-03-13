@@ -35,10 +35,10 @@ const Home: NextPage = () => {
           "@context": "https://schema.org",
           "@type": "WebSite",
           "name": "New York Curated",
-          "url": "https://newyorkcurated.com",
+          "url": "https://www.newyorkcurated.com",
           "potentialAction": {
             "@type": "SearchAction",
-            "target": "https://newyorkcurated.com/results?q={search_term_string}",
+            "target": "https://www.newyorkcurated.com/results?q={search_term_string}",
             "query-input": "required name=search_term_string"
           }
         }}

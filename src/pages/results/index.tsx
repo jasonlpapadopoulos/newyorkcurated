@@ -116,13 +116,13 @@ const Results: NextPage<ResultsPageProps> = ({
   };
 
   const categoryTitleMap: Record<string, string> = {
-    food: "Restaurants",
+    food: "Food",
     drinks: "Bars",
-    coffee: "Cafés",
-    party: "Party Spots"
+    coffee: "Cafés, Bakeries, and More",
+    party: "Clubs, Parties, and Nightlife",
   };
   
-  const title = `Best ${categoryTitleMap[category as string] || "Places"} in ${neighborhoods.join(', ')} | NYC Curated`;
+  const title = `${categoryTitleMap[category as string] || "Places"} | New York Curated`;
   const description = `Discover the best ${categoryTitleMap[category as string] || "places"} in ${neighborhoods.join(', ')}. Hand-picked recommendations in New York City.`;
 
   return (

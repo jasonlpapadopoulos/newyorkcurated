@@ -55,8 +55,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         <meta property="og:site_name" content="New York Curated" />
         <meta property="og:title" content="New York Curated - The Best of NYC" />
         <meta property="og:description" content="Hand-picked recommendations for the best restaurants, bars, and experiences in New York City." />
-        <meta property="og:image" content="https://newyorkcurated.com/apple-touch-icon.png" />
-        <meta property="og:url" content="https://newyorkcurated.com" />
+        <meta property="og:image" content="https://www.newyorkcurated.com/apple-touch-icon.png" />
+        <meta property="og:url" content="https://www.newyorkcurated.com" />
         <meta property="og:type" content="website" />
         
         {/* Structured Data for Organization */}
@@ -65,8 +65,8 @@ function MyApp({ Component, pageProps }: AppProps) {
             "@context": "https://schema.org",
             "@type": "Organization",
             "name": "New York Curated",
-            "url": "https://newyorkcurated.com",
-            "logo": "https://newyorkcurated.com/logo.png",
+            "url": "https://www.newyorkcurated.com",
+            "logo": "https://www.newyorkcurated.com/logo.png",
             "description": "Hand-picked recommendations for the best restaurants, bars, and experiences in New York City.",
             "sameAs": [
               "https://twitter.com/newyorkcurated",
