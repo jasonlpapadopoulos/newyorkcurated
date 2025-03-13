@@ -21,7 +21,7 @@
 
 .filter-button {
   width: 100%;
-  padding: var(--spacing-3) var(--spacing-5);
+  padding: var(--spacing-2) var(--spacing-4);
   background: var(--gradient-primary);
   border: 2px solid var(--color-secondary);
   color: var(--text-primary);
@@ -173,7 +173,7 @@
 }
 
 .view-toggle-option {
-  padding: var(--spacing-3) var(--spacing-8);
+  padding: var(--spacing-2) var(--spacing-6);
   background: none;
   border: 2px solid var(--color-secondary);
   color: var(--text-primary);

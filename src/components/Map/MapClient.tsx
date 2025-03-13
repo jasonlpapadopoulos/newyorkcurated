@@ -43,6 +43,7 @@ export default function MapClient({
   const [userMarker, setUserMarker] = useState<L.Marker | null>(null);
   const [isLocating, setIsLocating] = useState(false);
   const [initialBounds, setInitialBounds] = useState<L.LatLngBounds | null>(null);
+  const [currentZoom, setCurrentZoom] = useState(11);
 
 
   useEffect(() => {
@@ -66,6 +67,7 @@ export default function MapClient({
     // Detect user interaction
     mapRef.current.on('zoomstart', () => setUserInteracted(true));
     mapRef.current.on('dragstart', () => setUserInteracted(true));
+    mapRef.current.on('zoomend', () => setCurrentZoom(mapRef.current!.getZoom()));
   
     return () => {
       if (mapRef.current) {
@@ -216,10 +218,10 @@ export default function MapClient({
           } else {
             setSelectedPlace(place);
           }
-        });
-    
+        });       
+
         marker.bindTooltip(place.place_name, {
-          permanent: validPlaces.length <= 5,
+          permanent: currentZoom >= 15, 
           direction: 'top',
           offset: [0, -8],
           opacity: 0.9,
@@ -250,7 +252,7 @@ export default function MapClient({
       });
     }
 
-  }, [places, singlePlace, markerEmojis, onMarkerClick]);
+  }, [places, singlePlace, markerEmojis, onMarkerClick, currentZoom]);
 
   useEffect(() => {
     if (!mapRef.current || singlePlace) return;

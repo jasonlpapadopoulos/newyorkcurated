@@ -51,6 +51,7 @@ body {
   gap: var(--spacing-4);
   position: relative;
   top: -5rem;
+  margin-top: 4rem;
 }
 
 .fixed-line {
