@@ -92,7 +92,7 @@ export default function Filters({
         label: difficulty
       }))
     };
-    console.log("Mapped Entrance Options:", availableEntranceTypes);
+    
     return (
       <>
         <div 
