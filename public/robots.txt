@@ -2,6 +2,7 @@ User-agent: *
 Allow: /
 
 # Prevent crawling of search result pages with filters
+Disallow: /results
 Disallow: /results?*
 
 # Prevent crawling of non-existent neighborhoods
@@ -10,7 +11,7 @@ Disallow: /place/*/not-found
 # Allow crawling of valid place pages
 Allow: /place/*/
 
-# Prevent duplicate content
+# Prevent duplicate content issues from tracking parameters
 Disallow: /*?utm_*
 Disallow: /*?source=*
 

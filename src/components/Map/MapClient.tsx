@@ -308,26 +308,27 @@ export default function MapClient({
   createPortal(
     <div className="place-toaster show">
       <button className="place-toaster-close" onClick={() => setSelectedPlace(null)}>&times;</button>
-      <Link href={createSlug(selectedPlace)}>
-        <div className="place-content" style={{ cursor: "pointer" }}>
-          <h4 className="place-name">{selectedPlace.place_name}</h4>
-          <div className="place-info">
-            {"budget" in selectedPlace && <span>{(selectedPlace as { budget: string }).budget}</span>}
-          </div>
-          {selectedPlace.image_url && (
-            <img src={selectedPlace.image_url} alt={selectedPlace.place_name} className="place-image" />
-          )}
-      <div className="description-container">
-        <p className="place-description">
-          {selectedPlace.description
-            ? selectedPlace.description.length > 150
-              ? selectedPlace.description.slice(0, selectedPlace.description.lastIndexOf(" ", 150)) + "..."
-              : selectedPlace.description
-            : ""}
-        </p>
-      </div>
-        </div>
-      </Link>
+      <a href={createSlug(selectedPlace)} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", color: "inherit" }}>
+  <div className="place-content" style={{ cursor: "pointer" }}>
+    <h4 className="place-name">{selectedPlace.place_name}</h4>
+    <div className="place-info">
+      {"budget" in selectedPlace && <span>{(selectedPlace as { budget: string }).budget}</span>}
+    </div>
+    {selectedPlace.image_url && (
+      <img src={selectedPlace.image_url} alt={selectedPlace.place_name} className="place-image" />
+    )}
+    <div className="description-container">
+      <p className="place-description">
+        {selectedPlace.description
+          ? selectedPlace.description.length > 150
+            ? selectedPlace.description.slice(0, selectedPlace.description.lastIndexOf(" ", 150)) + "..."
+            : selectedPlace.description
+          : ""}
+      </p>
+    </div>
+  </div>
+</a>
+
     </div>,
     document.body // This moves it outside the overflow:hidden parent
   )

@@ -116,7 +116,8 @@ export default function PlacePage({ place, error }: PlacePageProps) {
   return (
     <>
       <SEO 
-        title={`${place.place_name} - ${isRestaurant ? place.cuisine : 'Bar'} in ${place.neighborhood} | NYC Curated`}
+        // title={`${place.place_name} - ${isRestaurant ? place.cuisine : 'Bar'} in ${place.neighborhood} | NYC Curated`}
+        title={`${place.place_name} - ${place.neighborhood} | New York Curated`}
         description={place.description}
         image={place.image_url}
         type="business.business"
