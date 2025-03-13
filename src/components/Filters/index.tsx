@@ -7,24 +7,30 @@ interface FiltersProps {
     price: Set<string>;
     cuisine: Set<string>;
     bar_category: Set<string>;
+    entrance: Set<string>;
+    difficulty_getting_in: Set<string>;
   };
   onFilterChange: (filters: any) => void;
-  availableCuisines?: string[]; // Make it optional
-  availableBarCategories?: string[]; // Add this prop
+  availableCuisines?: string[];
+  availableBarCategories?: string[];
+  availableEntranceTypes?: string[];
+  availableDifficultyLevels?: string[];
 }
 
 const filterConfig: Record<string, string[]> = {
   food: ["meals", "price", "cuisine"],
   drinks: ["price", "bar_category"],
   coffee: ["price"],  
-  party: ["price"], 
+  party: ["price", "entrance", "difficulty_getting_in"]
 };
 
 const titles: Record<string, string> = {
   meals: "Meal",
   price: "Price Range",
   cuisine: "Cuisine",
-  bar_category: "Setting"
+  bar_category: "Setting",
+  entrance: "Entrance Type",
+  difficulty_getting_in: "Getting In"
 };
 
 export default function Filters({ 
@@ -32,7 +38,9 @@ export default function Filters({
   selectedFilters, 
   onFilterChange, 
   availableCuisines = [],
-  availableBarCategories = []
+  availableBarCategories = [],
+  availableEntranceTypes = [],
+  availableDifficultyLevels = []
 }: FiltersProps) {
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
 
@@ -74,9 +82,17 @@ export default function Filters({
       bar_category: availableBarCategories.map(bar_category => ({
         value: bar_category.toLowerCase(),
         label: bar_category
+      })),
+      entrance: availableEntranceTypes.map(entrance => ({
+        value: entrance.toLowerCase(),
+        label: entrance
+      })),
+      difficulty_getting_in: availableDifficultyLevels.map(difficulty => ({
+        value: difficulty.toLowerCase(),
+        label: difficulty
       }))
     };
-
+    console.log("Mapped Entrance Options:", availableEntranceTypes);
     return (
       <>
         <div 

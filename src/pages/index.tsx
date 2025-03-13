@@ -53,6 +53,12 @@ const Home: NextPage = () => {
             <Link href="/categories" className="explore-button">
               Explore
             </Link>
+            {/* <Link href="/categories" className="explore-button">
+            Continue as Guest
+            </Link>
+            <Link href="/auth" className="explore-button">
+              Sign Up/ Log In
+            </Link> */}
           </div>
         </div>
       </div>

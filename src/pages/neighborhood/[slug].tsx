@@ -170,12 +170,12 @@ const NeighborhoodPage: NextPage<NeighborhoodPageProps> = ({
               <Map 
                 places={[...restaurants, ...bars, ...cafes, ...partySpots]}
                 // onMarkerClick={handleMarkerClick} remove bc this zooms out when closing toaster
-                markerColors={{
-                  restaurant: '#007BFF',
-                  bar: '#FC74A6',
-                  cafe: '#A239CA',
-                  party: '#FFC72C'
-                }}
+                // markerEmojis = {
+                //   restaurant: '🍽️',
+                //   bar: '🍸',
+                //   cafe: '☕',
+                //   party: '🪩'
+                // }
               />
             </div>
           </section>
@@ -247,7 +247,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     fetch(`${baseUrl}/api/restaurants?neighborhoods=${slug}`).then(res => res.json()),
     fetch(`${baseUrl}/api/bars?neighborhoods=${slug}`).then(res => res.json()),
     fetch(`${baseUrl}/api/cafes?neighborhoods=${slug}`).then(res => res.json()),
-    fetch(`${baseUrl}/api/partySpots?neighborhoods=${slug}`).then(res => res.json())
+    fetch(`${baseUrl}/api/partySpots?neighborhoods=${slug}`).then(res => res.json()).then(data => data.spots || [])
   ]);
 
   return {
@@ -256,7 +256,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       restaurants,
       bars,
       cafes,
-      partySpots
+      partySpots: Array.isArray(partySpots) ? partySpots : []
     },
     revalidate: 86400 // Revalidate once per day
   };

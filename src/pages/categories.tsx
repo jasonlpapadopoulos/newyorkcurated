@@ -50,8 +50,8 @@ const WhatAreYouLookingFor: NextPage = () => {
             onClick={() => setCategory('drinks')}
           />
             <CategoryOption
-            backgroundImage="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            label="Coffee"
+            backgroundImage="https://images.unsplash.com/photo-1616935648802-20c797d7b377?q=80&w=2737&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            label="Coffee+"
             onClick={() => setCategory('coffee')}
           />
           <CategoryOption

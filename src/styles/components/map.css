@@ -58,13 +58,14 @@
   width: 90%;
   max-width: 800px;
   padding: var(--spacing-4);
-  z-index: var(--z-50);
+  z-index: 10000 !important;
   transition: transform 0.3s ease;
   box-shadow: var(--shadow-xl);
 }
 
 .place-toaster.show {
   transform: translateX(-50%) translateY(0);
+  z-index: 1000;
 }
 
 .place-toaster-close {
@@ -88,4 +89,83 @@
 .custom-marker {
   width: 25px;
   height: 41px;
+}
+
+.map-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+  z-index: 1000;
+}
+
+.map-button {
+  background: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.map-button:hover {
+  background: #f0f0f0;
+  transform: translateY(-1px);
+}
+
+.map-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Place Label Styles */
+.place-label {
+  background: rgba(0, 0, 0, 0.8);
+  border: none;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Leaflet Popup Customization */
+.leaflet-popup-content-wrapper {
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.leaflet-popup-tip {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.leaflet-popup-close-button {
+  color: white !important;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .map-controls {
+    bottom: 10px;
+    right: 10px;
+  }
+  
+  .map-button {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  
+  .place-label {
+    font-size: 11px;
+    padding: 3px 6px;
+  }
 }
