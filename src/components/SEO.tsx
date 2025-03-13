@@ -19,7 +19,7 @@ function SEO({
   url
 }: SEOProps) {
   const router = useRouter();
-  const canonicalUrl = url || `https://newyorkcurated.com${router.asPath}`;
+  const canonicalUrl = url || `https://www.newyorkcurated.com${router.asPath}`;
   
   const searchTitle = title.length > 60 ? `${title.substring(0, 57)}...` : title;
   const metaDescription = description.length > 160 
@@ -30,7 +30,7 @@ function SEO({
   const defaultStructuredData = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "url": "https://newyorkcurated.com",
+    "url": "https://www.newyorkcurated.com",
     "name": "New York Curated",
     "description": "The best things to do in New York. Handpicked, like upstate apples.",
     "image": "https://images.unsplash.com/photo-1518563172008-e56c5dfbaef6?q=80&w=3087"

@@ -16,4 +16,4 @@ Disallow: /*?utm_*
 Disallow: /*?source=*
 
 # Sitemap
-Sitemap: https://newyorkcurated.com/sitemap.xml
+Sitemap: https://www.newyorkcurated.com/sitemap.xml
