@@ -5,7 +5,7 @@
   
   /* Gradient Colors */
   --gradient-primary: linear-gradient(45deg, rgba(186, 85, 211, 0.33), rgba(60, 179, 113, 0.33));
-  --gradient-secondary: linear-gradient(45deg, rgba(255, 107, 107, 0.25), rgba(78, 205, 196, 0.25));
+  --gradient-secondary: linear-gradient(45deg, rgba(186, 85, 211, 0.25), rgba(60, 179, 113, 0.25));
   
   /* Text Colors */
   --text-primary: rgba(255, 255, 255, 1);

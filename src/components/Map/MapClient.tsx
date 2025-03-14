@@ -19,7 +19,11 @@ interface MapProps {
     restaurant: string;
     bar: string;
     cafe: string;
+    bakery: string;
+    chocolate: string;
+    donut: string;
     party: string;
+    fallback: string;
   };
   onMarkerClick?: (place: Place) => void;
 }
@@ -31,7 +35,11 @@ export default function MapClient({
     restaurant: '🍽️',
     bar: '🍸',
     cafe: '☕',
-    party: '🪩'
+    bakery: '🥐',
+    chocolate: '🍫',
+    donut: '🍩',
+    party: '🪩',
+    fallback: '📍'
   },
   onMarkerClick
 }: MapProps) {
@@ -158,25 +166,32 @@ export default function MapClient({
     const validPlaces = places.filter(place => place.lat && place.lon);
 
     validPlaces.forEach(place => {
-      const isRestaurant = 'cuisine' in place;
-      const markerEmoji = 
-        isRestaurant ? markerEmojis.restaurant :
-        place.place_type == 'food' ? markerEmojis.restaurant : 
-        place.place_type == 'coffee' ? markerEmojis.cafe : 
-        place.place_type == 'party' ? markerEmojis.party : 
-        markerEmojis.bar;
+      const isRestaurant = "cuisine" in place;
+    
+      const markerEmoji = isRestaurant 
+        ? markerEmojis.restaurant 
+        : place.place_type === 'food' 
+          ? markerEmojis.restaurant 
+          : place.place_type === 'coffee+' && "subcategory" in place 
+            ? place.subcategory === 'Coffee' 
+              ? markerEmojis.cafe 
+              : place.subcategory === 'Bakery' 
+                ? markerEmojis.bakery 
+                : place.subcategory === 'Chocolate' 
+                  ? markerEmojis.chocolate 
+                  : place.subcategory === 'Doughnuts'
+                    ? markerEmojis.donut 
+                    : markerEmojis.fallback // If subcategory doesn't match, fallback
+            : place.place_type === 'party' 
+              ? markerEmojis.party 
+              : place.place_type === 'drinks' 
+                ? markerEmojis.bar 
+                : markerEmojis.fallback; // Final fallback for unknown cases
+    
 
     
       const icon = L.divIcon({
         className: 'custom-marker',
-        // html: `<div style="
-        //   width: 24px;
-        //   height: 24px;
-        //   background-color: ${markerColor};
-        //   border: 2px solid white;
-        //   border-radius: 50%;
-        //   box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        // "></div>`,
         html: `<div style="
         width: 36px;
         height: 36px;

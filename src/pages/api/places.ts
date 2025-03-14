@@ -8,7 +8,7 @@ import type { PartySpot } from '../../types/partySpot';
 const tables = [
   { name: "food_staging2", type: "food" },
   { name: "drinks_staging3", type: "drinks" },
-  { name: "coffee_staging2", type: "coffee" },
+  { name: "coffee_plus", type: "coffee" },
   { name: "party_staging2", type: "party" }
 ];
 
@@ -100,6 +100,8 @@ function formatResponse(row: any, type: string) {
         place_name: row.place_name,
         description: row.short_description,
         neighborhood: row.neighborhood,
+        subcategory: row.subcategory,
+        sitting: row.sitting,
         place_type: row.place_type,
         lat: row.lat,
         lon: row.lon,

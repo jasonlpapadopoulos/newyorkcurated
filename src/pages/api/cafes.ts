@@ -27,6 +27,8 @@ export default async function handler(
         place_name,
         place_name_clean,
         short_description as description,
+        subcategory,
+        sitting,
         neighborhood,
         neighborhood_clean,
         lat,
@@ -34,7 +36,7 @@ export default async function handler(
         image_url,
         address,
         place_type
-      FROM coffee_staging2
+      FROM coffee_plus
       WHERE neighborhood_clean IN (?)
       order by rand()
     `;
@@ -44,6 +46,8 @@ export default async function handler(
       id: row.id,
       place_name: row.place_name,
       place_name_clean: row.place_name_clean,
+      subcategory: row.subcategory,
+      sitting: row.sitting,
       description: row.description,
       neighborhood: row.neighborhood,
       neighborhood_clean: row.neighborhood_clean,
