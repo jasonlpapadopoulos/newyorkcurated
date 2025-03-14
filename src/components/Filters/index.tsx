@@ -7,6 +7,7 @@ interface FiltersProps {
     price: Set<string>;
     cuisine: Set<string>;
     bar_category: Set<string>;
+    subcategory: Set<string>;
     entrance: Set<string>;
     difficulty_getting_in: Set<string>;
   };
@@ -20,7 +21,7 @@ interface FiltersProps {
 const filterConfig: Record<string, string[]> = {
   food: ["meals", "price", "cuisine"],
   drinks: ["price", "bar_category"],
-  coffee: ["price"],  
+  coffee: ["subcategory"],  
   party: ["price", "entrance", "difficulty_getting_in"]
 };
 
@@ -28,6 +29,7 @@ const titles: Record<string, string> = {
   meals: "Meal",
   price: "Price Range",
   cuisine: "Cuisine",
+  subcategory: "Category",
   bar_category: "Setting",
   entrance: "Entrance Type",
   difficulty_getting_in: "Getting In"
@@ -83,6 +85,11 @@ export default function Filters({
         value: bar_category.toLowerCase(),
         label: bar_category
       })),
+      subcategory: [
+        { value: 'Coffee', label: 'Coffee' },
+        { value: 'Bakery', label: 'Bakery' },
+        { value: 'Doughnut', label: 'Doughnut' }
+      ],
       entrance: availableEntranceTypes.map(entrance => ({
         value: entrance.toLowerCase(),
         label: entrance
@@ -108,7 +115,7 @@ export default function Filters({
             <label key={value} className="filter-option">
               <input
                 type="checkbox"
-                checked={selectedFilters[type as keyof typeof selectedFilters].has(value)}
+                checked={selectedFilters[type as keyof typeof selectedFilters]?.has(value) ?? false}
                 onChange={() => handleFilterChange(type, value)}
               />
               {label}
@@ -128,8 +135,8 @@ export default function Filters({
             onClick={() => setActiveFilter(activeFilter === filterType ? null : filterType)}
           >
             {titles[filterType]} 
-            {selectedFilters[filterType as keyof typeof selectedFilters].size > 0 && 
-              ` (${selectedFilters[filterType as keyof typeof selectedFilters].size})`}
+            {selectedFilters[filterType as keyof typeof selectedFilters]?.size > 0 && 
+            ` (${selectedFilters[filterType as keyof typeof selectedFilters]?.size})`}
           </button>
           {renderFilterModal(filterType)}
         </div>

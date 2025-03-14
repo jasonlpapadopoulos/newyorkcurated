@@ -48,7 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           drinks_staging3 d
               ON b.place_id = d.id
       LEFT JOIN
-          coffee_staging2 c
+          coffee_plus c
               ON b.place_id = c.id
       LEFT JOIN
           party_staging2 p

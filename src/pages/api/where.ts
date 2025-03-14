@@ -24,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       sqlQuery = `
         SELECT neighborhood_name, neighborhood_name_clean, description, borough, broader_area 
         FROM neighborhoods 
-        WHERE neighborhood_name_clean IN (SELECT DISTINCT neighborhood_clean FROM coffee_staging2)
+        WHERE neighborhood_name_clean IN (SELECT DISTINCT neighborhood_clean FROM coffee_plus)
       `;
     } else if (category === 'party') {
       sqlQuery = `

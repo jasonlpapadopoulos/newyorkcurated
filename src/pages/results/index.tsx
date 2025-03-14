@@ -53,6 +53,7 @@ const Results: NextPage<ResultsPageProps> = ({
     meals: new Set<string>(),
     price: new Set<string>(),
     cuisine: new Set<string>(),
+    subcategory: new Set<string>(),
     bar_category: new Set<string>(),
     entrance: new Set<string>(),
     difficulty_getting_in: new Set<string>()
@@ -98,7 +99,13 @@ const Results: NextPage<ResultsPageProps> = ({
         ));
       return priceMatch && bar_categoryMatch;
     } else if (category === 'coffee') {
-      return priceMatch;
+      const cafe = place as Cafe;
+      const subcategoryMatch = selectedFilters.subcategory.size === 0 || 
+        (cafe.subcategory && Array.from(selectedFilters.subcategory).some(selectedSubcategory => 
+          cafe.subcategory.toLowerCase() === selectedSubcategory.toLowerCase()
+        ));
+    
+      return priceMatch && subcategoryMatch;
     } else if (category === 'party') {
       const partySpot = place as PartySpot;
       const entranceMatch = selectedFilters.entrance.size === 0 ||

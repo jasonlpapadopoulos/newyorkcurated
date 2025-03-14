@@ -66,7 +66,7 @@ const Neighborhoods: NextPage = () => {
   const buttonLabelMap: Record<string, string> = {
     food: "Let's Eat!",
     drinks: "Let's Drink!",
-    coffee: "Let's Have Coffee!",
+    coffee: "Find Coffee and More!",
     party: "Let's Party!",
   };
   
