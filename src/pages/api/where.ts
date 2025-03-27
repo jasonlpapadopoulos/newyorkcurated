@@ -12,33 +12,33 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       sqlQuery = `
         SELECT neighborhood_name, neighborhood_name_clean, description, borough, broader_area 
         FROM neighborhoods 
-        WHERE neighborhood_name_clean IN (SELECT DISTINCT neighborhood_clean FROM food_staging2)
+        WHERE neighborhood_name_clean IN (SELECT DISTINCT neighborhood_clean from food_2025_03_27)
       `;
     } else if (category === 'drinks') {
       sqlQuery = `
         SELECT neighborhood_name, neighborhood_name_clean, description, borough, broader_area 
         FROM neighborhoods 
-        WHERE neighborhood_name_clean IN (SELECT DISTINCT neighborhood_clean FROM drinks_staging3)
+        WHERE neighborhood_name_clean IN (SELECT DISTINCT neighborhood_clean from drinks_2025_03_27)
       `;
     } else if (category === 'coffee') {
       sqlQuery = `
         SELECT neighborhood_name, neighborhood_name_clean, description, borough, broader_area 
         FROM neighborhoods 
-        WHERE neighborhood_name_clean IN (SELECT DISTINCT neighborhood_clean FROM coffee_plus)
+        WHERE neighborhood_name_clean IN (SELECT DISTINCT neighborhood_clean from coffee_2025_03_27)
       `;
     } else if (category === 'party') {
       sqlQuery = `
         SELECT neighborhood_name, neighborhood_name_clean, description, borough, broader_area 
         FROM neighborhoods 
-        WHERE neighborhood_name_clean IN (SELECT DISTINCT neighborhood_clean FROM party_staging2)
+        WHERE neighborhood_name_clean IN (SELECT DISTINCT neighborhood_clean from party_2025_03_27)
       `;
     } else if (!category) {
       // If no category specified, return neighborhoods present in both food and drinks
       sqlQuery = `
         SELECT neighborhood_name, neighborhood_name_clean, description, borough, broader_area 
         FROM neighborhoods 
-        WHERE neighborhood_name_clean IN (SELECT DISTINCT neighborhood_clean FROM food_staging2)
-        AND neighborhood_name_clean IN (SELECT DISTINCT neighborhood_clean FROM drinks_staging3)
+        WHERE neighborhood_name_clean IN (SELECT DISTINCT neighborhood_clean from food_2025_03_27)
+        AND neighborhood_name_clean IN (SELECT DISTINCT neighborhood_clean from drinks_2025_03_27)
       `;
     } else {
       return res.status(400).json({ message: 'Invalid category parameter' });

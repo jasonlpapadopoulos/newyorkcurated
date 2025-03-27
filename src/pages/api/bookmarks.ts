@@ -42,16 +42,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       FROM
           bookmarks b
       LEFT JOIN
-          food_staging2 f
+          food_2025_03_27 f
               ON b.place_id = f.id
       LEFT JOIN
-          drinks_staging3 d
+          drinks_2025_03_27 d
               ON b.place_id = d.id
       LEFT JOIN
-          coffee_plus c
+          coffee_2025_03_27 c
               ON b.place_id = c.id
       LEFT JOIN
-          party_staging2 p
+          party_2025_03_27 p
               ON b.place_id = p.id
       WHERE
           b.user_id = (SELECT id FROM users WHERE firebase_uid = ?)

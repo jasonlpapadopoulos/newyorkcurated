@@ -6,10 +6,10 @@ import type { Cafe } from '../../types/cafe';
 import type { PartySpot } from '../../types/partySpot';
 
 const tables = [
-  { name: "food_staging2", type: "food" },
-  { name: "drinks_staging3", type: "drinks" },
-  { name: "coffee_plus", type: "coffee" },
-  { name: "party_staging2", type: "party" }
+  { name: "food_2025_03_27", type: "food" },
+  { name: "drinks_2025_03_27", type: "drinks" },
+  { name: "coffee_2025_03_27", type: "coffee" },
+  { name: "party_2025_03_27", type: "party" }
 ];
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -56,7 +56,7 @@ function formatResponse(row: any, type: string) {
       return {
         id: row.id,
         place_name: row.place_name,
-        description: row.short_description,
+        description: row.summarized_description,
         cuisine: row.cuisine,
         neighborhood: row.neighborhood,
         budget: row.budget,
@@ -77,7 +77,7 @@ function formatResponse(row: any, type: string) {
         id: row.id,
         place_name: row.place_name,
         place_name_clean: row.place_name_clean,
-        description: row.short_description,
+        description: row.summarized_description,
         neighborhood: row.neighborhood,
         neighborhood_clean: row.neighborhood_clean,
         budget: row.budget,
@@ -98,7 +98,7 @@ function formatResponse(row: any, type: string) {
       return {
         id: row.id,
         place_name: row.place_name,
-        description: row.short_description,
+        description: row.summarized_description,
         neighborhood: row.neighborhood,
         subcategory: row.subcategory,
         sitting: row.sitting,
@@ -112,7 +112,7 @@ function formatResponse(row: any, type: string) {
       return {
         id: row.id,
         place_name: row.place_name,
-        description: row.short_description,
+        description: row.summarized_description,
         neighborhood: row.neighborhood,
         budget: row.budget,
         place_type: row.place_type,
