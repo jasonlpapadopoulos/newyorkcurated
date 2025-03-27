@@ -31,7 +31,7 @@ export default async function handler(
       SELECT 
         DISTINCT entrance as value,
         difficulty_gettting_in as difficulty_level
-      FROM party_staging2
+      from party_2025_03_27
       WHERE entrance IS NOT NULL
         AND difficulty_gettting_in IS NOT NULL
     `;
@@ -47,7 +47,7 @@ export default async function handler(
             id,
             place_name,
             place_name_clean,
-            short_description as description,
+            summarized_description as description,
             neighborhood,
             neighborhood_clean,
             lat,
@@ -58,7 +58,7 @@ export default async function handler(
             difficulty_gettting_in,
             entrance,
             place_type
-        FROM party_staging2
+        from party_2025_03_27
         WHERE neighborhood_clean IN (?)
     `;
     const results = await query(partySpotQuery, [neighborhoodList]);

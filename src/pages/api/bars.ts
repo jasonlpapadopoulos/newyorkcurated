@@ -26,7 +26,7 @@ export default async function handler(
         id,
         place_name,
         place_name_clean,
-        short_description as description,
+        summarized_description as description,
         neighborhood,
         neighborhood_clean,
         budget,
@@ -43,7 +43,7 @@ export default async function handler(
         tasty_bites,
         address,
         place_type
-      FROM drinks_staging3
+      from drinks_2025_03_27
       WHERE neighborhood_clean IN (?)
       order by rand()
     `;
